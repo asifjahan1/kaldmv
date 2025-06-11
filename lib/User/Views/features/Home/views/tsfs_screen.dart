@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -36,9 +38,29 @@ class TSFSScreen extends StatelessWidget {
             Obx(() => Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(('Things to do '), style:TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),),
-                  Text('(${controller.items.length} results)', style: TextStyle(color: Color(0xFF867B79)),),
+                  Row(
+                    children: [
+                      Text(('Things to do '), style:TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),),
+                      Text('(${controller.items.length} results)', style: TextStyle(color: Color(0xFF867B79)),),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            log('grid tapped');
+                          },
+                          child: Image.asset('assets/images/grid.png', height: 28.h, width: 28.w)),
+                      SizedBox(width: 5.w),
+                      GestureDetector(
+                        onTap: () {
+                          log('grid11 tapped');
+                        },
+                          child: Image.asset('assets/images/grid11.png', height: 26.h, width: 26.w)),
+                    ],
+                  )
                 ],
               ),
             )),
@@ -110,7 +132,6 @@ class TSFSScreen extends StatelessWidget {
                                   top: 8.h,
                                   right: 8.w,
                                   child: CircleAvatar(
-
                                     child: Icon(
                                       Icons.save,
                                       color: Colors.white,
