@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import 'package:kaldmv/User/Views/features/Home/controller/home_controller.dart';
 import 'package:kaldmv/User/Views/features/Search/controller/search_controller.dart';
+import 'package:kaldmv/User/Views/features/Search/view/place_details.dart';
 import '../../../../../core/global_widegts/custom_header.dart';
 import '../../Home/controller/header_controller.dart' show HeaderController;
 import '../../Home/views/custom_drawer.dart';
@@ -170,7 +171,11 @@ class SearchScreen extends StatelessWidget {
               final double cardWidth = (MediaQuery.of(context).size.width - 20.w * 2 - 12.w) / 2;
               return SizedBox(
                 width: cardWidth,
-                child: _buildCityCard(city, imageHeight: 180),
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(() => PlaceDetails());
+                  },
+                    child: _buildCityCard(city, imageHeight: 180)),
               );
             }),
           ),

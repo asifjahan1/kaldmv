@@ -23,6 +23,9 @@ class CustomButton extends StatelessWidget {
   final double? suffixIconWidth;
   final double? prefixIconHeight;
   final double? prefixIconWidth;
+  final List<String>? dropdownItems;
+  final String? selectedDropdownValue;
+  final ValueChanged<String?>? onDropdownChanged;
 
   const CustomButton({
     super.key,
@@ -47,6 +50,9 @@ class CustomButton extends StatelessWidget {
     this.suffixIconWidth,
     this.prefixIconHeight,
     this.prefixIconWidth,
+    this.dropdownItems,
+    this.selectedDropdownValue,
+    this.onDropdownChanged,
   });
 
   @override
@@ -71,7 +77,34 @@ class CustomButton extends StatelessWidget {
         )
             : null,
       ),
-      child: InkWell(
+      child: dropdownItems != null
+          ? Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12.w),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            isExpanded: true,
+            value: selectedDropdownValue ?? dropdownItems!.first,
+            icon: suffixIcon ??
+                Icon(Icons.arrow_drop_down, color: textColor),
+            dropdownColor: backgroundColor,
+            onChanged: onDropdownChanged,
+            items: dropdownItems!.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: fontWeight,
+                    color: textColor,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      )
+          : InkWell(
         onTap: onPressed,
         borderRadius: BorderRadius.circular(borderRadius.r),
         child: Padding(
@@ -88,8 +121,8 @@ class CustomButton extends StatelessWidget {
                         children: [
                           Image.asset(
                             prefixIconPath!,
-                            height: prefixIconHeight ?? 24.h,
-                            width: prefixIconWidth ?? 24.w,
+                            height: prefixIconHeight ?? 18.h,
+                            width: prefixIconWidth ?? 18.w,
                           ),
                         ],
                       ),
@@ -117,7 +150,8 @@ class CustomButton extends StatelessWidget {
                 ],
               )
                   : Row(
-                mainAxisAlignment: (spaceBetweenPrefix || spaceBetweenSuffix)
+                mainAxisAlignment: (spaceBetweenPrefix ||
+                    spaceBetweenSuffix)
                     ? MainAxisAlignment.spaceBetween
                     : MainAxisAlignment.center,
                 children: [
@@ -131,7 +165,8 @@ class CustomButton extends StatelessWidget {
                           height: prefixIconHeight ?? 24.h,
                           width: prefixIconWidth ?? 24.w,
                         ),
-                      if (prefixIconPath != null) SizedBox(width: 8.w),
+                      if (prefixIconPath != null)
+                        SizedBox(width: 8.w),
                       Text(
                         text,
                         style: TextStyle(
