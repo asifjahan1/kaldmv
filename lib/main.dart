@@ -43,17 +43,20 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 640),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, child) => GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'kaldmv',
-        getPages: AppRoute.routes,
-        initialRoute: AppRoute.splashScreen,
-        builder: EasyLoading.init(),
-        theme: ThemeData(
-          fontFamily: GoogleFonts.dmSans().fontFamily,
-          textTheme: GoogleFonts.dmSansTextTheme(Theme.of(context).textTheme),
-        ),
-      ),
+      builder:
+          (context, child) => GetMaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'kaldmv',
+            getPages: AppRoute.routes,
+            initialRoute: AppRoute.splashScreen,
+            builder: EasyLoading.init(),
+            theme: ThemeData(
+              fontFamily: GoogleFonts.dmSans().fontFamily,
+              textTheme: GoogleFonts.dmSansTextTheme(
+                Theme.of(context).textTheme,
+              ),
+            ),
+          ),
     );
   }
 }
