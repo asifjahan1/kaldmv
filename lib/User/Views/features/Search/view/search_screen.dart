@@ -173,7 +173,7 @@ class SearchScreen extends StatelessWidget {
                 width: cardWidth,
                 child: GestureDetector(
                   onTap: () {
-                    Get.to(() => PlaceDetails());
+                    Get.to(() => PlaceDetails(item: city));
                   },
                     child: _buildCityCard(city, imageHeight: 180)),
               );
@@ -224,7 +224,7 @@ class SearchScreen extends StatelessWidget {
               bottomRight: Radius.circular(8.r),
             ),
             child: Image.asset(
-              city.imageUrl,
+              city.imageUrls.first,
               height: imageHeight.h,
               width: double.infinity,
               fit: BoxFit.cover,

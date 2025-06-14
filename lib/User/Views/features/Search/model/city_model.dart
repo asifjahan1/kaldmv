@@ -1,11 +1,17 @@
 class CityModel {
   final String name;
-  final String imageUrl;
+  final List<String> imageUrls;
   final int placeCount;
+  final double? rating;
+  final int? review;
+  final Map<String, double>? categoryRatings;
 
   CityModel({
     required this.name,
-    required this.imageUrl,
+    required this.imageUrls,
     required this.placeCount,
+    this.rating,
+    this.review,
+    this.categoryRatings,
   });
 }

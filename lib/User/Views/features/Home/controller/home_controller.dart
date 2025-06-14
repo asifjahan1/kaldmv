@@ -41,6 +41,9 @@ class HomeController extends GetxController {
   TextEditingController dateController = TextEditingController();
   TextEditingController filePathController = TextEditingController();
   TextEditingController specialRequirementController = TextEditingController();
+  TextEditingController groupTypeController = TextEditingController();
+  TextEditingController durationController = TextEditingController();
+  TextEditingController budgetController = TextEditingController();
 
   // Dropdown selections
   RxString startTime = ''.obs;

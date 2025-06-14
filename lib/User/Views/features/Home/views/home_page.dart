@@ -40,266 +40,349 @@ class HomePage extends StatelessWidget {
                 return controller.showAISuggestionPanel.value
                     ? const SizedBox.shrink()
                     : CustomButton(
-                      borderRadius: 12.r,
-                      backgroundImagePath: 'assets/images/ai_image.png',
-                      prefixIconPath: 'assets/images/ai.png',
-                      width: screenWidth * 0.9,
-                      text: 'Use Advance AI Suggestion',
-                      onPressed: () {
-                        controller.showAISuggestionPanel.value =
-                            !controller.showAISuggestionPanel.value;
-                      },
-                    );
+                        borderRadius: 12.r,
+                        backgroundImagePath: 'assets/images/ai_image.png',
+                        prefixIconPath: 'assets/images/ai.png',
+                        width: screenWidth * 0.9,
+                        text: 'Use Advance AI Suggestion',
+                        onPressed: () {
+                          controller.showAISuggestionPanel.value =
+                              !controller.showAISuggestionPanel.value;
+                        },
+                      );
               }),
               // AI Suggestion Panel
               Obx(() {
                 return controller.showAISuggestionPanel.value
                     ? Container(
-                      padding: EdgeInsets.all(16.w),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: Text(
-                              'Explore the world',
+                        padding: EdgeInsets.all(16.w),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Explore the world',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 24.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            // Country
+                            Text(
+                              'Country',
                               style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 24.sp,
+                                fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                          SizedBox(height: 12.h),
-                          // Country
-                          CustomTextField(
-                            hintTextColor: Colors.grey[500],
-                            fillColor: Color(0xFFFFFFFF),
-                            textColor: Colors.black,
-                            borderSide: BorderSide(color: Color(0xFF867B79)),
-                            prefixIconPath: 'assets/images/location.png',
-                            hintText: 'Which country to go...',
-                            textEditingController: controller.countryController,
-                          ),
-                          SizedBox(height: 10.h),
-                          // City
-                          CustomTextField(
-                            hintTextColor: Colors.grey[500],
-                            fillColor: Color(0xFFFFFFFF),
-                            textColor: Colors.black,
-                            borderSide: BorderSide(color: Color(0xFF867B79)),
-                            prefixIconPath: 'assets/images/location.png',
-                            hintText: 'Which city to go...',
-                            textEditingController: controller.cityController,
-                          ),
-                          SizedBox(height: 10.h),
-
-                          // Date
-                          CustomTextField(
-                            prefixIconPath: 'assets/images/date.png',
-                            textEditingController: controller.dateController,
-                            fillColor: Color(0xFFFFFFFF),
-                            textColor: Colors.black,
-                            hintText: 'Select date',
-                            hintTextColor: Colors.grey[500],
-                            fontSize: 14.sp,
-                            borderSide: const BorderSide(
-                              color: Color(0xFF867B79),
+                            SizedBox(height: 5.h),
+                            CustomTextField(
+                              hintTextColor: Colors.grey[500],
+                              fillColor: Color(0xFFFFFFFF),
+                              textColor: Colors.black,
+                              borderSide: BorderSide(color: Color(0xFF867B79)),
+                              prefixIconPath: 'assets/images/location1.png',
+                              hintText: 'Which country to go...',
+                              textEditingController:
+                                  controller.countryController,
                             ),
-                            readOnly: true,
-                            onTap: () async {
-                              final pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime(2100),
-                              );
-                              if (pickedDate != null) {
-                                controller.dateController.text = DateFormat(
-                                  'yyyy-MM-dd',
-                                ).format(pickedDate);
-                              }
-                            },
-                          ),
-
-                          SizedBox(height: 10.h),
-
-                          // Duration Dropdown Row
-                          Row(
-                            children: [
-                              Expanded(
-                                child: DropdownButtonFormField<String>(
-                                  decoration: InputDecoration(
-                                    labelText: 'Start Time',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.r),
+                            SizedBox(height: 10.h),
+                            // City
+                            Text(
+                              'City',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5.h),
+                            CustomTextField(
+                              hintTextColor: Colors.grey[500],
+                              fillColor: Color(0xFFFFFFFF),
+                              textColor: Colors.black,
+                              borderSide: BorderSide(color: Color(0xFF867B79)),
+                              prefixIconPath: 'assets/images/location1.png',
+                              hintText: 'Which city to go...',
+                              textEditingController: controller.cityController,
+                            ),
+                            SizedBox(height: 10.h),
+                            // Date
+                            Text(
+                              'Date',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5.h),
+                            CustomTextField(
+                              prefixIconPath: 'assets/images/date.png',
+                              textEditingController: controller.dateController,
+                              fillColor: Color(0xFFFFFFFF),
+                              textColor: Colors.black,
+                              hintText: 'Select date',
+                              hintTextColor: Colors.grey[500],
+                              fontSize: 14.sp,
+                              borderSide: const BorderSide(
+                                color: Color(0xFF867B79),
+                              ),
+                              readOnly: true,
+                              onTap: () async {
+                                final pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2100),
+                                );
+                                if (pickedDate != null) {
+                                  controller.dateController.text = DateFormat(
+                                    'yyyy-MM-dd',
+                                  ).format(pickedDate);
+                                }
+                              },
+                            ),
+                            SizedBox(height: 10.h),
+                            // Duration Dropdown Row
+                            Text(
+                              'Duration',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5.h),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Obx(
+                                    () => CustomTextField(
+                                      textEditingController:
+                                          controller.durationController,
+                                      prefixIconPath: 'assets/images/timer1.png',
+                                      isDropdown: true,
+                                      dropdownItems: controller.durationTimes,
+                                      selectedDropdownValue:
+                                          controller.startTime.value.isEmpty
+                                          ? null
+                                          : controller.startTime.value,
+                                      onDropdownChanged: (value) {
+                                        if (value != null) {
+                                          controller.startTime.value = value;
+                                          controller.durationController.text =
+                                              value;
+                                        }
+                                      },
+                                      fillColor: Colors.white,
+                                      hintText: 'Start time',
+                                      hintTextColor: Colors.grey[500],
+                                      borderSide: const BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                      controllerTag: 'start_time_dropdown',
                                     ),
                                   ),
-                                  hint: const Text('Start time'),
-                                  items:
-                                      controller.durationTimes.map((
-                                        String time,
-                                      ) {
-                                        return DropdownMenuItem<String>(
-                                          value: time,
-                                          child: Text(time),
-                                        );
-                                      }).toList(),
-                                  onChanged: (value) {},
                                 ),
-                              ),
-                              SizedBox(width: 10.w),
-                              Expanded(
-                                child: DropdownButtonFormField<String>(
-                                  decoration: InputDecoration(
-                                    labelText: 'End Time',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.r),
+                                SizedBox(width: 10.w),
+                                Expanded(
+                                  child: Obx(
+                                    () => CustomTextField(
+                                      textEditingController:
+                                          TextEditingController(
+                                            text: controller.endTime.value,
+                                          ),
+                                      prefixIconPath: 'assets/images/timer1.png',
+                                      isDropdown: true,
+                                      dropdownItems: controller.durationTimes,
+                                      selectedDropdownValue:
+                                          controller.endTime.value.isEmpty
+                                          ? null
+                                          : controller.endTime.value,
+                                      onDropdownChanged: (value) {
+                                        if (value != null) {
+                                          controller.endTime.value = value;
+                                          controller.durationController.text =
+                                              value;
+                                        }
+                                      },
+                                      fillColor: Colors.white,
+                                      hintText: 'End time',
+                                      hintTextColor: Colors.grey[500],
+                                      borderSide: const BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                      controllerTag: 'end_time_dropdown',
                                     ),
                                   ),
-                                  hint: const Text('End time'),
-                                  items:
-                                      controller.durationTimes.map((
-                                        String time,
-                                      ) {
-                                        return DropdownMenuItem<String>(
-                                          value: time,
-                                          child: Text(time),
-                                        );
-                                      }).toList(),
-                                  onChanged: (value) {},
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
-                          // Budget Dropdown
-                          DropdownButtonFormField<String>(
-                            decoration: InputDecoration(
-                              labelText: 'Budget',
-                              labelStyle: TextStyle(fontSize: 14.sp),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.r),
+                              ],
+                            ),
+                            SizedBox(height: 10.h),
+                            // Budget Dropdown
+                            Text(
+                              'Budget',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            hint: const Text('Select your budget range'),
-                            items:
-                                controller.budgetRanges.map((String budget) {
-                                  return DropdownMenuItem<String>(
-                                    value: budget,
-                                    child: Text(budget),
-                                  );
-                                }).toList(),
-                            onChanged: (value) {},
-                          ),
-                          SizedBox(height: 10.h),
-                          // Group Type
-                          DropdownButtonFormField<String>(
-                            decoration: InputDecoration(
-                              labelText: 'Group Type',
-                              labelStyle: TextStyle(fontSize: 14.sp),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.r),
+                            SizedBox(height: 5.h),
+                            Obx(
+                              () => CustomTextField(
+                                textEditingController:
+                                    controller.budgetController,
+                                prefixIconPath: 'assets/images/budget.png',
+                                isDropdown: true,
+                                dropdownItems: controller.budgetRanges,
+                                selectedDropdownValue:
+                                    controller.selectedBudget.value.isEmpty
+                                    ? null
+                                    : controller.selectedBudget.value,
+                                onDropdownChanged: (value) {
+                                  if (value != null) {
+                                    controller.selectedBudget.value = value;
+                                    controller.budgetController.text = value;
+                                  }
+                                },
+                                fillColor: Colors.white,
+                                hintText: 'Select your budget range',
+                                hintTextColor: Colors.grey[500],
+                                borderSide: const BorderSide(
+                                  color: Colors.grey,
+                                ),
+                                controllerTag: 'budget_dropdown',
                               ),
                             ),
-                            hint: const Text('Select group type'),
-                            items: const [
-                              DropdownMenuItem(
-                                value: 'Solo',
-                                child: Text('Solo'),
+                            SizedBox(height: 10.h),
+                            // Group Type
+                            Text(
+                              'Group Type',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
                               ),
-                              DropdownMenuItem(
-                                value: 'Couple',
-                                child: Text('Couple'),
+                            ),
+                            SizedBox(height: 5.h),
+                            Obx(
+                              () => CustomTextField(
+                                textEditingController:
+                                    controller.groupTypeController,
+                                prefixIconPath: 'assets/images/group.png',
+                                isDropdown: true,
+                                dropdownItems: controller.groupTypes,
+                                selectedDropdownValue:
+                                    controller.selectedGroupType.value.isEmpty
+                                    ? null
+                                    : controller.selectedGroupType.value,
+                                onDropdownChanged: (value) {
+                                  if (value != null) {
+                                    controller.selectedGroupType.value = value;
+                                    controller.groupTypeController.text = value;
+                                  }
+                                },
+                                fillColor: Colors.white,
+                                hintText: 'Select group type',
+                                hintTextColor: Colors.grey[500],
+                                borderSide: const BorderSide(
+                                  color: Colors.grey,
+                                ),
+                                controllerTag: 'group_type_dropdown',
                               ),
-                              DropdownMenuItem(
-                                value: 'Family',
-                                child: Text('Family'),
+                            ),
+                            SizedBox(height: 10.h),
+                            // File Upload (Read Only Field)
+                            Text(
+                              'Preferences',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
                               ),
-                              DropdownMenuItem(
-                                value: 'Friends',
-                                child: Text('Friends'),
-                              ),
-                            ],
-                            onChanged: (value) {},
-                          ),
-                          SizedBox(height: 10.h),
-                          // File Upload (Read Only Field)
-                          CustomTextField(
-                            hintText: 'Click to select image or file',
-                            hintTextColor: Colors.grey[500],
-                            readOnly: true,
-                            onTap: () async {
-                              FilePickerResult? result = await FilePicker
-                                  .platform
-                                  .pickFiles(
-                                    type: FileType.custom,
-                                    allowedExtensions: [
-                                      'jpg',
-                                      'png',
-                                      'jpeg',
-                                      'pdf',
-                                      'doc',
-                                      'docx',
-                                    ],
-                                  );
+                            ),
+                            SizedBox(height: 5.h),
+                            CustomTextField(
+                              hintText: 'Click to select image or file',
+                              hintTextColor: Colors.grey[500],
+                              readOnly: true,
+                              onTap: () async {
+                                FilePickerResult? result = await FilePicker
+                                    .platform
+                                    .pickFiles(
+                                      type: FileType.custom,
+                                      allowedExtensions: [
+                                        'jpg',
+                                        'png',
+                                        'jpeg',
+                                        'pdf',
+                                        'doc',
+                                        'docx',
+                                      ],
+                                    );
 
-                              if (result != null &&
-                                  result.files.single.path != null) {
-                                controller.filePathController.text =
-                                    result.files.single.name;
-                                // Optional: save full path too if needed
-                                // final filePath = result.files.single.path!;
-                              }
-                            },
-                            textEditingController:
-                                controller.filePathController,
-                            fillColor: Colors.white,
-                            textColor: Colors.black,
-                            borderSide: const BorderSide(
-                              color: Color(0xFF867B79),
+                                if (result != null &&
+                                    result.files.single.path != null) {
+                                  controller.filePathController.text =
+                                      result.files.single.name;
+                                }
+                              },
+                              textEditingController:
+                                  controller.filePathController,
+                              fillColor: Colors.white,
+                              textColor: Colors.black,
+                              borderSide: const BorderSide(
+                                color: Color(0xFF867B79),
+                              ),
+                              fontWeight: FontWeight.w400,
+                              obscureText: false,
+                              validator: null,
+                              prefixIconPath: 'assets/images/attachment.png',
                             ),
-                            fontWeight: FontWeight.w400,
-                            obscureText: false,
-                            validator: null,
-                            prefixIconPath: 'assets/images/attachment.png',
-                            // suffixIcon: const Icon(Icons.upload_file),
-                          ),
-                          CustomTextField(
-                            height: 100.h,
-                            fillColor: Color(0xFFFFFFFF),
-                            textColor: Colors.black,
-                            hintTextColor: Colors.grey[500],
-                            hintText:
-                                'Special Requirements (e.g., vegetarian food options, wheelchair accessible places)',
-                            textEditingController:
-                                controller.specialRequirementController,
-                            borderSide: const BorderSide(
-                              color: Color(0xFF867B79),
+                            // Special Requirements
+                            Text(
+                              'Special Requirements',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            fontSize: 13.sp,
-                            maxLines: 5,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          SizedBox(height: 10.h),
-                          // Generate Button
-                          CustomButton(
-                            borderRadius: 12.r,
-                            backgroundImagePath: 'assets/images/ai_image.png',
-                            prefixIconPath: 'assets/images/ai.png',
-                            width: screenWidth * 0.9,
-                            text: 'Generate AI Suggestions',
-                            onPressed: () {
-                              controller.showAISuggestionPanel.value =
-                                  !controller.showAISuggestionPanel.value;
-                            },
-                          ),
-                        ],
-                      ),
-                    )
+                            SizedBox(height: 5.h),
+                            CustomTextField(
+                              height: 100.h,
+                              fillColor: Color(0xFFFFFFFF),
+                              textColor: Colors.black,
+                              hintTextColor: Colors.grey[500],
+                              hintText:
+                                  'Special Requirements (e.g., vegetarian food options, wheelchair accessible places)',
+                              textEditingController:
+                                  controller.specialRequirementController,
+                              borderSide: const BorderSide(
+                                color: Color(0xFF867B79),
+                              ),
+                              fontSize: 13.sp,
+                              maxLines: 5,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            SizedBox(height: 10.h),
+                            // Generate Button
+                            CustomButton(
+                              borderRadius: 12.r,
+                              backgroundImagePath: 'assets/images/ai_image.png',
+                              prefixIconPath: 'assets/images/ai.png',
+                              width: screenWidth * 0.9,
+                              text: 'Generate AI Suggestions',
+                              onPressed: () {
+                                controller.showAISuggestionPanel.value =
+                                    !controller.showAISuggestionPanel.value;
+                              },
+                            ),
+                          ],
+                        ),
+                      )
                     : const SizedBox.shrink();
               }),
               SizedBox(height: 20.h),
@@ -319,10 +402,9 @@ class HomePage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Obx(
                       () => GestureDetector(
-                        onTap:
-                            () => controller.setCategory(
-                              controller.categories[index].name,
-                            ),
+                        onTap: () => controller.setCategory(
+                          controller.categories[index].name,
+                        ),
                         child: Container(
                           height: 100.h,
                           width: 100.w,
@@ -330,9 +412,9 @@ class HomePage extends StatelessWidget {
                           decoration: BoxDecoration(
                             color:
                                 controller.selectedCategory.value ==
-                                        controller.categories[index].name
-                                    ? const Color(0xFF21BABA)
-                                    : const Color(0xFFCCC3C2).withAlpha(20),
+                                    controller.categories[index].name
+                                ? const Color(0xFF21BABA)
+                                : const Color(0xFFCCC3C2).withAlpha(20),
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                           child: Column(
@@ -356,9 +438,9 @@ class HomePage extends StatelessWidget {
                                 style: TextStyle(
                                   color:
                                       controller.selectedCategory.value ==
-                                              controller.categories[index].name
-                                          ? Colors.white
-                                          : Colors.black,
+                                          controller.categories[index].name
+                                      ? Colors.white
+                                      : Colors.black,
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
