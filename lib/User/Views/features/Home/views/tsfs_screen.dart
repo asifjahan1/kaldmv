@@ -75,10 +75,9 @@ class TSFSScreen extends StatelessWidget {
                             'assets/images/grid.png',
                             height: 28.h,
                             width: 28.w,
-                            color:
-                                controller.isGridView.value
-                                    ? Colors.black
-                                    : Color(0xFFF97C68),
+                            color: controller.isGridView.value
+                                ? Colors.black
+                                : Color(0xFFF97C68),
                           ),
                         ),
                         SizedBox(width: 5.w),
@@ -91,10 +90,9 @@ class TSFSScreen extends StatelessWidget {
                             'assets/images/grid11.png',
                             height: 26.h,
                             width: 26.w,
-                            color:
-                                controller.isGridView.value
-                                    ? Color(0xFFF97C68)
-                                    : Colors.black,
+                            color: controller.isGridView.value
+                                ? Color(0xFFF97C68)
+                                : Colors.black,
                           ),
                         ),
                       ],
@@ -161,369 +159,168 @@ class TSFSScreen extends StatelessWidget {
                     horizontal: 12.w,
                     vertical: 10.h,
                   ),
-                  child:
-                      controller.isGridView.value
-                          ? GridView.builder(
-                            shrinkWrap: true,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 10.w,
-                                  mainAxisSpacing: 10.h,
-                                  childAspectRatio: 0.6667,
+                  child: controller.isGridView.value
+                      ? GridView.builder(
+                          shrinkWrap: true,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10.w,
+                                mainAxisSpacing: 10.h,
+                                childAspectRatio: 0.6667,
+                              ),
+                          itemCount: controller.filteredItems.length,
+                          itemBuilder: (context, index) {
+                            final item = controller.filteredItems[index];
+                            return GestureDetector(
+                              onTap: () => controller.onItemTap(index),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 2,
+                                      spreadRadius: 1,
+                                      offset: Offset(0, 1),
+                                    ),
+                                  ],
                                 ),
-                            itemCount: controller.filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = controller.filteredItems[index];
-                              return GestureDetector(
-                                onTap: () => controller.onItemTap(index),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
-                                        blurRadius: 2,
-                                        spreadRadius: 1,
-                                        offset: Offset(0, 1),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(10),
-                                            ),
-                                            child: AspectRatio(
-                                              aspectRatio: 1.5,
-                                              child: Image.asset(
-                                                item.imagePath,
-                                                width: double.infinity,
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (
-                                                  context,
-                                                  error,
-                                                  stackTrace,
-                                                ) {
-                                                  return Container(
-                                                    color: Colors.grey,
-                                                    child: const Center(
-                                                      child: Text(
-                                                        'Image not available',
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(10),
                                           ),
-                                          Positioned(
-                                            top: 8.h,
-                                            left: 8.w,
-                                            child: Image.asset(
-                                              'assets/images/rest.png',
-                                              height: 20.h,
-                                              width: 20.w,
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: 8.h,
-                                            right: 8.w,
-                                            child: CircleAvatar(
-                                              radius: 14.r,
-                                              child: Icon(
-                                                Icons.save,
-                                                color: Colors.white,
-                                                size: 16.sp,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(8.w),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                item.subTitle,
-                                                style: TextStyle(
-                                                  fontSize: 12.sp,
-                                                  color: Colors.grey,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                              Text(
-                                                item.title,
-                                                style: TextStyle(
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Image.asset(
-                                                    'assets/images/closed.png',
-                                                    height: 16.h,
-                                                    width: 16.w,
-                                                  ),
-                                                  SizedBox(width: 4.w),
-                                                  Expanded(
-                                                    child: Text(
-                                                      item.provider,
-                                                      style: TextStyle(
-                                                        fontSize: 12.sp,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Color(
-                                                          0xFFFF2300,
-                                                        ),
-                                                      ),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Image.asset(
-                                                    'assets/images/location.png',
-                                                    height: 14.h,
-                                                    width: 14.w,
-                                                  ),
-                                                  SizedBox(width: 4.w),
-                                                  Expanded(
-                                                    child: Text(
-                                                      _truncateToThreeWords(
-                                                        item.location,
-                                                      ),
-                                                      style: TextStyle(
-                                                        fontSize: 10.sp,
-                                                        color: Colors.grey,
-                                                      ),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        '${item.rating}',
-                                                        style: TextStyle(
-                                                          fontSize: 12.sp,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Color(
-                                                            0xFFFEC622,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 4.w),
-                                                      Icon(
-                                                        Icons.star,
-                                                        size: 12.sp,
-                                                        color:
-                                                            Colors.yellow[700],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Text(
-                                                    'Free',
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 12.sp,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              if (item.isClosed)
-                                                Text(
-                                                  'Closed',
-                                                  style: TextStyle(
-                                                    fontSize: 10.sp,
-                                                    color: Colors.red,
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                          : ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: controller.filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = controller.filteredItems[index];
-                              return GestureDetector(
-                                onTap: () => controller.onItemTap(index),
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                    vertical: 10.h,
-                                    horizontal: 10.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
-                                        blurRadius: 6,
-                                        spreadRadius: 2,
-                                        offset: Offset(0, 3),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(10),
-                                            ),
+                                          child: AspectRatio(
+                                            aspectRatio: 1.5,
                                             child: Image.asset(
                                               item.imagePath,
-                                              height: 150.h,
                                               width: double.infinity,
                                               fit: BoxFit.cover,
-                                              errorBuilder: (
-                                                context,
-                                                error,
-                                                stackTrace,
-                                              ) {
-                                                return Container(
-                                                  height: 150.h,
-                                                  color: Colors.grey,
-                                                  child: const Center(
-                                                    child: Text(
-                                                      'Image not available',
-                                                    ),
-                                                  ),
-                                                );
-                                              },
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                    return Container(
+                                                      color: Colors.grey,
+                                                      child: const Center(
+                                                        child: Text(
+                                                          'Image not available',
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                             ),
                                           ),
-                                          Positioned(
-                                            top: 8.h,
-                                            left: 8.w,
-                                            child: Image.asset(
-                                              'assets/images/rest.png',
-                                              height: 30.h,
-                                              width: 30.w,
-                                            ),
+                                        ),
+                                        Positioned(
+                                          top: 8.h,
+                                          left: 8.w,
+                                          child: Image.asset(
+                                            'assets/images/rest.png',
+                                            height: 20.h,
+                                            width: 20.w,
                                           ),
-                                          Positioned(
-                                            top: 8.h,
-                                            right: 8.w,
+                                        ),
+                                        Positioned(
+                                          top: 8.h,
+                                          right: 8.w,
+                                          child: InkWell(
+                                            onTap: () {
+                                              log('Bookmark Tapped');
+                                            },
                                             child: CircleAvatar(
-                                              child: Icon(
-                                                Icons.save,
-                                                color: Colors.white,
-                                                size: 26.sp,
+                                              backgroundColor: Color(
+                                                0xFFFFFFFF,
+                                              ).withAlpha(80),
+                                              child: Image.asset(
+                                                'assets/images/bookmark1.png',
+                                                height: 20.h,
+                                                width: 20.w,
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(10.w),
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8.w),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               item.subTitle,
                                               style: TextStyle(
-                                                fontSize: 16.sp,
+                                                fontSize: 12.sp,
                                                 color: Colors.grey,
                                               ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                             ),
-                                            SizedBox(height: 5.h),
                                             Text(
                                               item.title,
                                               style: TextStyle(
-                                                fontSize: 20.sp,
+                                                fontSize: 14.sp,
                                                 fontWeight: FontWeight.bold,
                                               ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
                                             ),
-                                            SizedBox(height: 5.h),
                                             Row(
                                               children: [
                                                 Image.asset(
                                                   'assets/images/closed.png',
-                                                  height: 28.h,
-                                                  width: 28.w,
+                                                  height: 16.h,
+                                                  width: 16.w,
                                                 ),
-                                                SizedBox(width: 8.w),
-                                                Text(
-                                                  item.provider,
-                                                  style: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color(0xFFFF2300),
+                                                SizedBox(width: 4.w),
+                                                Expanded(
+                                                  child: Text(
+                                                    item.provider,
+                                                    style: TextStyle(
+                                                      fontSize: 12.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color(0xFFFF2300),
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(height: 5.h),
                                             Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Image.asset(
                                                   'assets/images/location.png',
-                                                  height: 22.h,
-                                                  width: 22.w,
+                                                  height: 14.h,
+                                                  width: 14.w,
                                                 ),
-                                                SizedBox(width: 5.w),
+                                                SizedBox(width: 4.w),
                                                 Expanded(
                                                   child: Text(
-                                                    item.location,
-                                                    textAlign: TextAlign.start,
-                                                    softWrap: true,
+                                                    _truncateToThreeWords(
+                                                      item.location,
+                                                    ),
                                                     style: TextStyle(
-                                                      fontSize: 12.sp,
+                                                      fontSize: 10.sp,
                                                       color: Colors.grey,
                                                     ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(height: 5.h),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -534,7 +331,7 @@ class TSFSScreen extends StatelessWidget {
                                                     Text(
                                                       '${item.rating}',
                                                       style: TextStyle(
-                                                        fontSize: 18.sp,
+                                                        fontSize: 12.sp,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: Color(
@@ -542,19 +339,11 @@ class TSFSScreen extends StatelessWidget {
                                                         ),
                                                       ),
                                                     ),
-                                                    SizedBox(width: 5.w),
+                                                    SizedBox(width: 4.w),
                                                     Icon(
                                                       Icons.star,
-                                                      size: 20.sp,
+                                                      size: 12.sp,
                                                       color: Colors.yellow[700],
-                                                    ),
-                                                    SizedBox(width: 5.w),
-                                                    Text(
-                                                      ' (${(index + 0) * 1} Reviews)',
-                                                      style: TextStyle(
-                                                        fontSize: 14.sp,
-                                                        color: Colors.grey,
-                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -562,8 +351,7 @@ class TSFSScreen extends StatelessWidget {
                                                   'Free',
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 18.sp,
-                                                    color: Colors.black,
+                                                    fontSize: 12.sp,
                                                   ),
                                                 ),
                                               ],
@@ -572,19 +360,227 @@ class TSFSScreen extends StatelessWidget {
                                               Text(
                                                 'Closed',
                                                 style: TextStyle(
-                                                  fontSize: 12.sp,
+                                                  fontSize: 10.sp,
                                                   color: Colors.red,
                                                 ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
                                               ),
                                           ],
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: controller.filteredItems.length,
+                          itemBuilder: (context, index) {
+                            final item = controller.filteredItems[index];
+                            return GestureDetector(
+                              onTap: () => controller.onItemTap(index),
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                  vertical: 10.h,
+                                  horizontal: 10.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 6,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(10),
+                                          ),
+                                          child: Image.asset(
+                                            item.imagePath,
+                                            height: 150.h,
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  return Container(
+                                                    height: 150.h,
+                                                    color: Colors.grey,
+                                                    child: const Center(
+                                                      child: Text(
+                                                        'Image not available',
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 8.h,
+                                          left: 8.w,
+                                          child: Image.asset(
+                                            'assets/images/rest.png',
+                                            height: 30.h,
+                                            width: 30.w,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 8.h,
+                                          right: 8.w,
+                                          child: InkWell(
+                                            onTap: () {
+                                              log('Bookmark Tapped');
+                                            },
+                                            child: CircleAvatar(
+                                              backgroundColor: Color(
+                                                0xFFFFFFFF,
+                                              ).withAlpha(80),
+                                              child: Image.asset(
+                                                'assets/images/bookmark1.png',
+                                                height: 20.h,
+                                                width: 20.w,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(10.w),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item.subTitle,
+                                            style: TextStyle(
+                                              fontSize: 16.sp,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          SizedBox(height: 5.h),
+                                          Text(
+                                            item.title,
+                                            style: TextStyle(
+                                              fontSize: 20.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 5.h),
+                                          Row(
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/closed.png',
+                                                height: 28.h,
+                                                width: 28.w,
+                                              ),
+                                              SizedBox(width: 8.w),
+                                              Text(
+                                                item.provider,
+                                                style: TextStyle(
+                                                  fontSize: 16.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFFFF2300),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 5.h),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/location.png',
+                                                height: 22.h,
+                                                width: 22.w,
+                                              ),
+                                              SizedBox(width: 5.w),
+                                              Expanded(
+                                                child: Text(
+                                                  item.location,
+                                                  textAlign: TextAlign.start,
+                                                  softWrap: true,
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 5.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    '${item.rating}',
+                                                    style: TextStyle(
+                                                      fontSize: 18.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color(0xFFFEC622),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 5.w),
+                                                  Icon(
+                                                    Icons.star,
+                                                    size: 20.sp,
+                                                    color: Colors.yellow[700],
+                                                  ),
+                                                  SizedBox(width: 5.w),
+                                                  Text(
+                                                    ' (${(index + 0) * 1} Reviews)',
+                                                    style: TextStyle(
+                                                      fontSize: 14.sp,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Text(
+                                                'Free',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18.sp,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          if (item.isClosed)
+                                            Text(
+                                              'Closed',
+                                              style: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                 ),
               ),
             ),

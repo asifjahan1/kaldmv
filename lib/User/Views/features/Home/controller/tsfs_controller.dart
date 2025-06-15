@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:get/get.dart';
 import '../../Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
-import '../model/fcfs_item_model.dart';
+import '../model/tsfs_item_model.dart';
 
 class TSFSController extends GetxController {
   final RxList<TSFSItem> items = <TSFSItem>[].obs;

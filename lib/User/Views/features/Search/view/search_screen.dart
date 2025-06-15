@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide SearchController;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
 
 import 'package:kaldmv/User/Views/features/Home/controller/home_controller.dart';
 import 'package:kaldmv/User/Views/features/Search/controller/search_controller.dart';
@@ -173,7 +174,12 @@ class SearchScreen extends StatelessWidget {
                 width: cardWidth,
                 child: GestureDetector(
                   onTap: () {
-                    Get.to(() => PlaceDetails(item: city));
+                    // Get.to(() => PlaceDetails(item: city));
+                    final BottomNavController nav =
+                            Get.find<BottomNavController>();
+                        nav.openSearchScreen('city', -1, '');
+                        nav.customSearchContent.value = PlaceDetails(item: city);
+                        nav.changeIndex(1);
                   },
                     child: _buildCityCard(city, imageHeight: 180)),
               );

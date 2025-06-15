@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kaldmv/User/Views/features/Home/home%20widget/ai_generated_tour_plan/view/tour_plan_screen.dart';
+import 'package:kaldmv/User/Views/features/Home/views/city_details.dart';
+import 'package:kaldmv/User/Views/features/Home/views/popular_cities.dart';
 import 'package:kaldmv/core/global_widegts/custom_button.dart';
 import '../../../../../core/global_widegts/custom_header.dart';
 import '../../../../../core/global_widegts/custom_text_field.dart';
@@ -35,11 +38,10 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10.h),
-              // AI Suggestion Button (Hidden when panel is visible)
+              // AI Suggestion Button (Toggles to show AI Suggestion Panel)
               Obx(() {
-                return controller.showAISuggestionPanel.value
-                    ? const SizedBox.shrink()
-                    : CustomButton(
+                return !controller.showAISuggestionPanel.value
+                    ? CustomButton(
                         borderRadius: 12.r,
                         backgroundImagePath: 'assets/images/ai_image.png',
                         prefixIconPath: 'assets/images/ai.png',
@@ -47,9 +49,10 @@ class HomePage extends StatelessWidget {
                         text: 'Use Advance AI Suggestion',
                         onPressed: () {
                           controller.showAISuggestionPanel.value =
-                              !controller.showAISuggestionPanel.value;
+                              true; // Show panel on first click
                         },
-                      );
+                      )
+                    : const SizedBox.shrink();
               }),
               // AI Suggestion Panel
               Obx(() {
@@ -165,7 +168,8 @@ class HomePage extends StatelessWidget {
                                     () => CustomTextField(
                                       textEditingController:
                                           controller.durationController,
-                                      prefixIconPath: 'assets/images/timer1.png',
+                                      prefixIconPath:
+                                          'assets/images/timer1.png',
                                       isDropdown: true,
                                       dropdownItems: controller.durationTimes,
                                       selectedDropdownValue:
@@ -197,7 +201,8 @@ class HomePage extends StatelessWidget {
                                           TextEditingController(
                                             text: controller.endTime.value,
                                           ),
-                                      prefixIconPath: 'assets/images/timer1.png',
+                                      prefixIconPath:
+                                          'assets/images/timer1.png',
                                       isDropdown: true,
                                       dropdownItems: controller.durationTimes,
                                       selectedDropdownValue:
@@ -368,7 +373,7 @@ class HomePage extends StatelessWidget {
                               fontWeight: FontWeight.w400,
                             ),
                             SizedBox(height: 10.h),
-                            // Generate Button
+                            // Generate AI Suggestions Button (Navigates to TourPlanScreen)
                             CustomButton(
                               borderRadius: 12.r,
                               backgroundImagePath: 'assets/images/ai_image.png',
@@ -376,8 +381,32 @@ class HomePage extends StatelessWidget {
                               width: screenWidth * 0.9,
                               text: 'Generate AI Suggestions',
                               onPressed: () {
+                                // Collect data from controllers
+                                final tourPlanData = {
+                                  'country': controller.countryController.text,
+                                  'city': controller.cityController.text,
+                                  'date': controller.dateController.text,
+                                  'duration':
+                                      controller.durationController.text,
+                                  'budget': controller.budgetController.text,
+                                  'groupType':
+                                      controller.groupTypeController.text,
+                                  'filePath':
+                                      controller.filePathController.text,
+                                  'specialRequirements': controller
+                                      .specialRequirementController
+                                      .text,
+                                };
+                                final BottomNavController nav =
+                                    Get.find<BottomNavController>();
+                                nav.customSearchContent.value = TourPlanScreen(
+                                  tourPlanData: tourPlanData,
+                                );
+                                nav.changeIndex(
+                                  1,
+                                ); // Navigate to TourPlanScreen
                                 controller.showAISuggestionPanel.value =
-                                    !controller.showAISuggestionPanel.value;
+                                    false; // Hide panel
                               },
                             ),
                           ],
@@ -461,10 +490,10 @@ class HomePage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Popular Countries',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -576,7 +605,13 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        final BottomNavController nav =
+                            Get.find<BottomNavController>();
+                        nav.openSearchScreen('city', -1, '');
+                        nav.customSearchContent.value = PopularCities();
+                        nav.changeIndex(1);
+                      },
                       child: const Text(
                         'See all',
                         style: TextStyle(color: Color(0xFFF97C68)),
@@ -597,8 +632,11 @@ class HomePage extends StatelessWidget {
                       final city = controller.popularCities[index];
                       return GestureDetector(
                         onTap: () {
-                          final BottomNavController nav = Get.find();
-                          nav.openSearchScreen('city', index, city.name);
+                          final BottomNavController nav =
+                              Get.find<BottomNavController>();
+                          nav.openSearchScreen('city', -1, '');
+                          nav.customSearchContent.value = CityDetails();
+                          nav.changeIndex(1);
                         },
                         child: Container(
                           margin: EdgeInsets.only(right: 10.w),
@@ -635,6 +673,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 20.h),
             ],
           ),
         ),
