@@ -123,7 +123,7 @@ class TourPlanScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildDetailItem(
-          tourPlan.destination,
+          'Destination: ${tourPlan.destination}',
           'assets/images/location.png',
         ),
         _buildDetailItem(
