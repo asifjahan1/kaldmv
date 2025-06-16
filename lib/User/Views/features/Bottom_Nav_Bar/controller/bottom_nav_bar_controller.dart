@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/view/add_new_item_screen.dart';
 import 'package:kaldmv/User/Views/features/Home/views/home_page.dart';
 import 'package:kaldmv/User/Views/features/Search/view/search_screen.dart';
 import '../../Home/views/tsfs_screen.dart';
@@ -9,6 +10,8 @@ class BottomNavController extends GetxController {
   var searchType = ''.obs;
   var searchIndex = 0.obs;
   var searchPlaceName = ''.obs;
+
+  static const int addItemScreenIndex = 4;
 
   var customSearchContent = Rx<Widget?>(null);
   var customTab2Content = Rxn<Widget>();
@@ -48,9 +51,15 @@ class BottomNavController extends GetxController {
         );
       case 2:
         return customTab2Content.value ??
-            const Center(child: Text('Wishlist', style: TextStyle(color: Colors.black)));
+            const Center(
+              child: Text('Wishlist', style: TextStyle(color: Colors.black)),
+            );
       case 3:
-        return const Center(child: Text('Profile', style: TextStyle(color: Colors.black)));
+        return const Center(
+          child: Text('Profile', style: TextStyle(color: Colors.black)),
+        );
+      case addItemScreenIndex:
+        return AddNewItemScreen();
       default:
         return HomePage();
     }

@@ -388,19 +388,19 @@ class TourPlanController extends GetxController {
           day: 'Day $i',
           description: 'Arrival & Coastal Relaxation',
           theme: i == 1
-              ? 'Arrival & Exploration'
+              ? "Settling in and enjoying Jeddah's waterfront"
               : i == days
               ? 'Departure & Reflection'
               : 'Day $i Activities',
           scheduleItems: [
             ScheduleItem(
               time: i == 1
-                  ? 'Time: 14:00'
+                  ? '14:00'
                   : i == days
                   ? 'Time: 16:00-18:00'
                   : 'Time: 14:00-14:30',
               activity: i == 1
-                  ? 'Arrival'
+                  ? 'Airport Arrival'
                   : i == days
                   ? 'Departure'
                   : 'Activity $i',

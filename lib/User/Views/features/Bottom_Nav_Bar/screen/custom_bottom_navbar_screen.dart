@@ -16,12 +16,7 @@ class BottomNavScreen extends StatelessWidget {
     Icons.person_outline,
   ];
 
-  final List<String> labels = [
-    "Home",
-    "Search",
-    "Wishlist",
-    "Profile",
-  ];
+  final List<String> labels = ["Home", "Search", "Wishlist", "Profile"];
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +24,7 @@ class BottomNavScreen extends StatelessWidget {
       body: Obx(() => controller.currentScreen),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Obx(
-            () => Container(
+        () => Container(
           height: 100.h,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -100,18 +95,21 @@ class BottomNavScreen extends StatelessWidget {
               // FAB positioned inside the container
               Positioned(
                 top: 10.h,
-                left: MediaQuery.of(context).size.width/2 - 28,
+                left: MediaQuery.of(context).size.width / 2 - 28,
                 child: FloatingActionButton(
                   backgroundColor: Color(0xFFF97C68),
                   onPressed: () {
                     log("Central action tapped!");
+                    controller.changeIndex(
+                      BottomNavController.addItemScreenIndex,
+                    );
                   },
                   shape: CircleBorder(),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100.r),
                     ),
-                      child: Icon(Icons.add, size: 30, color: Colors.white),
+                    child: Icon(Icons.add, size: 30, color: Colors.white),
                   ),
                 ),
               ),

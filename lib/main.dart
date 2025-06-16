@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
+import 'package:kaldmv/User/Views/features/Home/controller/drawer_controller.dart';
 import 'package:kaldmv/User/Views/features/Home/controller/home_controller.dart';
 import 'package:kaldmv/User/Views/features/Search/controller/search_controller.dart';
 import 'User/Views/features/Home/controller/header_controller.dart';
@@ -19,6 +20,7 @@ void main() async {
   Get.put(BottomNavController(), permanent: true);
   Get.put(HeaderController(), permanent: true);
   Get.put(TSFSController(), permanent: true);
+  Get.put(DrawerControllerX(), permanent: true);
 
   runApp(const MyApp());
 }
@@ -43,20 +45,17 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 640),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder:
-          (context, child) => GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'kaldmv',
-            getPages: AppRoute.routes,
-            initialRoute: AppRoute.splashScreen,
-            builder: EasyLoading.init(),
-            theme: ThemeData(
-              fontFamily: GoogleFonts.dmSans().fontFamily,
-              textTheme: GoogleFonts.dmSansTextTheme(
-                Theme.of(context).textTheme,
-              ),
-            ),
-          ),
+      builder: (context, child) => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'kaldmv',
+        getPages: AppRoute.routes,
+        initialRoute: AppRoute.splashScreen,
+        builder: EasyLoading.init(),
+        theme: ThemeData(
+          fontFamily: GoogleFonts.dmSans().fontFamily,
+          textTheme: GoogleFonts.dmSansTextTheme(Theme.of(context).textTheme),
+        ),
+      ),
     );
   }
 }

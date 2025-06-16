@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/view/add_new_item_screen.dart';
 import 'package:kaldmv/User/Views/features/Home/views/tsfs_screen.dart';
 
 import '../User/Auth/screens/forget_pasword_screen.dart';
@@ -11,6 +12,7 @@ class AppRoute {
   static String forgetScreen = "/forgetScreen";
   static String resetPassScreen = "/resetPassScreen";
   static String tsfsScreen = "/tsfsScreen";
+  static String addNewItemScreen = "/addNewItemScreen";
 
   static String getSplashScreen() => splashScreen;
 
@@ -21,6 +23,8 @@ class AppRoute {
   static String getResetPassScreen() => resetPassScreen;
 
   static String getTSFSScreen() => tsfsScreen;
+  
+  static String getAddNewItemScreen() => addNewItemScreen;
 
   static List<GetPage> routes = [
     GetPage(name: splashScreen, page: () => SplashScreen()),
@@ -28,5 +32,6 @@ class AppRoute {
     GetPage(name: forgetScreen, page: () => ForgetPasswordScreen()),
     // GetPage(name: resetPassScreen, page: () => ResetPassword()),
     GetPage(name: tsfsScreen, page: () => TSFSScreen()),
+    GetPage(name: addNewItemScreen, page: () => AddNewItemScreen()),
   ];
 }

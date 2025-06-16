@@ -147,6 +147,7 @@ class TourPlanScreen extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Image.asset(iconPath, height: 24.h, width: 24.w),
           SizedBox(width: 8.w),
@@ -174,10 +175,30 @@ class TourPlanScreen extends StatelessWidget {
           ),
         ),
         SizedBox(height: 5.h),
-        Text(
-          'Theme: ${schedule.theme}',
-          style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: 'Theme: ',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF72544F),
+                ),
+              ),
+              TextSpan(
+                text: schedule.theme,
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+              ),
+            ],
+          ),
         ),
+
+        // Text(
+        //   'Theme: ${schedule.theme}',
+        //   style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+        // ),
         SizedBox(height: 10.h),
         // Dynamically render all ScheduleItems
         ...schedule.scheduleItems.asMap().entries.map((entry) {
@@ -214,24 +235,88 @@ class TourPlanScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        item.time,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Time: ',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF72544F),
+                              ),
+                            ),
+                            TextSpan(
+                              text: item.time,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Color(0xFF72544F),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+
+                      // Text(
+                      //   item.time,
+                      //   style: TextStyle(
+                      //     fontSize: 14.sp,
+                      //     fontWeight: FontWeight.bold,
+                      //     color: Colors.black,
+                      //   ),
+                      // ),
                       SizedBox(height: 2.h),
-                      Text(
-                        item.activity,
-                        style: TextStyle(fontSize: 14.sp, color: Colors.black),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Activity: ',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF72544F),
+                              ),
+                            ),
+                            TextSpan(
+                              text: item.activity,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Color(0xFF72544F),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                      // Text(
+                      //   item.activity,
+                      //   style: TextStyle(fontSize: 14.sp, color: Colors.black),
+                      // ),
                       SizedBox(height: 2.h),
-                      Text(
-                        item.details,
-                        style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Details: ',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF72544F),
+                              ),
+                            ),
+                            TextSpan(
+                              text: item.details,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Color(0xFF72544F),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                      // Text(
+                      //   item.details,
+                      //   style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                      // ),
                       SizedBox(height: 10.h),
                       Divider(color: Color(0xFFEEE5E4)),
                       SizedBox(height: 10.h),
