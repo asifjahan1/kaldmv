@@ -1,25 +1,39 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kaldmv/User/Views/features/Add_New_Item/controller/add_new_item_controller.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/contact_info_section.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/dotted_builder_widget.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/faq_section.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/featured_checkbox_section.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/general_section.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/highlight_section.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/location_section.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/media_section.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/menu_section.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/opening_hours_section.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/social_network_section.dart';
 import 'package:kaldmv/User/Views/features/Home/views/custom_drawer.dart';
+import 'package:kaldmv/core/global_widegts/custom_button.dart';
 import 'package:kaldmv/core/global_widegts/custom_header.dart';
-import 'package:kaldmv/core/global_widegts/custom_text_field.dart';
 
 class AddNewItemScreen extends StatelessWidget {
   const AddNewItemScreen({super.key});
 
+  final LatLng placeLatLng = const LatLng(21.4858, 39.1925);
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     final controller = Get.put(AddNewItemController());
 
     return Scaffold(
       drawer: const CustomDrawer(),
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFF7F7F7),
       body: SafeArea(
         child: Column(
           children: [
@@ -33,326 +47,171 @@ class AddNewItemScreen extends StatelessWidget {
             ),
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                padding: EdgeInsets.symmetric(vertical: 12.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Add new place",
-                      style: GoogleFonts.dmSans(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Text(
+                        "Add new place",
+                        style: GoogleFonts.dmSans(
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     SizedBox(height: 16.h),
 
                     /// GENERAL
-                    Text(
-                      "General",
-                      style: GoogleFonts.dmSans(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      height: 650.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: GeneralSection(
+                        controller: controller,
+                        buildCustomQuillField:
+                            ({
+                              required quill.QuillController controller,
+                              required String label,
+                            }) => _buildCustomQuillField(
+                              controller: controller,
+                              label: label,
+                            ),
                       ),
                     ),
-                    SizedBox(height: 8.h),
-
-                    Text(
-                      'Place Name*',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    SizedBox(height: 5.h),
-                    CustomTextField(
-                      textEditingController: controller.placeNameController,
-                      hintText: 'What the name of place',
-                      fillColor: Colors.white,
-                      borderSide: BorderSide(
-                        color: const Color(0xFF000000).withOpacity(0.3),
-                      ),
-                      hintTextColor: const Color(0xFFC3C0C0),
-                      fontSize: 14.sp,
-                      height: 40.h,
-                    ),
-                    SizedBox(height: 10.h),
-
-                    Text(
-                      'Price*',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    SizedBox(height: 5.h),
-                    CustomTextField(
-                      textEditingController: controller.priceController,
-                      hintText: 'Only Numbers',
-                      fillColor: Colors.white,
-                      borderSide: BorderSide(
-                        color: const Color(0xFF000000).withOpacity(0.3),
-                      ),
-                      hintTextColor: const Color(0xFFC3C0C0),
-                      fontSize: 14.sp,
-                      height: 40.h,
-                    ),
-                    CustomTextField(
-                      textEditingController: controller.hourController,
-                      hintText: 'Hour',
-                      fillColor: Colors.white,
-                      borderSide: BorderSide(
-                        color: const Color(0xFF000000).withOpacity(0.3),
-                      ),
-                      hintTextColor: const Color(0xFFC3C0C0),
-                      fontSize: 14.sp,
-                      height: 40.h,
-                      isDropdown: true,
-                      dropdownItems: controller.hourItems,
-                      selectedDropdownValue: controller.selectedHour.value,
-                      onDropdownChanged: (value) =>
-                          controller.selectedHour.value = value!,
-                    ),
-                    CustomTextField(
-                      textEditingController: controller.noneController,
-                      hintText: 'None',
-                      fillColor: Colors.white,
-                      borderSide: BorderSide(
-                        color: const Color(0xFF000000).withOpacity(0.3),
-                      ),
-                      hintTextColor: const Color(0xFFC3C0C0),
-                      fontSize: 14.sp,
-                      height: 40.h,
-                      isDropdown: true,
-                      dropdownItems: controller.noneItems,
-                      selectedDropdownValue: controller.selectedNone.value,
-                      onDropdownChanged: (value) =>
-                          controller.selectedNone.value = value!,
-                    ),
-                    SizedBox(height: 10.h),
-                    _buildCustomQuillField(
-                      controller: controller.descriptionController,
-                      label: "Description*",
-                    ),
-                    Text(
-                      'Category*',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    SizedBox(height: 5.h),
-
-                    CustomTextField(
-                      textEditingController: controller.categoryController,
-                      hintText: 'Select Category',
-                      fillColor: Colors.white,
-                      borderSide: BorderSide(
-                        color: const Color(0xFF000000).withOpacity(0.3),
-                      ),
-                      hintTextColor: const Color(0xFFC3C0C0),
-                      fontSize: 14.sp,
-                      height: 40.h,
-                      isDropdown: true,
-                      dropdownItems: controller.categoryItems,
-                      selectedDropdownValue: controller.selectedCategory.value,
-                      onDropdownChanged: (value) =>
-                          controller.selectedCategory.value = value!,
-                    ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      'Place Type*',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    SizedBox(height: 5.h),
-                    CustomTextField(
-                      textEditingController: controller.placeTypeController,
-                      hintText: 'Indoor',
-                      hintTextColor: const Color(0xFFC3C0C0),
-                      fillColor: Colors.white,
-                      borderSide: BorderSide(
-                        color: const Color(0xFF000000).withOpacity(0.3),
-                      ),
-                      fontSize: 14.sp,
-                      height: 40.h,
-                      isDropdown: true,
-                      dropdownItems: controller.placeTypeItems,
-                      selectedDropdownValue: controller.selectedPlaceType.value,
-                      onDropdownChanged: (value) =>
-                          controller.selectedPlaceType.value = value!,
-                    ),
-                    SizedBox(height: 16.h),
+                    SizedBox(height: 30.h),
 
                     /// HIGHLIGHTS
-                    Text(
-                      "Highlights",
-                      style: GoogleFonts.dmSans(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Wrap(
-                      spacing: 10.w,
-                      runSpacing: 10.h,
-                      children:
-                          [
-                                "Air Condition",
-                                "Car Parking",
-                                "Cocktails",
-                                "Credit Cards",
-                                "Non Smoking",
-                                "Reservations",
-                                "Swimming Pool",
-                                "WiFi",
-                              ]
-                              .map(
-                                (item) => FilterChip(
-                                  label: Text(
-                                    item,
-                                    style: GoogleFonts.dmSans(fontSize: 12.sp),
-                                  ),
-                                  selected: false,
-                                  onSelected: (_) {},
-                                  backgroundColor: Colors.grey[200],
-                                  labelStyle: const TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                    ),
-
-                    SizedBox(height: 24.h),
-                    Text(
-                      "Menu",
-                      style: GoogleFonts.dmSans(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-
-                    Text(
-                      'Name*',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    SizedBox(height: 5.h),
-                    CustomTextField(
-                      textEditingController: controller.menuNameController,
-                      hintText: 'Item Name',
-                      fillColor: Colors.white,
-                      borderSide: BorderSide(
-                        color: const Color(0xFF000000).withOpacity(0.3),
-                      ),
-                      hintTextColor: const Color(0xFFC3C0C0),
-                      fontSize: 14.sp,
-                      height: 40.h,
-                    ),
-                    SizedBox(height: 5.h),
-                    Text(
-                      'Price*',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    SizedBox(height: 5.h),
-                    CustomTextField(
-                      textEditingController: controller.itemPriceController,
-                      hintText: 'Item Price',
-                      fillColor: Colors.white,
-                      borderSide: BorderSide(
-                        color: const Color(0xFF000000).withOpacity(0.3),
-                      ),
-                      hintTextColor: const Color(0xFFC3C0C0),
-                      fontSize: 14.sp,
-                      height: 40.h,
-                      isDropdown: true,
-                      dropdownItems: controller.itemPriceItems,
-                      selectedDropdownValue: controller.selectedItemPrice.value,
-                      onDropdownChanged: (value) =>
-                          controller.selectedItemPrice.value = value!,
-                    ),
-                    SizedBox(height: 5.h),
-                    Text(
-                      'Type*',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    SizedBox(height: 5.h),
-                    CustomTextField(
-                      textEditingController: controller.typeController,
-                      hintText: 'Choose type',
-                      fillColor: Colors.white,
-                      borderSide: BorderSide(
-                        color: const Color(0xFF000000).withOpacity(0.3),
-                      ),
-                      hintTextColor: const Color(0xFFC3C0C0),
-                      fontSize: 14.sp,
-                      height: 40.h,
-                    ),
-                    _buildCustomQuillField(
-                      controller: controller.menuDescriptionController,
-                      label: "Description*",
-                    ),
-
-                    SizedBox(height: 16.h),
-                    Text(
-                      "Item Image*",
-                      style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
                     Container(
-                      height: 120.h,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(8.r),
+                      height: 200.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white),
+
+                      child: HighlightsSection(
+                        items: [
+                          "Air Condition",
+                          "Car Parking",
+                          "Cocktails",
+                          "Credit Cards",
+                          "Non Smoking",
+                          "Reservations",
+                          "Swimming Pool",
+                          "WiFi",
+                        ],
                       ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.cloud_upload_outlined,
-                              size: 40,
-                              color: Colors.grey,
+                    ),
+
+                    SizedBox(height: 30.h),
+
+                    /// Menu
+                    Container(
+                      height: 725.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: MenuSection(
+                        controller: controller,
+                        buildCustomQuillField:
+                            ({
+                              required quill.QuillController controller,
+                              required String label,
+                            }) => _buildCustomQuillField(
+                              controller: controller,
+                              label: label,
                             ),
-                            SizedBox(height: 8.h),
-                            RichText(
-                              text: TextSpan(
-                                text: "Drag your file(s) or ",
-                                style: GoogleFonts.dmSans(color: Colors.black),
-                                children: [
-                                  TextSpan(
-                                    text: "browse",
-                                    style: GoogleFonts.dmSans(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              "Max 10MB files are allowed",
-                              style: GoogleFonts.dmSans(
-                                fontSize: 12.sp,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 30.h),
+
+                    Container(
+                      height: 650.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: LocationSection(
+                        controller: controller,
+                        placeLatLng: LatLng(24.7136, 46.6753), // Riyadh
+                      ),
+                    ),
+
+                    SizedBox(height: 30.h),
+
+                    /// Contact Info
+                    Container(
+                      height: 340.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: ContactInfoSection(controller: controller),
+                    ),
+
+                    SizedBox(height: 30.h),
+
+                    /// Social Network
+                    Container(
+                      height: 270.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: SocialNetworkSection(controller: controller),
+                    ),
+
+                    SizedBox(height: 30.h),
+
+                    /// Opening Hours
+                    Container(
+                      height: 550.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: OpeningHoursSection(controller: controller),
+                    ),
+
+                    SizedBox(height: 30.h),
+
+                    /// Media
+                    Container(
+                      height: 580.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: MediaSection(
+                        controller: controller,
+                        buildDottedBorderWidget: buildDottedBorderWidget,
+                      ),
+                    ),
+
+                    SizedBox(height: 30.h),
+
+                    /// FAQ Section
+                    Container(
+                      height: 560.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: FAQSection(
+                        controller: controller,
+                        sw: screenWidth,
+                      ),
+                    ),
+
+                    SizedBox(height: 30.h),
+
+                    /// Mark this place as featured
+                    Container(
+                      height: 100.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: FeaturedCheckbox(controller: controller),
+                    ),
+
+                    SizedBox(height: 30.h),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: CustomButton(
+                        onPressed: () {},
+                        text: 'Submit',
+                        fontSize: 20.sp,
+                        textColor: const Color(0xFFFFFFFF),
+                        backgroundColor: Color(0xFFF97C68),
+                        borderRadius: 16.r,
+                        centerText: true,
                       ),
                     ),
                     SizedBox(height: 30.h),

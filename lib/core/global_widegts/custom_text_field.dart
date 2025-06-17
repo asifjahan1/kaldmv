@@ -115,7 +115,7 @@ class CustomTextField extends StatelessWidget {
                       onTap?.call();
                       controller.toggleDropdown();
                     },
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.dmSans(
                       fontSize: fontSize ?? 16.sp,
                       fontWeight: fontWeight ?? FontWeight.w400,
                       height: lineHeight ?? 24.h / 16.h,
@@ -127,7 +127,7 @@ class CustomTextField extends StatelessWidget {
                         horizontal: 10.w,
                       ),
                       hintText: hintText,
-                      hintStyle: GoogleFonts.poppins(
+                      hintStyle: GoogleFonts.dmSans(
                         fontSize: fontSize ?? 14.sp,
                         fontWeight: fontWeight ?? FontWeight.w300,
                         height: lineHeight ?? 24.h / 16.h,
@@ -203,7 +203,7 @@ class CustomTextField extends StatelessWidget {
                                   ),
                                   child: Text(
                                     item,
-                                    style: GoogleFonts.poppins(
+                                    style: GoogleFonts.dmSans(
                                       fontSize: fontSize ?? 14.sp,
                                       fontWeight: fontWeight ?? FontWeight.w300,
                                       color: textColor ?? Colors.black,
@@ -226,7 +226,7 @@ class CustomTextField extends StatelessWidget {
                 validator: validator,
                 readOnly: readOnly,
                 onTap: onTap,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.dmSans(
                   fontSize: fontSize ?? 16.sp,
                   fontWeight: fontWeight ?? FontWeight.w400,
                   height: lineHeight ?? 24.h / 16.h,
@@ -238,7 +238,7 @@ class CustomTextField extends StatelessWidget {
                     horizontal: 10.w,
                   ),
                   hintText: hintText,
-                  hintStyle: GoogleFonts.poppins(
+                  hintStyle: GoogleFonts.dmSans(
                     fontSize: fontSize ?? 14.sp,
                     fontWeight: fontWeight ?? FontWeight.w300,
                     height: lineHeight ?? 24.h / 16.h,
