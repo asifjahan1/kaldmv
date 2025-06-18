@@ -5,7 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'app_colors.dart';
 
 Widget loader() {
-  return Center(child: SpinKitWave(color: appDeepBlueColor, size: 30.h));
+  return Center(child: SpinKitWave(color: appDeepOrangeColor, size: 30.h));
 }
 
 Widget loader2() {

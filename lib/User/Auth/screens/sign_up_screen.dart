@@ -1,39 +1,28 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kaldmv/User/Auth/screens/login_screen.dart';
-
 import '../../../core/global_widegts/custom_button.dart';
 import '../controller/signup_controller.dart';
-import 'otp_very_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   final SignupController controller = Get.put(SignupController());
-  final RxString selectedRole = 'Guest'.obs;
 
   SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(height: 30.h),
-              Image.asset(
-                'assets/images/logo.png',
-                height: 64.h,
-                fit: BoxFit.cover,
-              ),
-
+              Image.asset('assets/images/logo.png', height: 64.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 20.h),
                 child: Column(
@@ -50,144 +39,85 @@ class SignUpScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 30.h),
-
-                    // Role Selection
-                    Obx(() => Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildRoleButton('Guest', selectedRole.value),
-                        // SizedBox(width: 10.w),
-                        _buildRoleButton('Owner', selectedRole.value),
-                      ],
-                    )),
-                    SizedBox(height: 20.h),
-
-                    // First Name
-                    TextField(
-                      controller: controller.firstNameController,
-                      decoration: const InputDecoration(
-                        hintText: 'First Name',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF867B79)),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF867B79)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 15.h),
-
-                    // Last Name
-                    TextField(
-                      controller: controller.lastNameController,
-                      decoration: const InputDecoration(
-                        hintText: 'Last Name',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF867B79)),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF867B79)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 15.h),
-
-                    // Company Name (only for Owner)
-                    Obx(() => selectedRole.value == 'Guest'
-                        ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextField(
-                          controller: controller.companyNameController,
-                          decoration: const InputDecoration(
-                            hintText: 'Company Name',
-                            hintStyle: TextStyle(color: Colors.grey),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF867B79)),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF867B79)),
-                            ),
+                    Obx(
+                      () => Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildRoleButton(
+                            'Guest',
+                            controller.selectedRole.value,
                           ),
-                        ),
-                        SizedBox(height: 15.h),
-                      ],
-                    )
-                        : const SizedBox(),
-                    ),
-
-                    // Email
-                    TextField(
-                      controller: controller.emailController,
-                      decoration: const InputDecoration(
-                        hintText: 'Email',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF867B79)),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF867B79)),
-                        ),
+                          _buildRoleButton(
+                            'Owner',
+                            controller.selectedRole.value,
+                          ),
+                        ],
                       ),
+                    ),
+                    SizedBox(height: 20.h),
+                    _buildTextField(
+                      controller.firstNameController,
+                      'First Name',
                     ),
                     SizedBox(height: 15.h),
-
-                    // Password
-                    TextField(
-                      controller: controller.passwordController,
-                      decoration: const InputDecoration(
-                        hintText: 'Password',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF867B79)),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF867B79)),
-                        ),
-                      ),
+                    _buildTextField(controller.lastNameController, 'Last Name'),
+                    SizedBox(height: 15.h),
+                    Obx(
+                      () => controller.isOwner
+                          ? Column(
+                              children: [
+                                _buildTextField(
+                                  controller.companyNameController,
+                                  'Company Name',
+                                ),
+                                SizedBox(height: 15.h),
+                              ],
+                            )
+                          : const SizedBox(),
+                    ),
+                    _buildTextField(controller.emailController, 'Email'),
+                    SizedBox(height: 15.h),
+                    _buildPasswordField(
+                      controller.passwordController,
+                      'Password',
+                      true,
+                    ),
+                    SizedBox(height: 15.h),
+                    _buildPasswordField(
+                      controller.confirmPasswordController,
+                      'Confirm Password',
+                      false,
                     ),
                     SizedBox(height: 30.h),
-
-                    // Sign Up Button
-                    Obx(() => controller.isLoading.value
-                        ? Center(
-                      child: SpinKitWave(color: Color(0xFFF97C68)),
-                    )
-                        : SizedBox(
-                      width: screenWidth * 0.9,
-                      height: 40.h,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Get.to(() => LoginScreen());
-                          Get.snackbar(
-                            'Great Work!',
-                            'Sign Up Successfully!',
-                            backgroundColor: Colors.green,
-                            colorText: Colors.white,
-                            snackPosition: SnackPosition.TOP,
-                            duration: Duration(milliseconds: 1800),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF97C68),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(80.r),
-                          ),
-                        ),
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
+                    Obx(
+                      () => controller.isLoading.value
+                          ? Center(
+                              child: SpinKitWave(
+                                color: const Color(0xFFF97C68),
+                              ),
+                            )
+                          : SizedBox(
+                              width: screenWidth * 0.9,
+                              height: 40.h,
+                              child: ElevatedButton(
+                                onPressed: controller.signUp,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFF97C68),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(80.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
                     ),
                     SizedBox(height: 20.h),
-
                     CustomButton(
                       onPressed: () {},
                       text: 'Continue with Google',
@@ -195,7 +125,7 @@ class SignUpScreen extends StatelessWidget {
                       textColor: Colors.black,
                       backgroundColor: Colors.transparent,
                       width: screenWidth * 0.9,
-                      borderSide: BorderSide(color: Color(0xFF867B79)),
+                      borderSide: const BorderSide(color: Color(0xFF867B79)),
                       borderRadius: 80.r,
                     ),
                     SizedBox(height: 10.h),
@@ -206,97 +136,79 @@ class SignUpScreen extends StatelessWidget {
                       textColor: Colors.black,
                       backgroundColor: Colors.transparent,
                       width: screenWidth * 0.9,
-                      borderSide: BorderSide(color: Color(0xFF867B79)),
+                      borderSide: const BorderSide(color: Color(0xFF867B79)),
                       borderRadius: 80.r,
                     ),
-
                     SizedBox(height: 20.h),
-
-                    // Terms and Privacy Policy Checkbox
                     Row(
                       children: [
-                        Obx(() => Checkbox(
-                          value: controller.acceptTerms.value,
-                          onChanged: (value) => controller.acceptTerms.value = value!,
-                          fillColor: WidgetStateProperty.resolveWith<Color>(
-                                (Set<WidgetState> states) {
-                              if (states.contains(WidgetState.selected)) {
-                                return const Color(0xFFF97C68);
-                              }
-                              return Colors.transparent;
-                            },
+                        Obx(
+                          () => Checkbox(
+                            value: controller.acceptTerms.value,
+                            onChanged: (val) =>
+                                controller.acceptTerms.value = val!,
+                            fillColor: WidgetStateProperty.resolveWith<Color>((
+                              states,
+                            ) {
+                              return states.contains(WidgetState.selected)
+                                  ? const Color(0xFFF97C68)
+                                  : Colors.grey;
+                            }),
                           ),
-                        )),
-                        RichText(
-                          text: TextSpan(
-                            text: 'Accept the ',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16.sp,
+                        ),
+                        Flexible(
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Accept the ',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16.sp,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: 'Terms',
+                                  style: TextStyle(
+                                    color: Color(0xFFF97C68),
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                const TextSpan(
+                                  text: ' and ',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                TextSpan(
+                                  text: 'Privacy Policy',
+                                  style: TextStyle(
+                                    color: Color(0xFFF97C68),
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ],
                             ),
-                            children: [
-                              TextSpan(
-                                text: 'Terms',
-                                style: TextStyle(
-                                  color: Color(0xFFF97C68),
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                              TextSpan(
-                                text: ' and ',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16.sp,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'Privacy Policy',
-                                style: TextStyle(
-                                  color: Color(0xFFF97C68),
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ],
                           ),
                         ),
                       ],
                     ),
                     SizedBox(height: 10.h),
-
-                    // Already have an account
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            'Already have an account?',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18.sp,
-                            ),
-                          ),
+                        Text(
+                          'Already have an account?',
+                          style: TextStyle(fontSize: 16.sp),
                         ),
-
+                        SizedBox(width: 5.w),
                         GestureDetector(
-                          onTap: () {
-                            Get.to(() => LoginScreen());
-                            // Get.snackbar('Successful!', 'Sign Up Successful! Please Log In',
-                            // backgroundColor: Colors.green,
-                            // );
-                            log('login tapped===========');
-                          },
+                          onTap: () => Get.to(() => LoginScreen()),
                           child: Text(
                             'Log In',
                             style: TextStyle(
-                              fontSize: 18.sp,
+                              fontSize: 16.sp,
                               color: const Color(0xFFF97C68),
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
-                              decorationColor: Color(0xFFF97C68),
-                              decorationThickness: 2,
                             ),
                           ),
                         ),
@@ -313,44 +225,91 @@ class SignUpScreen extends StatelessWidget {
   }
 
   Widget _buildRoleButton(String role, String selectedRole) {
+    final isSelected = role == selectedRole;
     return GestureDetector(
-      onTap: () => this.selectedRole.value = role,
+      onTap: () => controller.changeRole(role),
       child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 5.w),
         padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 10.h),
         decoration: BoxDecoration(
-          color: role == selectedRole
-              ? const Color(0xFF21BABA)
-              : const Color(0xFFF5E5E5),
+          color: isSelected ? const Color(0xFF21BABA) : const Color(0xFFF5E5E5),
           borderRadius: BorderRadius.circular(5.r),
           border: Border.all(
-            color: role == selectedRole
+            color: isSelected
                 ? const Color(0xFF21BABA)
                 : const Color(0xFFF5E5E5),
           ),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               role == 'Guest' ? Icons.person : Icons.store,
-              color: role == selectedRole
-                  ? Colors.white
-                  : Colors.black,
+              color: isSelected ? Colors.white : Colors.black,
               size: 18.sp,
             ),
             SizedBox(width: 5.w),
             Text(
               role,
               style: TextStyle(
-                color: role == selectedRole
-                    ? Colors.white
-                    : Colors.black,
                 fontSize: 14.sp,
+                color: isSelected ? Colors.white : Colors.black,
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hint) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: const TextStyle(color: Colors.grey),
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFF867B79)),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFF867B79)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField(
+    TextEditingController controller,
+    String hint,
+    bool isMainPassword,
+  ) {
+    return Obx(() {
+      final isVisible = isMainPassword
+          ? this.controller.isPasswordVisible.value
+          : this.controller.isConfirmPasswordVisible.value;
+      return TextField(
+        controller: controller,
+        obscureText: !isVisible,
+        decoration: InputDecoration(
+          hintText: hint,
+          suffixIcon: IconButton(
+            icon: Icon(
+              isVisible ? Icons.visibility : Icons.visibility_off,
+              color: Colors.grey,
+            ),
+            onPressed: () {
+              isMainPassword
+                  ? this.controller.togglePasswordVisibility()
+                  : this.controller.toggleConfirmPasswordVisibility();
+            },
+          ),
+          enabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF867B79)),
+          ),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF867B79)),
+          ),
+        ),
+      );
+    });
   }
 }

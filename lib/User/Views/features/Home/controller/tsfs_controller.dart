@@ -6,12 +6,18 @@ import '../model/tsfs_item_model.dart';
 class TSFSController extends GetxController {
   final RxList<TSFSItem> items = <TSFSItem>[].obs;
   final RxList<TSFSItem> filteredItems = <TSFSItem>[].obs;
+  final RxList<TSFSItem> bookmarkedItems = <TSFSItem>[].obs;
   final RxString selectedValue = 'Open Now'.obs;
   final RxBool isGridView = false.obs;
   late final BottomNavController bottomNavController;
 
   // Dropdown filter options
-  List<String> get dropdownOptions => ['All', 'Open Now', 'Closed', 'Highly Rated'];
+  List<String> get dropdownOptions => [
+    'All',
+    'Open Now',
+    'Closed',
+    'Highly Rated',
+  ];
 
   @override
   void onInit() {
@@ -35,24 +41,29 @@ class TSFSController extends GetxController {
         rating: 0,
         isClosed: false,
         provider: 'Closed',
+        isBookmarked: false,
       ),
       TSFSItem(
         title: "King's Fountain",
         subTitle: 'Activity, Sight, Jeddah',
-        location: 'Meeza Internatuinal Tourism Services Co. LTD, AL Andalus, Jeddah, Saudi Arabia',
+        location:
+            'Meeza Internatuinal Tourism Services Co. LTD, AL Andalus, Jeddah, Saudi Arabia',
         imagePath: 'assets/images/king.png',
         rating: 4.5,
         isClosed: false,
         provider: 'Closed',
+        isBookmarked: false,
       ),
       TSFSItem(
         title: 'Fakeeh Aquarium',
         subTitle: 'Activity, Jeddah',
-        location: 'Fakieh Aquarium Next to Al Nawras, On oposite AL Shallal THeme Park- Cornice ROad Jeddah, Saudi Arabia.',
+        location:
+            'Fakieh Aquarium Next to Al Nawras, On oposite AL Shallal THeme Park- Cornice ROad Jeddah, Saudi Arabia.',
         imagePath: 'assets/images/fakeen.png',
         rating: 0,
         isClosed: false,
         provider: 'Closed',
+        isBookmarked: false,
       ),
       TSFSItem(
         title: 'Al Jazirah Stadium',
@@ -62,15 +73,18 @@ class TSFSController extends GetxController {
         rating: 0,
         isClosed: true,
         provider: 'Closed',
+        isBookmarked: false,
       ),
       TSFSItem(
         title: "King's Fountain",
         subTitle: 'Activity, Sight, Jeddah',
-        location: 'Meeza Internatuinal Tourism Services Co. LTD, AL Andalus, Jeddah, Saudi Arabia',
+        location:
+            'Meeza Internatuinal Tourism Services Co. LTD, AL Andalus, Jeddah, Saudi Arabia',
         imagePath: 'assets/images/king.png',
         rating: 4.5,
         isClosed: false,
         provider: 'Closed',
+        isBookmarked: false,
       ),
       TSFSItem(
         title: 'Elephant Rock',
@@ -80,6 +94,7 @@ class TSFSController extends GetxController {
         rating: 0,
         isClosed: false,
         provider: 'Closed',
+        isBookmarked: false,
       ),
     ];
 
@@ -102,7 +117,9 @@ class TSFSController extends GetxController {
         filteredItems.assignAll(items.where((item) => item.isClosed).toList());
         break;
       case 'Highly Rated':
-        filteredItems.assignAll(items.where((item) => item.rating >= 4.0).toList());
+        filteredItems.assignAll(
+          items.where((item) => item.rating >= 4.0).toList(),
+        );
         break;
       default:
         filteredItems.assignAll(items);
@@ -115,5 +132,19 @@ class TSFSController extends GetxController {
 
   void toggleView() {
     isGridView.value = !isGridView.value;
+  }
+
+  void toggleBookmark(int index) {
+    final item = filteredItems[index];
+    item.isBookmarked = !item.isBookmarked;
+    if (item.isBookmarked) {
+      if (!bookmarkedItems.contains(item)) {
+        bookmarkedItems.add(item);
+      }
+    } else {
+      bookmarkedItems.remove(item);
+    }
+    filteredItems.refresh();
+    bookmarkedItems.refresh();
   }
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:image_picker/image_picker.dart';
-
-import '../screens/otp_very_screen.dart';
+import 'package:kaldmv/User/Auth/screens/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupController extends GetxController {
   // Text Editing Controllers
@@ -14,14 +13,44 @@ class SignupController extends GetxController {
   final confirmPasswordController = TextEditingController();
 
   // Form Key
-  final formKey = GlobalKey<FormState>();
+  // final formKey = GlobalKey<FormState>();
 
   // Observables
-  var selectedRole = 'Guest'.obs; // 'A Guest' or 'Owner'
+  var selectedRole = 'Guest'.obs; // 'Guest' or 'Owner'
   var isPasswordVisible = false.obs;
   var isConfirmPasswordVisible = false.obs;
   var isLoading = false.obs;
   var acceptTerms = false.obs;
+
+  bool get isOwner => selectedRole.value == 'Owner';
+  bool get isGuest => selectedRole.value == 'Guest';
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadSelectedRole();
+  }
+
+  // Save selectedRole to SharedPreferences
+  Future<void> saveSelectedRole(String role) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_role', role);
+  }
+
+  // Load selectedRole from SharedPreferences
+  Future<void> loadSelectedRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedRole = prefs.getString('user_role');
+    if (savedRole != null && (savedRole == 'Guest' || savedRole == 'Owner')) {
+      selectedRole.value = savedRole;
+    }
+  }
+
+  // Change selected role and save it
+  void changeRole(String role) {
+    selectedRole.value = role;
+    saveSelectedRole(role); // ✅ save it when changed
+  }
 
   // Toggle password visibility
   void togglePasswordVisibility() {
@@ -33,55 +62,11 @@ class SignupController extends GetxController {
     isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
   }
 
-  // Change selected role
-  void changeRole(String role) {
-    selectedRole.value = role;
-  }
-
   // Validate required fields based on role
   bool validateFields() {
-    if (firstNameController.text.isEmpty) {
-      Get.snackbar('Error', 'First name is required',
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return false;
-    }
-
-    if (lastNameController.text.isEmpty) {
-      Get.snackbar('Error', 'Last name is required',
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return false;
-    }
-
-    if (selectedRole.value == 'Owner' && companyNameController.text.isEmpty) {
-      Get.snackbar('Error', 'Company name is required for Owners',
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return false;
-    }
-
-    if (emailController.text.isEmpty || !emailController.text.isEmail) {
-      Get.snackbar('Error', 'Valid email is required',
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return false;
-    }
-
-    if (passwordController.text.isEmpty || passwordController.text.length < 8) {
-      Get.snackbar('Error', 'Password must be at least 8 characters',
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return false;
-    }
-
-    if (passwordController.text != confirmPasswordController.text) {
-      Get.snackbar('Error', 'Passwords do not match',
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return false;
-    }
-
-    if (!acceptTerms.value) {
-      Get.snackbar('Error', 'Please accept Terms and Privacy Policy',
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return false;
-    }
-
+    /*
+    // Your validation logic here...
+    */
     return true;
   }
 
@@ -92,9 +77,12 @@ class SignupController extends GetxController {
     isLoading.value = true;
 
     try {
-      // Here you would typically call your API
-      // For now, we'll just simulate a successful signup
       await Future.delayed(const Duration(seconds: 2));
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_email', emailController.text.trim());
+      await prefs.setString('user_password', passwordController.text);
+      await prefs.setString('user_type', selectedRole.value);
 
       Get.snackbar(
         'Success',
@@ -103,13 +91,7 @@ class SignupController extends GetxController {
         colorText: Colors.white,
       );
 
-      // Navigate to OTP verification
-      Get.to(
-            () => OTPVerificationScreen(
-          email: emailController.text,
-          isForSignUp: true,
-        ),
-      );
+      Get.to(() => LoginScreen(isOwner: isOwner, isGuest: isGuest));
     } catch (e) {
       Get.snackbar(
         'Error',

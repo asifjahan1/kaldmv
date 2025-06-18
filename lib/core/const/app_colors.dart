@@ -25,5 +25,6 @@ class AppColors {
 
 const appBlueColor = Color(0xFF1F3892);
 const appDeepBlueColor = Color(0xFF142D84);
+const appDeepOrangeColor = Color(0xFFF97C68);
 const appIconBlueColor = Color(0xFF6E7FB9);
 const appBaseColor = Color(0xFFccd3e4);

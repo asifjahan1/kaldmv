@@ -6,6 +6,7 @@ class TSFSItem {
   final double rating;
   final bool isClosed;
   final String provider;
+  bool isBookmarked;
 
   TSFSItem({
     required this.title,
@@ -15,6 +16,7 @@ class TSFSItem {
     required this.rating,
     required this.isClosed,
     required this.provider,
+    this.isBookmarked = false,
   });
 
   factory TSFSItem.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class TSFSItem {
       imagePath: json['imagePath'] ?? '',
       rating: (json['rating'] ?? 0).toDouble(),
       isClosed: json['isClosed'] ?? false,
+      isBookmarked: json['isBookmarked'] ?? false,
       provider: json['provider'] ?? '',
     );
   }
@@ -37,6 +40,7 @@ class TSFSItem {
       'imagePath': imagePath,
       'rating': rating,
       'isClosed': isClosed,
+      'isBookmarked': isBookmarked,
       'provider': provider,
     };
   }
@@ -48,7 +52,9 @@ class TSFSItem {
     String? imagePath,
     double? rating,
     bool? isClosed,
+    bool? isBookmarked,
     String? provider,
+
   }) {
     return TSFSItem(
       title: title ?? this.title,
@@ -57,6 +63,7 @@ class TSFSItem {
       imagePath: imagePath ?? this.imagePath,
       rating: rating ?? this.rating,
       isClosed: isClosed ?? this.isClosed,
+      isBookmarked: isBookmarked ?? this.isBookmarked,
       provider: provider ?? this.provider,
     );
   }

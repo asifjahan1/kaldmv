@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../screens/success_screen.dart';
-import 'login_controller.dart';
+import '../services/otp_service.dart';
 
 class OTPController extends GetxController {
   final RxString otp = ''.obs;
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
-  final LoginController loginController = Get.find<LoginController>();
+
+  final OTPService _otpService = Get.put(OTPService());
 
   void updateOTP(String value) {
     otp.value = value;
-    errorMessage.value = ''; // Clear error on new input
+    errorMessage.value = '';
   }
 
   Future<void> verifyOTP({
@@ -26,17 +26,16 @@ class OTPController extends GetxController {
 
     isLoading.value = true;
     try {
-      // Call the existing verifyOTP method from LoginController
-      await loginController.verifyOTP(
+      await _otpService.verifyOTP(
         email: email,
         otp: otp.value,
         isForSignUp: isForSignUp,
       );
 
-      // Navigate based on isForSignUp
+      // Navigate to success screen (optional)
       Get.to(() => SuccessScreen());
     } catch (e) {
-      errorMessage.value = 'Invalid OTP or network error. Please try again.';
+      errorMessage.value = e.toString();
     } finally {
       isLoading.value = false;
     }
@@ -45,12 +44,11 @@ class OTPController extends GetxController {
   Future<void> resendOTP(String email) async {
     isLoading.value = true;
     try {
-      // Assuming LoginController has a resendOTP method
-      await loginController.resendOTP(email);
+      await _otpService.resendOTP(email);
       Get.snackbar(
         'Success',
         'OTP has been resent to $email',
-        backgroundColor: Color(0xFFFB4958),
+        backgroundColor: const Color(0xFFFB4958),
         colorText: Colors.white,
       );
     } catch (e) {

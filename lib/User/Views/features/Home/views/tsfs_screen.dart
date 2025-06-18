@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -442,14 +444,19 @@ class TSFSScreen extends StatelessWidget {
                                           right: 8.w,
                                           child: InkWell(
                                             onTap: () {
-                                              log('Bookmark Tapped');
+                                              controller.toggleBookmark(index);
+                                              log(
+                                                'Bookmark Tapped for ${item.title}, isBookmarked: ${item.isBookmarked}',
+                                              );
                                             },
                                             child: CircleAvatar(
                                               backgroundColor: Color(
                                                 0xFFFFFFFF,
                                               ).withAlpha(80),
                                               child: Image.asset(
-                                                'assets/images/bookmark1.png',
+                                                item.isBookmarked
+                                                    ? 'assets/images/bookmark22.png'
+                                                    : 'assets/images/bookmark1.png',
                                                 height: 20.h,
                                                 width: 20.w,
                                               ),

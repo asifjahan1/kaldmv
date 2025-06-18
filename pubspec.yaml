@@ -63,6 +63,7 @@ dependencies:
   youtube_player_flutter: ^9.1.1
   flutter_quill: ^11.4.1
   dotted_border: ^3.0.1
+  get_storage: ^2.1.1
 
 dev_dependencies:
   flutter_test:
