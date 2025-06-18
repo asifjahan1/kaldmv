@@ -12,9 +12,6 @@ class SignupController extends GetxController {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  // Form Key
-  // final formKey = GlobalKey<FormState>();
-
   // Observables
   var selectedRole = 'Guest'.obs; // 'Guest' or 'Owner'
   var isPasswordVisible = false.obs;
@@ -49,7 +46,7 @@ class SignupController extends GetxController {
   // Change selected role and save it
   void changeRole(String role) {
     selectedRole.value = role;
-    saveSelectedRole(role); // ✅ save it when changed
+    saveSelectedRole(role);
   }
 
   // Toggle password visibility
@@ -71,37 +68,19 @@ class SignupController extends GetxController {
   }
 
   // Sign up method
-  Future<void> signUp() async {
-    if (!validateFields()) return;
-
+  Future<void> signup() async {
     isLoading.value = true;
 
-    try {
-      await Future.delayed(const Duration(seconds: 2));
+    // You may add actual signup logic here (API call, etc.)
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user_email', emailController.text.trim());
-      await prefs.setString('user_password', passwordController.text);
-      await prefs.setString('user_type', selectedRole.value);
+    // Save the role after signup
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_role', selectedRole.value);
 
-      Get.snackbar(
-        'Success',
-        'Sign up successful!',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+    isLoading.value = false;
 
-      Get.to(() => LoginScreen(isOwner: isOwner, isGuest: isGuest));
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Sign up failed: ${e.toString()}',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    } finally {
-      isLoading.value = false;
-    }
+    // Navigate to LoginScreen after signup
+    Get.offAll(() => LoginScreen());
   }
 
   @override

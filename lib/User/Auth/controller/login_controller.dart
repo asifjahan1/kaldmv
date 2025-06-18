@@ -4,6 +4,9 @@ import 'package:get/get.dart';
 import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/screen/custom_bottom_navbar_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Views/features/Profile/views/Guest_profile/guest_profile.dart';
+import '../../Views/features/Profile/views/Owner_Profile/owner_profile.dart';
+
 class LoginController extends GetxController {
   // Text Editing Controllers
   final emailTEController = TextEditingController();
@@ -12,6 +15,7 @@ class LoginController extends GetxController {
   // Observables
   var isPasswordVisible = false.obs;
   var isLoginLoading = false.obs;
+  var storedRole = 'Guest'.obs;
 
   // Shared Preferences & Role
   late SharedPreferences _prefs;
@@ -30,24 +34,42 @@ class LoginController extends GetxController {
   // Initialize SharedPreferences
   Future<void> _initPrefs() async {
     _prefs = await SharedPreferences.getInstance();
-    _prefillData();
+    // _prefillData();
   }
 
   // Pre-fill login data if previously saved
-  Future<void> _prefillData() async {
-    final email = _prefs.getString('user_email') ?? '';
-    final role = _prefs.getString('user_type') ?? '';
+  // Future<void> _prefillData() async {
+  //   final email = _prefs.getString('user_email') ?? '';
+  //   final role = _prefs.getString('user_type') ?? '';
+  //
+  //   if (email.isNotEmpty) {
+  //     emailTEController.text = email;
+  //     _role.value = role;
+  //
+  //     if (kDebugMode) {
+  //       print('Prefilled email: $email');
+  //       print('Prefilled role: $role');
+  //     }
+  //   }
+  // }
 
-    if (email.isNotEmpty) {
-      emailTEController.text = email;
-      _role.value = role;
+  // LoginController er moddhe login method er sheshe:
+  Future<void> login() async {
+    // ...login logic
+    String role = 'owner'; // ba 'guest', ja user select kore signup/login e
 
-      if (kDebugMode) {
-        print('Prefilled email: $email');
-        print('Prefilled role: $role');
-      }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_role', role);
+
+    if (role == 'owner') {
+      Get.offAll(() => OwnerProfile(isOwner: true));
+    } else if (role == 'guest') {
+      Get.offAll(() => GuestProfile());
+    } else {
+      //Get.offAll(() => ErrorScreen(message: "Unknown user role: $role"));
     }
   }
+
 
   // Toggle password visibility
   void togglePasswordVisibility() {

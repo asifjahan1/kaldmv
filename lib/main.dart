@@ -7,6 +7,7 @@ import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_
 import 'package:kaldmv/User/Views/features/Home/controller/drawer_controller.dart';
 import 'package:kaldmv/User/Views/features/Home/controller/home_controller.dart';
 import 'package:kaldmv/User/Views/features/Search/controller/search_controller.dart';
+import 'User/Auth/controller/login_controller.dart';
 import 'User/Views/features/Home/controller/header_controller.dart';
 import 'User/Views/features/Home/controller/tsfs_controller.dart';
 import 'core/const/app_colors.dart';
@@ -16,6 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   configEasyLoading();
   Get.put(HomeController(), permanent: true);
+  Get.put(LoginController(), permanent: true);
   Get.put(SearchhController(), permanent: true);
   Get.put(BottomNavController(), permanent: true);
   Get.put(HeaderController(), permanent: true);

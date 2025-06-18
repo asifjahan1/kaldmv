@@ -6,6 +6,7 @@ import 'package:kaldmv/User/Views/features/Profile/views/Guest_profile/guest_pro
 import 'package:kaldmv/User/Views/features/Profile/views/Owner_Profile/owner_profile.dart';
 import 'package:kaldmv/User/Views/features/Search/view/search_screen.dart';
 import 'package:kaldmv/User/Views/features/Whishlist/views/whishlist_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Home/views/tsfs_screen.dart';
 
 class BottomNavController extends GetxController {
@@ -17,8 +18,8 @@ class BottomNavController extends GetxController {
   var searchIndex = 0.obs;
   var searchPlaceName = ''.obs;
 
-  // Role stored as reactive variable (default to 'Guest')
-  var storedRole = 'Guest'.obs;
+  // Role stored as reactive variable (default to 'guest')
+  var storedRole = 'guest'.obs;
 
   // Index for the "Add New Item" screen for easy reference
   static const int addItemScreenIndex = 4;
@@ -26,6 +27,28 @@ class BottomNavController extends GetxController {
   // Custom content widgets for specific tabs (optional dynamic content)
   var customSearchContent = Rx<Widget?>(null);
   var customTab2Content = Rxn<Widget>();
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadRole();
+  }
+
+  Future<void> loadRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    storedRole.value = prefs.getString('user_role')?.toLowerCase() ?? 'guest';
+    debugPrint('Loaded user role: ${storedRole.value}');
+  }
+
+  Widget getProfileScreen() {
+    if (storedRole.value == 'owner') {
+      return OwnerProfile(isOwner: true);
+    } else if (storedRole.value == 'guest') {
+      return GuestProfile();
+    } else {
+      return Center(child: Text('Error: Invalid user role'));
+    }
+  }
 
   /// Change selected bottom nav index
   void changeIndex(int index) {
@@ -68,10 +91,19 @@ class BottomNavController extends GetxController {
       case 2:
         return WhishlistScreen();
       case 3:
-        if (storedRole.value == 'Owner') {
-          return OwnerProfile(isOwner: true, isGuest: false);
-        } else {
+        if (storedRole.value == 'owner') {
+          debugPrint('Displaying OwnerProfile screen');
+          final args = Get.arguments as Map<String, dynamic>? ?? {};
+          return OwnerProfile(
+            isOwner: true,
+            activePlacesCount: args['activePlacesCount'] ?? 1,
+            totalReviewsCount: args['totalReviewsCount'] ?? 5,
+            totalViewsCount: args['totalViewsCount'] ?? 3,
+          );
+        } else if (storedRole.value == 'guest') {
           return GuestProfile();
+        } else {
+          return Center(child: Text('Error: Invalid user role'));
         }
       case addItemScreenIndex:
         return AddNewItemScreen();

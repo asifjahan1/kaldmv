@@ -24,24 +24,14 @@ class BottomNavScreen extends StatelessWidget {
       body: Obx(() => controller.currentScreen),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Obx(
-        () => Container(
+            () => Container(
           height: 100.h,
           decoration: BoxDecoration(
             color: Colors.white,
-            // borderRadius: BorderRadius.only(
-            //   topLeft: Radius.circular(24.r),
-            //   topRight: Radius.circular(24.r),
-            // ),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: Colors.black12,
-            //     blurRadius: 6,
-            //     offset: Offset(0, -1),
-            //   )
-            // ],
           ),
           child: Stack(
             children: [
+              // Background color with rounded corners at the top
               Positioned(
                 top: 0.h,
                 left: 0.w,
@@ -49,7 +39,7 @@ class BottomNavScreen extends StatelessWidget {
                 height: (100.h / 3),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color(0xFFF5FAF8),
+                    color: const Color(0xFFF5FAF8),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24.r),
                       topRight: Radius.circular(24.r),
@@ -58,7 +48,7 @@ class BottomNavScreen extends StatelessWidget {
                 ),
               ),
 
-              // Navigation items (pushed down slightly)
+              // Navigation icons and labels
               Padding(
                 padding: EdgeInsets.only(top: 12.h),
                 child: Row(
@@ -72,8 +62,8 @@ class BottomNavScreen extends StatelessWidget {
                           Icon(
                             icons[index],
                             color: controller.selectedIndex.value == index
-                                ? Color(0xFFF97C68)
-                                : Color(0xFF867B79),
+                                ? const Color(0xFFF97C68)
+                                : const Color(0xFF867B79),
                           ),
                           SizedBox(height: 4.h),
                           Text(
@@ -81,7 +71,7 @@ class BottomNavScreen extends StatelessWidget {
                             style: TextStyle(
                               color: controller.selectedIndex.value == index
                                   ? Colors.redAccent
-                                  : Color(0xFF867B79),
+                                  : const Color(0xFF867B79),
                               fontSize: 12.sp,
                             ),
                           ),
@@ -92,24 +82,24 @@ class BottomNavScreen extends StatelessWidget {
                 ),
               ),
 
-              // FAB positioned inside the container
+              // Floating Action Button in the center
               Positioned(
                 top: 10.h,
                 left: MediaQuery.of(context).size.width / 2 - 28,
                 child: FloatingActionButton(
-                  backgroundColor: Color(0xFFF97C68),
+                  backgroundColor: const Color(0xFFF97C68),
                   onPressed: () {
                     log("Central action tapped!");
                     controller.changeIndex(
                       BottomNavController.addItemScreenIndex,
                     );
                   },
-                  shape: CircleBorder(),
+                  shape: const CircleBorder(),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100.r),
                     ),
-                    child: Icon(Icons.add, size: 30, color: Colors.white),
+                    child: const Icon(Icons.add, size: 30, color: Colors.white),
                   ),
                 ),
               ),
