@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:kaldmv/User/Auth/screens/login_screen.dart';
+import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
 import 'package:kaldmv/User/Views/features/Home/views/custom_drawer.dart';
+import 'package:kaldmv/User/Views/features/Profile/views/profile_info.dart';
+import 'package:kaldmv/User/Views/features/Profile/views/settings.dart';
 import 'package:kaldmv/core/global_widegts/custom_header.dart';
 
 /// A widget that displays the profile page for an owner, including stats and navigation options.
@@ -14,9 +19,9 @@ class OwnerProfile extends StatelessWidget {
   const OwnerProfile({
     super.key,
     required this.isOwner,
-    this.activePlacesCount = 0,
-    this.totalReviewsCount = 0,
-    this.totalViewsCount = 0,
+    this.activePlacesCount = 1,
+    this.totalReviewsCount = 5,
+    this.totalViewsCount = 3,
   });
 
   @override
@@ -56,6 +61,10 @@ class OwnerProfile extends StatelessWidget {
                           value: activePlacesCount.toString(),
                           color: Colors.green,
                           showProgress: true,
+                          progressValue: (totalViewsCount / 10).clamp(
+                            10.0,
+                            10.0,
+                          ), // Max views = 10
                         ),
                       ),
                       SizedBox(width: 16.w),
@@ -65,6 +74,10 @@ class OwnerProfile extends StatelessWidget {
                           value: totalReviewsCount.toString(),
                           color: Colors.amber,
                           showProgress: true,
+                          progressValue: (totalViewsCount / 10).clamp(
+                            10.0,
+                            10.0,
+                          ), // Max views = 10
                         ),
                       ),
                     ],
@@ -76,7 +89,10 @@ class OwnerProfile extends StatelessWidget {
                     value: totalViewsCount.toString(),
                     color: Colors.blue,
                     showProgress: true,
-                    progressValue: (totalViewsCount / 10).clamp(0.0, 1.0), // Max views = 10
+                    progressValue: (totalViewsCount / 10).clamp(
+                      10.0,
+                      10.0,
+                    ), // Max views = 10
                   ),
                   SizedBox(height: 30.h),
                   // Profile Section
@@ -84,8 +100,14 @@ class OwnerProfile extends StatelessWidget {
                   _buildNavTile(
                     title: 'Edit Profile Information',
                     icon: Icons.edit,
-                    onTap: () {},
+                    onTap: () {
+                      final BottomNavController nav =
+                          Get.find<BottomNavController>();
+                      nav.changeIndex(3);
+                      Get.to(() => ProfileInfo());
+                    },
                   ),
+                  Divider(color: Color(0xFF01150E).withAlpha(10)),
                   SizedBox(height: 20.h),
                   // Settings Section
                   _buildSectionTitle('Settings'),
@@ -93,9 +115,13 @@ class OwnerProfile extends StatelessWidget {
                     title: 'Settings',
                     icon: Icons.settings,
                     onTap: () {
-                      // TODO: Navigate to settings screen
+                      final BottomNavController nav =
+                          Get.find<BottomNavController>();
+                      nav.changeIndex(3);
+                      Get.to(() => Settings());
                     },
                   ),
+                  Divider(color: Color(0xFF01150E).withAlpha(10)),
                   SizedBox(height: 20.h),
                   // More Section
                   _buildSectionTitle('More'),
@@ -106,6 +132,7 @@ class OwnerProfile extends StatelessWidget {
                       // TODO: Navigate to about us screen
                     },
                   ),
+                  Divider(color: Color(0xFF01150E).withAlpha(10)),
                   _buildNavTile(
                     title: 'Privacy Policy',
                     icon: Icons.privacy_tip_outlined,
@@ -113,8 +140,8 @@ class OwnerProfile extends StatelessWidget {
                       // TODO: Navigate to privacy policy screen
                     },
                   ),
-                  SizedBox(height: 30.h),
-                  const Divider(),
+                  Divider(color: Color(0xFF01150E).withAlpha(10)),
+                  SizedBox(height: 10.h),
                   ListTile(
                     leading: const Icon(Icons.logout, color: Colors.red),
                     title: const Text(
@@ -123,9 +150,10 @@ class OwnerProfile extends StatelessWidget {
                     ),
                     trailing: Icon(Icons.arrow_forward_ios, size: 16.sp),
                     onTap: () {
-                      // TODO: Implement logout logic (e.g., clear session, navigate to login)
+                      Get.offAll(() => LoginScreen());
                     },
                   ),
+                  Divider(color: Color(0xFFDE2222).withAlpha(40)),
                   SizedBox(height: 16.h), // Bottom padding
                 ],
               ),
@@ -147,9 +175,9 @@ class OwnerProfile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.grey.shade300),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: Color(0xFFF8EFEE)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -176,8 +204,8 @@ class OwnerProfile extends StatelessWidget {
             SizedBox(height: 8.h),
             LinearProgressIndicator(
               borderRadius: BorderRadius.horizontal(
-                  left: Radius.circular(10.r),
-                  right: Radius.circular(10.r)
+                left: Radius.circular(10.r),
+                right: Radius.circular(10.r),
               ),
               value: progressValue,
               backgroundColor: Colors.grey[300],
@@ -197,9 +225,9 @@ class OwnerProfile extends StatelessWidget {
       child: Text(
         title,
         style: TextStyle(
-          fontSize: 18.sp,
-          fontWeight: FontWeight.w700,
-          color: Colors.black87,
+          fontSize: 20.sp,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF1B0400),
         ),
       ),
     );

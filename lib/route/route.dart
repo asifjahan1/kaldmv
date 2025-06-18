@@ -25,7 +25,7 @@ class AppRoute {
   static String getResetPassScreen() => resetPassScreen;
 
   static String getTSFSScreen() => tsfsScreen;
-  
+
   static String getAddNewItemScreen() => addNewItemScreen;
 
   static String getOwnerProfile() => ownerProfile;
@@ -36,7 +36,7 @@ class AppRoute {
     GetPage(name: forgetScreen, page: () => ForgetPasswordScreen()),
     // GetPage(name: resetPassScreen, page: () => ResetPassword()),
     GetPage(name: tsfsScreen, page: () => TSFSScreen()),
-    GetPage(name: addNewItemScreen, page: () => AddNewItemScreen()),
+    GetPage(name: addNewItemScreen, page: () => AddNewPlaceScreen()),
     GetPage(
       name: ownerProfile,
       page: () {
@@ -49,6 +49,5 @@ class AppRoute {
         );
       },
     ),
-
   ];
 }

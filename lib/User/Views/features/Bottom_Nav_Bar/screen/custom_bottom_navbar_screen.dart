@@ -23,20 +23,20 @@ class BottomNavScreen extends StatelessWidget {
     return Scaffold(
       body: Obx(() => controller.currentScreen),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: Obx(
-            () => Container(
+      bottomNavigationBar: Obx(() {
+        final isGuest = controller.storedRole.value.toLowerCase() == 'guest';
+
+        return Container(
           height: 100.h,
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
+          decoration: const BoxDecoration(color: Colors.white),
           child: Stack(
             children: [
-              // Background color with rounded corners at the top
+              // Background with rounded corners
               Positioned(
-                top: 0.h,
-                left: 0.w,
-                right: 0.w,
-                height: (100.h / 3),
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 100.h / 3,
                 child: Container(
                   decoration: BoxDecoration(
                     color: const Color(0xFFF5FAF8),
@@ -48,7 +48,7 @@ class BottomNavScreen extends StatelessWidget {
                 ),
               ),
 
-              // Navigation icons and labels
+              // Navigation Items
               Padding(
                 padding: EdgeInsets.only(top: 12.h),
                 child: Row(
@@ -82,31 +82,36 @@ class BottomNavScreen extends StatelessWidget {
                 ),
               ),
 
-              // Floating Action Button in the center
-              Positioned(
-                top: 10.h,
-                left: MediaQuery.of(context).size.width / 2 - 28,
-                child: FloatingActionButton(
-                  backgroundColor: const Color(0xFFF97C68),
-                  onPressed: () {
-                    log("Central action tapped!");
-                    controller.changeIndex(
-                      BottomNavController.addItemScreenIndex,
-                    );
-                  },
-                  shape: const CircleBorder(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100.r),
+              // FAB only for Owner
+              if (!isGuest)
+                Positioned(
+                  top: 10.h,
+                  left: MediaQuery.of(context).size.width / 2 - 28,
+                  child: FloatingActionButton(
+                    backgroundColor: const Color(0xFFF97C68),
+                    onPressed: () {
+                      log("FAB tapped!");
+                      controller.changeIndex(
+                        BottomNavController.addItemScreenIndex,
+                      );
+                    },
+                    shape: const CircleBorder(),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100.r),
+                      ),
+                      child: const Icon(
+                        Icons.add,
+                        size: 30,
+                        color: Colors.white,
+                      ),
                     ),
-                    child: const Icon(Icons.add, size: 30, color: Colors.white),
                   ),
                 ),
-              ),
             ],
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

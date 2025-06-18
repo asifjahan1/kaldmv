@@ -18,8 +18,9 @@ class BottomNavController extends GetxController {
   var searchIndex = 0.obs;
   var searchPlaceName = ''.obs;
 
-  // Role stored as reactive variable (default to 'guest')
-  var storedRole = 'guest'.obs;
+  // Role stored as reactive variable (default to 'Guest')
+  var storedRole = ''.obs;
+  var isRoleLoaded = false.obs;
 
   // Index for the "Add New Item" screen for easy reference
   static const int addItemScreenIndex = 4;
@@ -36,23 +37,35 @@ class BottomNavController extends GetxController {
 
   Future<void> loadRole() async {
     final prefs = await SharedPreferences.getInstance();
-    storedRole.value = prefs.getString('user_role')?.toLowerCase() ?? 'guest';
-    debugPrint('Loaded user role: ${storedRole.value}');
+    storedRole.value =
+        prefs.getString('user_role')?.toLowerCase() ??
+        'guest'; // Read as lowercase
+    isRoleLoaded.value = true;
   }
 
   Widget getProfileScreen() {
-    if (storedRole.value == 'owner') {
+    if (storedRole.value.toLowerCase() == 'owner') {
       return OwnerProfile(isOwner: true);
-    } else if (storedRole.value == 'guest') {
+    } else if (storedRole.value.toLowerCase() == 'guest') {
       return GuestProfile();
     } else {
-      return Center(child: Text('Error: Invalid user role'));
+      return const Center(child: Text('Error: Invalid user role'));
     }
   }
 
   /// Change selected bottom nav index
-  void changeIndex(int index) {
+  // void changeIndex(int index) {
+  //   selectedIndex.value = index;
+  // }
+  Future<void> changeIndex(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    storedRole.value = prefs.getString('user_role')?.toLowerCase() ?? 'guest';
     selectedIndex.value = index;
+  }
+
+  Future<void> refreshRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    storedRole.value = prefs.getString('user_role')?.toLowerCase() ?? 'guest';
   }
 
   /// Open Search Screen with specific parameters and select Search tab (index 1)
@@ -60,7 +73,7 @@ class BottomNavController extends GetxController {
     searchType.value = type;
     searchIndex.value = index;
     searchPlaceName.value = name;
-    customSearchContent.value = null; // reset custom content
+    customSearchContent.value = null;
     selectedIndex.value = 1;
   }
 
@@ -78,6 +91,10 @@ class BottomNavController extends GetxController {
 
   /// Returns the currently selected screen widget based on selectedIndex
   Widget get currentScreen {
+    if (!isRoleLoaded.value) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     switch (selectedIndex.value) {
       case 0:
         return HomePage();
@@ -92,21 +109,14 @@ class BottomNavController extends GetxController {
         return WhishlistScreen();
       case 3:
         if (storedRole.value == 'owner') {
-          debugPrint('Displaying OwnerProfile screen');
-          final args = Get.arguments as Map<String, dynamic>? ?? {};
-          return OwnerProfile(
-            isOwner: true,
-            activePlacesCount: args['activePlacesCount'] ?? 1,
-            totalReviewsCount: args['totalReviewsCount'] ?? 5,
-            totalViewsCount: args['totalViewsCount'] ?? 3,
-          );
+          return OwnerProfile(isOwner: true);
         } else if (storedRole.value == 'guest') {
           return GuestProfile();
         } else {
-          return Center(child: Text('Error: Invalid user role'));
+          return const Center(child: Text('❌ Invalid Role'));
         }
       case addItemScreenIndex:
-        return AddNewItemScreen();
+        return AddNewPlaceScreen();
       default:
         return HomePage();
     }

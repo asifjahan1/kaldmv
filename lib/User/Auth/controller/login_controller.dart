@@ -1,9 +1,10 @@
-import 'package:flutter/foundation.dart';
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/screen/custom_bottom_navbar_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
+import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/screen/custom_bottom_navbar_screen.dart';
 import '../../Views/features/Profile/views/Guest_profile/guest_profile.dart';
 import '../../Views/features/Profile/views/Owner_Profile/owner_profile.dart';
 
@@ -15,15 +16,9 @@ class LoginController extends GetxController {
   // Observables
   var isPasswordVisible = false.obs;
   var isLoginLoading = false.obs;
-  var storedRole = 'Guest'.obs;
+  var storedRole = ''.obs;
 
-  // Shared Preferences & Role
   late SharedPreferences _prefs;
-  var _role = ''.obs;
-
-  // Role Checkers
-  bool get isGuest => _role.value == 'Guest';
-  bool get isOwner => _role.value == 'Owner';
 
   @override
   void onInit() {
@@ -31,123 +26,47 @@ class LoginController extends GetxController {
     _initPrefs();
   }
 
-  // Initialize SharedPreferences
   Future<void> _initPrefs() async {
     _prefs = await SharedPreferences.getInstance();
-    // _prefillData();
   }
-
-  // Pre-fill login data if previously saved
-  // Future<void> _prefillData() async {
-  //   final email = _prefs.getString('user_email') ?? '';
-  //   final role = _prefs.getString('user_type') ?? '';
-  //
-  //   if (email.isNotEmpty) {
-  //     emailTEController.text = email;
-  //     _role.value = role;
-  //
-  //     if (kDebugMode) {
-  //       print('Prefilled email: $email');
-  //       print('Prefilled role: $role');
-  //     }
-  //   }
-  // }
-
-  // LoginController er moddhe login method er sheshe:
-  Future<void> login() async {
-    // ...login logic
-    String role = 'owner'; // ba 'guest', ja user select kore signup/login e
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_role', role);
-
-    if (role == 'owner') {
-      Get.offAll(() => OwnerProfile(isOwner: true));
-    } else if (role == 'guest') {
-      Get.offAll(() => GuestProfile());
-    } else {
-      //Get.offAll(() => ErrorScreen(message: "Unknown user role: $role"));
-    }
-  }
-
 
   // Toggle password visibility
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  // Handle Login Flow
-  Future<void> handleLogin() async {
-    // Simulated flow – validations are commented out
-    /*
-    if (emailTEController.text.isEmpty || passwordTEController.text.isEmpty) {
-      _showError('Please fill all fields');
-      return;
-    }
-    */
+  /// ✅ Role-based login navigation (if you're still testing Guest/Owner separately)
+  Future<void> login() async {
+    final prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString('user_role')?.toLowerCase() ?? 'guest';
+    await prefs.setString('user_role', role); // ensure lowercase
 
-    isLoginLoading.value = true;
-
-    try {
-      final storedEmail = _prefs.getString('user_email');
-      final storedPassword = _prefs.getString('user_password');
-      final storedRole = _prefs.getString('user_type');
-
-      _role.value = storedRole ?? '';
-
-      if (kDebugMode) {
-        print('Logging in...');
-        print('Input email: ${emailTEController.text}');
-        print('Stored email: $storedEmail');
-        print('Stored password: $storedPassword');
-        print('Stored role: $_role');
-      }
-
-      /*
-      if (storedEmail == null || storedEmail != emailTEController.text.trim()) {
-        _showError('Email not found. Please sign up.');
-        return;
-      }
-
-      if (storedPassword == null || storedPassword != passwordTEController.text) {
-        _showError('Incorrect password.');
-        return;
-      }
-
-      if (storedRole == null || storedRole.isEmpty) {
-        _showError('User role not found.');
-        return;
-      }
-      */
-
-      // Simulate successful login
-      await _prefs.setBool('isLogin', true);
-
-      Get.snackbar(
-        'Success',
-        'Login successful',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
-
-      // Navigate to main screen
-      Get.off(() => BottomNavScreen());
-    } catch (e) {
-      _showError('Login failed: ${e.toString()}');
-      if (kDebugMode) print('Login error: $e');
-    } finally {
-      isLoginLoading.value = false;
+    if (role == 'owner') {
+      Get.offAll(() => OwnerProfile(isOwner: true));
+    } else if (role == 'guest') {
+      Get.offAll(() => GuestProfile());
+    } else {
+      Get.snackbar('Error', 'Unknown user role: $role');
     }
   }
 
-  // Show error using GetX snackbar
-  void _showError(String msg) {
-    Get.snackbar(
-      'Error',
-      msg,
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
-    );
+  /// 🔄 Main login logic: navigates to BottomNavScreen and updates role in controller
+  Future<void> handleLogin() async {
+    isLoginLoading.value = true;
+
+    final prefs = await SharedPreferences.getInstance();
+    storedRole.value = prefs.getString('user_role')?.toLowerCase() ?? 'guest';
+
+    // Update BottomNavController role immediately
+    final bottomNavController = Get.find<BottomNavController>();
+    await bottomNavController.refreshRole();
+
+    // Simulate delay
+    await Future.delayed(const Duration(seconds: 1));
+
+    // Navigate to main screen
+    Get.offAll(() => BottomNavScreen());
+    isLoginLoading.value = false;
   }
 
   @override

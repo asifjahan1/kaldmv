@@ -21,8 +21,8 @@ import 'package:kaldmv/User/Views/features/Home/views/custom_drawer.dart';
 import 'package:kaldmv/core/global_widegts/custom_button.dart';
 import 'package:kaldmv/core/global_widegts/custom_header.dart';
 
-class AddNewItemScreen extends StatelessWidget {
-  const AddNewItemScreen({super.key});
+class AddNewPlaceScreen extends StatelessWidget {
+  const AddNewPlaceScreen({super.key});
 
   final LatLng placeLatLng = const LatLng(21.4858, 39.1925);
 

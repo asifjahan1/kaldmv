@@ -31,22 +31,21 @@ class SignupController extends GetxController {
   // Save selectedRole to SharedPreferences
   Future<void> saveSelectedRole(String role) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_role', role);
+    await prefs.setString('user_role', selectedRole.value.toLowerCase());
   }
 
   // Load selectedRole from SharedPreferences
   Future<void> loadSelectedRole() async {
     final prefs = await SharedPreferences.getInstance();
     final savedRole = prefs.getString('user_role');
-    if (savedRole != null && (savedRole == 'Guest' || savedRole == 'Owner')) {
-      selectedRole.value = savedRole;
+    if (savedRole != null && (savedRole == 'guest' || savedRole == 'owner')) {
+      selectedRole.value = savedRole == 'owner' ? 'Owner' : 'Guest';
     }
   }
 
-  // Change selected role and save it
+  // Change selected role locally (used in UI role selection)
   void changeRole(String role) {
     selectedRole.value = role;
-    saveSelectedRole(role);
   }
 
   // Toggle password visibility
@@ -54,33 +53,23 @@ class SignupController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  // Toggle confirm password visibility
   void toggleConfirmPasswordVisibility() {
     isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
   }
 
-  // Validate required fields based on role
+  // Placeholder for validations (optional)
   bool validateFields() {
-    /*
-    // Your validation logic here...
-    */
     return true;
   }
 
   // Sign up method
   Future<void> signup() async {
-    isLoading.value = true;
-
-    // You may add actual signup logic here (API call, etc.)
-
-    // Save the role after signup
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_role', selectedRole.value);
-
-    isLoading.value = false;
-
-    // Navigate to LoginScreen after signup
-    Get.offAll(() => LoginScreen());
+    await prefs.setString(
+      'user_role',
+      selectedRole.value.toLowerCase(),
+    ); // Save as lowercase: 'guest' or 'owner'
+    Get.to(() => LoginScreen());
   }
 
   @override
