@@ -3,26 +3,13 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
-import 'package:kaldmv/User/Views/features/Home/controller/drawer_controller.dart';
-import 'package:kaldmv/User/Views/features/Home/controller/home_controller.dart';
-import 'package:kaldmv/User/Views/features/Search/controller/search_controller.dart';
-import 'User/Auth/controller/login_controller.dart';
-import 'User/Views/features/Home/controller/header_controller.dart';
-import 'User/Views/features/Home/controller/tsfs_controller.dart';
+import 'package:kaldmv/bindings/app_binding.dart';
 import 'core/const/app_colors.dart';
 import 'route/route.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   configEasyLoading();
-  Get.put(HomeController(), permanent: true);
-  Get.put(LoginController(), permanent: true);
-  Get.put(SearchhController(), permanent: true);
-  Get.put(BottomNavController(), permanent: true);
-  Get.put(HeaderController(), permanent: true);
-  Get.put(TSFSController(), permanent: true);
-  Get.put(DrawerControllerX(), permanent: true);
 
   runApp(const MyApp());
 }
@@ -51,6 +38,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'kaldmv',
         getPages: AppRoute.routes,
+        initialBinding: AppBinding(),
         initialRoute: AppRoute.splashScreen,
         builder: EasyLoading.init(),
         theme: ThemeData(
