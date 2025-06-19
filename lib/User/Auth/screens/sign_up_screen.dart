@@ -289,6 +289,7 @@ class SignUpScreen extends StatelessWidget {
         obscureText: !isVisible,
         decoration: InputDecoration(
           hintText: hint,
+          hintStyle: const TextStyle(color: Colors.grey),
           suffixIcon: IconButton(
             icon: Icon(
               isVisible ? Icons.visibility : Icons.visibility_off,
