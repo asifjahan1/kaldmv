@@ -50,6 +50,14 @@ class CustomDrawer extends StatelessWidget {
                 'Wishlist',
                 'My Places'
               ];
+              final searchTypes = [
+                'things_to_do',
+                'food_drink',
+                'shopping',
+                'stay',
+                '', // Wishlist (not used for search)
+                ''  // My Places (not used for search)
+              ];
               // final menuRoutes = [
               //   ThingsToDoScreen(),
               //   FoodDrinkScreen(),
@@ -71,8 +79,14 @@ class CustomDrawer extends StatelessWidget {
                         final bottomNavController = Get.find<BottomNavController>();
 
                         if (index >= 0 && index <= 3) {
+                          // Use openSearchScreen to set search parameters and switch to index 1
+                          bottomNavController.openSearchScreen(
+                            searchTypes[index],
+                            index,
+                            menuItems[index],
+                          );
+                          // Set customSearchContent to TSFSScreen
                           bottomNavController.customSearchContent.value = TSFSScreen();
-                          bottomNavController.selectedIndex.value = 1;
                         } else {
                           switch (index) {
                             case 4: // Wishlist tab

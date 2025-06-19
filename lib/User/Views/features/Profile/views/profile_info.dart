@@ -59,6 +59,7 @@ class ProfileInfo extends StatelessWidget {
                       'First Name',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -82,6 +83,7 @@ class ProfileInfo extends StatelessWidget {
                       'Last Name',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -91,6 +93,7 @@ class ProfileInfo extends StatelessWidget {
                         textEditingController:
                             controller.lastNameController.value,
                         hintText: 'Last Name',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
@@ -105,6 +108,7 @@ class ProfileInfo extends StatelessWidget {
                       'Mobile',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -114,6 +118,7 @@ class ProfileInfo extends StatelessWidget {
                         textEditingController:
                             controller.mobileNumberController.value,
                         hintText: 'Mobile number',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
@@ -128,6 +133,7 @@ class ProfileInfo extends StatelessWidget {
                       'Fax Number',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -137,6 +143,7 @@ class ProfileInfo extends StatelessWidget {
                         textEditingController:
                             controller.faxNumberController.value,
                         hintText: 'Fax number',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
@@ -151,6 +158,7 @@ class ProfileInfo extends StatelessWidget {
                       'Email',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -159,6 +167,7 @@ class ProfileInfo extends StatelessWidget {
                       () => CustomTextField(
                         textEditingController: controller.emailController.value,
                         hintText: 'Email',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
@@ -173,16 +182,18 @@ class ProfileInfo extends StatelessWidget {
                       'Skype',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
                     SizedBox(height: 10.h),
-                    
+
                     Obx(
                       () => CustomTextField(
                         textEditingController:
                             controller.skypeUrlController.value,
                         hintText: 'Enter Skype url',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
@@ -197,6 +208,7 @@ class ProfileInfo extends StatelessWidget {
                       'Facebook URL',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -206,6 +218,7 @@ class ProfileInfo extends StatelessWidget {
                         textEditingController:
                             controller.facebookUrlController.value,
                         hintText: 'Enter facebook url',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
@@ -220,6 +233,7 @@ class ProfileInfo extends StatelessWidget {
                       'Twitter URL',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -229,6 +243,7 @@ class ProfileInfo extends StatelessWidget {
                         textEditingController:
                             controller.twitterUrlController.value,
                         hintText: 'Enter twitter url',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
@@ -243,6 +258,7 @@ class ProfileInfo extends StatelessWidget {
                       'Instagram URL',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -252,6 +268,7 @@ class ProfileInfo extends StatelessWidget {
                         textEditingController:
                             controller.instagramUrlController.value,
                         hintText: 'Enter instagram url',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
@@ -266,6 +283,7 @@ class ProfileInfo extends StatelessWidget {
                       'Youtube URL',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -275,6 +293,7 @@ class ProfileInfo extends StatelessWidget {
                         textEditingController:
                             controller.youtubeUrlController.value,
                         hintText: 'Enter youtube url',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
@@ -289,6 +308,7 @@ class ProfileInfo extends StatelessWidget {
                       'Pinterest URL',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -298,6 +318,7 @@ class ProfileInfo extends StatelessWidget {
                         textEditingController:
                             controller.pinterestUrlController.value,
                         hintText: 'Enter pinterest url',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
@@ -312,6 +333,7 @@ class ProfileInfo extends StatelessWidget {
                       'Linkedin URL',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -321,6 +343,7 @@ class ProfileInfo extends StatelessWidget {
                         textEditingController:
                             controller.linkedinUrlController.value,
                         hintText: 'Enter linkedin url',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
@@ -335,6 +358,7 @@ class ProfileInfo extends StatelessWidget {
                       'Website URL',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF4C4C4C),
                       ),
                     ),
@@ -344,6 +368,7 @@ class ProfileInfo extends StatelessWidget {
                         textEditingController:
                             controller.websiteUrlController.value,
                         hintText: 'Enter website url',
+                        textColor: Colors.black,
                         fillColor: Colors.white,
                         borderSide: BorderSide(
                           color: const Color(0xFF000000).withOpacity(0.3),
