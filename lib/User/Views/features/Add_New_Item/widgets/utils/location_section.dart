@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,46 +30,52 @@ class LocationSection extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
           ),
           SizedBox(height: 10.h),
-      
+
           _buildLabel('City/Town*'),
           _buildDropdownField(
+            controllerTag: "city_town_drop_down",
             controller.cityController,
             'Select City/Town',
             controller.cityItems,
             controller.selectedCity.value,
-                (value) => controller.selectedCity.value = value!,
+            (value) => controller.selectedCity.value = value!,
           ),
-      
+
           _buildLabel('Create New City*'),
           _buildDropdownField(
+            controllerTag: "select_city_dropdown",
             controller.cityController,
             'Select City',
             controller.cityItems,
             controller.selectedCity.value,
-                (value) => controller.selectedCity.value = value!,
+            (value) => controller.selectedCity.value = value!,
           ),
-      
+
           _buildLabel('Time Zone*'),
           _buildDropdownField(
+            controllerTag: "time_zone_dropdown",
             controller.timeZoneController,
             'Riyadh',
             controller.cityItems,
             controller.selectedCity.value,
-                (value) => controller.selectedCity.value = value!,
+            (value) => controller.selectedCity.value = value!,
           ),
-      
+
           _buildLabel('Place Address*'),
           CustomTextField(
             textEditingController: controller.timeZoneController,
             hintText: 'Full Address',
+            textColor: Colors.black,
             fillColor: Colors.white,
-            borderSide: BorderSide(color: const Color(0xFF000000).withOpacity(0.3)),
+            borderSide: BorderSide(
+              color: const Color(0xFF000000).withOpacity(0.3),
+            ),
             hintTextColor: const Color(0xFFC3C0C0),
             fontSize: 14.sp,
             height: 40.h,
           ),
           SizedBox(height: 10.h),
-      
+
           // Lock Pin Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,7 +98,7 @@ class LocationSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 5.h),
-      
+
           // Google Map Section
           ClipRRect(
             borderRadius: BorderRadius.circular(8.r),
@@ -123,24 +131,26 @@ class LocationSection extends StatelessWidget {
   }
 
   Widget _buildLabel(String text) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            text,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
-          ),
-          SizedBox(height: 5.h),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        text,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
+      ),
+      SizedBox(height: 5.h),
+    ],
+  );
 
   Widget _buildDropdownField(
     TextEditingController textController,
     String hint,
     List<String> items,
     String selectedValue,
-    ValueChanged<String?> onChanged,
-  ) {
+    ValueChanged<String?> onChanged, {
+    required String controllerTag,
+  }) {
     return CustomTextField(
+      controllerTag: controllerTag,
       textEditingController: textController,
       hintText: hint,
       fillColor: Colors.white,

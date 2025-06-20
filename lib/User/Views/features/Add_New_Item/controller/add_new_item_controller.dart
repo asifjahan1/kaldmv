@@ -54,15 +54,15 @@ class AddNewItemController extends GetxController {
   // Dropdown items
   final List<String> hourItems = ["Hour", "Day", "Month"];
   final List<String> noneItems = ["Service Charge", "Tax"];
-  final List<String> categoryItems = ["Restaurant", "Cafe", "Hotel"];
+  final List<String> categoryItems = ["Food & Drink", "Shopping", "Stay", "Things To Do"];
   final List<String> cityItems = ["London", "Manchester", "Birmingham"];
   final List<String> timeItems = ["Riyadh", "Madinah", "Jeddha", "Dhaka"];
   final List<String> placeTypeItems = ["Indoor", "Outdoor", "Rooftop"];
   final List<String> itemPriceItems = [
-    "100\$ - 300\$",
-    "300\$ - 500\$",
-    "500\$ - 1000\$",
-    "Above 1000\$",
+    "Basic (0\$ - 500\$)",
+    "Mid-range (500\$ - 1500\$)",
+    "Luxury (1500\$ - 5000\$)",
+    "Premium (5000\$)",
   ];
 
   @override

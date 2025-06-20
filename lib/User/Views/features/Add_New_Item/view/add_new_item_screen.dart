@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kaldmv/User/Views/features/Add_New_Item/controller/add_new_item_controller.dart';
 import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/contact_info_section.dart';
-import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/dotted_builder_widget.dart';
+// import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/dotted_builder_widget.dart';
 import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/faq_section.dart';
 import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/featured_checkbox_section.dart';
 import 'package:kaldmv/User/Views/features/Add_New_Item/widgets/utils/general_section.dart';
@@ -112,13 +112,12 @@ class AddNewPlaceScreen extends StatelessWidget {
                       child: MenuSection(
                         controller: controller,
                         buildCustomQuillField:
-                            ({
-                              required quill.QuillController controller,
-                              required String label,
-                            }) => _buildCustomQuillField(
-                              controller: controller,
-                              label: label,
-                            ),
+                            ({required controller, required label}) =>
+                                _buildCustomQuillField(
+                                  controller: controller,
+                                  label: label,
+                                ),
+                        menuTag: 'menu_1',
                       ),
                     ),
 
@@ -173,20 +172,33 @@ class AddNewPlaceScreen extends StatelessWidget {
                       decoration: BoxDecoration(color: Colors.white),
                       child: MediaSection(
                         controller: controller,
-                        buildDottedBorderWidget: buildDottedBorderWidget,
+                        // buildDottedBorderWidget: buildDottedBorderWidget,
                       ),
                     ),
 
                     SizedBox(height: 30.h),
 
+                    // /// FAQ Section
+                    // Container(
+                    //   height: 560.h,
+                    //   width: double.infinity,
+                    //   decoration: BoxDecoration(color: Colors.white),
+                    //   child: FAQSection(
+                    //     controller: controller,
+                    //     sw: screenWidth,
+                    //   ),
+                    // ),
+
                     /// FAQ Section
-                    Container(
-                      height: 560.h,
-                      width: double.infinity,
-                      decoration: BoxDecoration(color: Colors.white),
-                      child: FAQSection(
-                        controller: controller,
-                        sw: screenWidth,
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 30.h),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(color: Colors.white),
+                        child: FAQSection(
+                          controller: controller,
+                          sw: screenWidth,
+                        ),
                       ),
                     ),
 
@@ -214,7 +226,7 @@ class AddNewPlaceScreen extends StatelessWidget {
                         centerText: true,
                       ),
                     ),
-                    SizedBox(height: 30.h),
+                    SizedBox(height: 10.h),
                   ],
                 ),
               ),

@@ -96,7 +96,7 @@ class CustomTextField extends StatelessWidget {
 
       return SizedBox(
         height: isDropdown && isOpen
-            ? (height ?? 40.h) + (dropdownItems?.length ?? 0) * 40.h + 10.h
+            ? (height ?? 40.h) + (dropdownItems?.length ?? 0) * 25.h + 10.h
             : height ?? 40.h,
         width: width ?? screenWidth * 0.9,
         child: isDropdown
@@ -158,7 +158,8 @@ class CustomTextField extends StatelessWidget {
                       ),
                       suffixIcon: Transform.rotate(
                         angle: isOpen ? 0 : 1.57,
-                        child: suffixIcon ??
+                        child:
+                            suffixIcon ??
                             Icon(
                               Icons.arrow_forward_ios_rounded,
                               color: Colors.grey,
@@ -171,49 +172,72 @@ class CustomTextField extends StatelessWidget {
                   ),
                   // Dropdown panel
                   if (isOpen && dropdownItems != null)
-                    Positioned(
-                      top: (height ?? 40.h) + 5.h,
-                      left: 0,
-                      right: 0,
-                      child: Material(
-                        elevation: 4,
-                        borderRadius: BorderRadius.circular(10.r),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: fillColor ?? Colors.white,
-                            border: Border.all(
-                              color: borderSide?.color ?? Colors.grey,
-                              width: borderSide?.width ?? 1,
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final screenHeight = MediaQuery.of(
+                            context,
+                          ).size.height;
+                          final renderBox =
+                              context.findRenderObject() as RenderBox?;
+                          final currentY =
+                              renderBox?.localToGlobal(Offset.zero).dy ?? 0;
+                          final availableHeight =
+                              screenHeight - currentY - 40.h;
+
+                          return ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: availableHeight > 150.h
+                                  ? 150.h
+                                  : availableHeight,
                             ),
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Column(
-                            children: dropdownItems!.map((item) {
-                              return GestureDetector(
-                                onTap: () {
-                                  textEditingController.text = item;
-                                  onDropdownChanged?.call(item);
-                                  controller.closeDropdown();
-                                },
+                            child: Material(
+                              elevation: 4,
+                              borderRadius: BorderRadius.circular(10.r),
+                              child: SingleChildScrollView(
                                 child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 10.h,
-                                    horizontal: 10.w,
-                                  ),
-                                  child: Text(
-                                    item,
-                                    style: GoogleFonts.dmSans(
-                                      fontSize: fontSize ?? 14.sp,
-                                      fontWeight: fontWeight ?? FontWeight.w300,
-                                      color: textColor ?? Colors.black,
+                                  decoration: BoxDecoration(
+                                    color: fillColor ?? Colors.white,
+                                    border: Border.all(
+                                      color: borderSide?.color ?? Colors.grey,
+                                      width: borderSide?.width ?? 1,
                                     ),
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: dropdownItems!.map((item) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          textEditingController.text = item;
+                                          onDropdownChanged?.call(item);
+                                          controller.closeDropdown();
+                                        },
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 10.h,
+                                            horizontal: 10.w,
+                                          ),
+                                          child: Text(
+                                            item,
+                                            style: GoogleFonts.dmSans(
+                                              fontSize: fontSize ?? 14.sp,
+                                              fontWeight:
+                                                  fontWeight ?? FontWeight.w300,
+                                              color: textColor ?? Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
                                   ),
                                 ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                 ],

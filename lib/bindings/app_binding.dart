@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:kaldmv/User/Auth/controller/login_controller.dart';
 import 'package:kaldmv/User/Auth/controller/signup_controller.dart';
 import 'package:kaldmv/User/Views/features/Add_New_Item/controller/add_new_item_controller.dart';
+import 'package:kaldmv/User/Views/features/Add_New_Item/controller/file_upload_controller.dart';
 import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
 import 'package:kaldmv/User/Views/features/Home/controller/drawer_controller.dart';
 import 'package:kaldmv/User/Views/features/Home/controller/header_controller.dart';
@@ -27,5 +28,15 @@ class AppBinding extends Bindings {
     Get.put(HeaderController(), permanent: true);
     Get.put(TSFSController(), permanent: true);
     Get.put(DrawerControllerX(), permanent: true);
+
+    final featuredImageController = Get.create<FileUploadController>(
+      () => FileUploadController(),
+      tag: 'featured_image',
+    );
+
+    final galleryImageController = Get.create<FileUploadController>(
+      () => FileUploadController(),
+      tag: 'gallery_image',
+    );
   }
 }

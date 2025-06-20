@@ -7,17 +7,11 @@ import 'package:kaldmv/User/Views/features/Add_New_Item/controller/add_new_item_
 import 'package:kaldmv/core/global_widegts/custom_button.dart';
 import 'package:kaldmv/core/global_widegts/custom_text_field.dart';
 
-// Import your controller and CustomTextField widget
-
 class FAQSection extends StatelessWidget {
   final AddNewItemController controller;
   final double sw;
 
-  const FAQSection({
-    super.key,
-    required this.controller,
-    required this.sw,
-  });
+  const FAQSection({super.key, required this.controller, required this.sw});
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +24,7 @@ class FAQSection extends StatelessWidget {
             SizedBox(height: 10.h),
             Text(
               'FAQs',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.sp,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
             ),
             SizedBox(height: 10.h),
 
@@ -77,8 +68,10 @@ class FAQSection extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5.r),
                       ),
                       child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 5.h,
+                        ),
                         child: TextField(
                           controller: faq.answerController,
                           maxLines: null,
@@ -135,6 +128,7 @@ class FAQSection extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(height: 10.h),
           ],
         ),
       );

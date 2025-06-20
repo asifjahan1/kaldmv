@@ -48,6 +48,7 @@ class SocialNetworkSection extends StatelessWidget {
     return CustomTextField(
       textEditingController: textController,
       hintText: hint,
+      textColor: Colors.black,
       fillColor: Colors.white,
       borderSide: BorderSide(color: const Color(0xFF000000).withOpacity(0.3)),
       hintTextColor: const Color(0xFFC3C0C0),
