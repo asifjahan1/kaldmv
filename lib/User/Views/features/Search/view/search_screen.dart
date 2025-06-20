@@ -98,7 +98,7 @@ class SearchScreen extends StatelessWidget {
     return Row(
       children: [
         Image.asset(
-          'assets/images/location.png',
+          'assets/images/location1.png',
           height: 24.h,
           width: 24.w,
         ),
