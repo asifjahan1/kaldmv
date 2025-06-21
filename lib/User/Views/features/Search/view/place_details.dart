@@ -26,6 +26,15 @@ class PlaceDetails extends StatelessWidget {
   final PageController _pageController = PageController();
   final RxDouble _currentPage = 0.0.obs;
 
+  String _formatCategoryName(String category) {
+    if (category.isEmpty) return 'Things to Do';
+    return category
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map((word) => word.capitalizeFirst!)
+        .join(' ');
+  }
+
   @override
   Widget build(BuildContext context) {
     _pageController.addListener(() {
@@ -126,7 +135,7 @@ class PlaceDetails extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      item.name,
+                                      item.place,
                                       style: TextStyle(
                                         color: const Color(0xFF3F201C),
                                         fontSize: 13.sp,
@@ -146,13 +155,22 @@ class PlaceDetails extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'THINGS TO DO',
+                                      _formatCategoryName(
+                                        controller.selectedCategory.value,
+                                      ),
                                       style: TextStyle(
-                                        color: const Color(0xFF3F201C),
                                         fontSize: 13.sp,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
+                                    // Text(
+                                    //   'THINGS TO DO',
+                                    //   style: TextStyle(
+                                    //     color: const Color(0xFF3F201C),
+                                    //     fontSize: 13.sp,
+                                    //     fontWeight: FontWeight.bold,
+                                    //   ),
+                                    // ),
                                     SizedBox(height: 2.h),
                                     Container(
                                       height: 1.5.h,
@@ -167,6 +185,8 @@ class PlaceDetails extends StatelessWidget {
                               children: [
                                 GestureDetector(
                                   onTap: () {
+                                    // Get.to(() => WhishlistScreen());
+                                    // bottomNavController.changeIndex(2);
                                     log('Bookmark tapped');
                                   },
                                   child: Image.asset(

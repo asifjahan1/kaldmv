@@ -84,7 +84,7 @@ class AddNewPlaceScreen extends StatelessWidget {
 
                     /// HIGHLIGHTS
                     Container(
-                      height: 200.h,
+                      height: 240.h,
                       width: double.infinity,
                       decoration: BoxDecoration(color: Colors.white),
 
@@ -106,7 +106,7 @@ class AddNewPlaceScreen extends StatelessWidget {
 
                     /// Menu
                     Container(
-                      height: 725.h,
+                      height: 700.h,
                       width: double.infinity,
                       decoration: BoxDecoration(color: Colors.white),
                       child: MenuSection(
@@ -167,7 +167,7 @@ class AddNewPlaceScreen extends StatelessWidget {
 
                     /// Media
                     Container(
-                      height: 580.h,
+                      height: 520.h,
                       width: double.infinity,
                       decoration: BoxDecoration(color: Colors.white),
                       child: MediaSection(

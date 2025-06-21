@@ -55,6 +55,16 @@ class CustomDrawer extends StatelessWidget {
                 'food_drink',
                 'shopping',
                 'stay',
+                '',
+                '',
+              ];
+              final categoryImages = [
+                'assets/images/rest.png',
+                'assets/images/food_drink.png',
+                'assets/images/shopping.png',
+                'assets/images/stay.png',
+                '',
+                '',
               ];
 
               return Column(
@@ -77,7 +87,10 @@ class CustomDrawer extends StatelessWidget {
                             menuItems[index],
                           );
                           bottomNavController.customSearchContent.value =
-                              TSFSScreen(category: searchTypes[index]);
+                              TSFSScreen(
+                                category: searchTypes[index],
+                                categoryImage: categoryImages[index],
+                              );
                         } else {
                           switch (index) {
                             case 4: // Wishlist tab

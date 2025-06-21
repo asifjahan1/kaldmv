@@ -58,6 +58,7 @@ class CityDetails extends StatelessWidget {
                                     Get.find<BottomNavController>();
                                 log('Nav controller found: $nav');
                                 final cityModel = CityModel(
+                                  place: item.place,
                                   name: item.title,
                                   imageUrls: [item.imagePath],
                                   placeCount: 1,

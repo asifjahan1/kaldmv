@@ -15,8 +15,9 @@ import 'custom_drawer.dart';
 
 class TSFSScreen extends StatelessWidget {
   final String category;
+  final String categoryImage;
 
-  TSFSScreen({super.key, this.category = ''});
+  TSFSScreen({super.key, this.category = '', this.categoryImage = 'assets/images/rest.png'});
 
   final TSFSController controller = Get.find<TSFSController>();
   final SearchhController sController = Get.find<SearchhController>();
@@ -42,7 +43,7 @@ class TSFSScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Apply category filter on initialization
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.filterByCategory(category);
+      controller.filterByCategory(category, categoryImage);
     });
 
     final screenWidth = MediaQuery.of(context).size.width;
@@ -194,6 +195,7 @@ class TSFSScreen extends StatelessWidget {
                                     Get.find<BottomNavController>();
                                 log('Nav controller found: $nav');
                                 final cityModel = CityModel(
+                                  place: item.place,
                                   name: item.title,
                                   imageUrls: [item.imagePath],
                                   placeCount: 1,
@@ -252,7 +254,8 @@ class TSFSScreen extends StatelessWidget {
                                           top: 8.h,
                                           left: 8.w,
                                           child: Image.asset(
-                                            'assets/images/rest.png',
+                                            // 'assets/images/rest.png',
+                                            controller.categoryImage.value,
                                             height: 20.h,
                                             width: 20.w,
                                           ),
@@ -425,6 +428,7 @@ class TSFSScreen extends StatelessWidget {
                                     Get.find<BottomNavController>();
                                 log('Nav controller found: $nav');
                                 final cityModel = CityModel(
+                                  place: item.place,
                                   name: item.title,
                                   imageUrls: [item.imagePath],
                                   placeCount: 1,
@@ -486,7 +490,8 @@ class TSFSScreen extends StatelessWidget {
                                           top: 8.h,
                                           left: 8.w,
                                           child: Image.asset(
-                                            'assets/images/rest.png',
+                                            // 'assets/images/rest.png',
+                                            controller.categoryImage.value,
                                             height: 30.h,
                                             width: 30.w,
                                           ),

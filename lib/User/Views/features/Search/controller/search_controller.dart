@@ -30,6 +30,7 @@ class SearchhController extends GetxController {
       headerImage: 'assets/images/saudi_arabia.png',
       cities: [
         CityModel(
+          place: 'Riyad',
           name: 'AlUla',
           imageUrls: List.generate(14, (_) => 'assets/images/iran.png'),
           placeCount: 4,
@@ -37,6 +38,7 @@ class SearchhController extends GetxController {
           review: 1,
         ),
         CityModel(
+          place: 'Riyad',
           name: 'Jeddah',
           imageUrls: List.generate(14, (_) => 'assets/images/ksa1.png'),
           placeCount: 4,
@@ -44,6 +46,7 @@ class SearchhController extends GetxController {
           review: 2,
         ),
         CityModel(
+          place: 'Riyad',
           name: 'Taif',
           imageUrls: List.generate(14, (_) => 'assets/images/ksa.png'),
           placeCount: 5,
@@ -51,6 +54,7 @@ class SearchhController extends GetxController {
           review: 3,
         ),
         CityModel(
+          place: 'Riyad',
           name: 'Medina',
           imageUrls: List.generate(14, (_) => 'assets/images/ksa2.png'),
           placeCount: 6,
@@ -58,6 +62,7 @@ class SearchhController extends GetxController {
           review: 4,
         ),
         CityModel(
+          place: 'Riyad',
           name: 'Bait Ul Mamur',
           imageUrls: List.generate(14, (_) => 'assets/images/istanbul.png'),
           placeCount: 4,
@@ -65,6 +70,7 @@ class SearchhController extends GetxController {
           review: 5,
         ),
         CityModel(
+          place: 'Riyad',
           name: 'Bait Ul Mamur',
           imageUrls: List.generate(14, (_) => 'assets/images/ksa1.png'),
           placeCount: 4,
@@ -83,6 +89,7 @@ class SearchhController extends GetxController {
       headerImage: 'assets/images/uk.png',
       cities: [
         CityModel(
+          place: 'Riyad',
           name: 'London',
           imageUrls: List.generate(14, (_) => 'assets/images/uk.png'),
           placeCount: 8,
@@ -90,6 +97,7 @@ class SearchhController extends GetxController {
           review: 10,
         ),
         CityModel(
+          place: 'Riyad',
           name: 'Manchester',
           imageUrls: List.generate(14, (_) => 'assets/images/uk.png'),
           placeCount: 5,
@@ -97,6 +105,7 @@ class SearchhController extends GetxController {
           review: 7,
         ),
         CityModel(
+          place: 'Riyad',
           name: 'Birmingham',
           imageUrls: List.generate(14, (_) => 'assets/images/uk.png'),
           placeCount: 5,
@@ -104,6 +113,7 @@ class SearchhController extends GetxController {
           review: 7,
         ),
         CityModel(
+          place: 'Riyad',
           name: 'Wales',
           imageUrls: List.generate(14, (_) => 'assets/images/uk.png'),
           placeCount: 5,
@@ -111,6 +121,7 @@ class SearchhController extends GetxController {
           review: 7,
         ),
         CityModel(
+          place: 'Riyad',
           name: 'West County',
           imageUrls: List.generate(14, (_) => 'assets/images/uk.png'),
           placeCount: 5,
@@ -129,6 +140,7 @@ class SearchhController extends GetxController {
       headerImage: 'assets/images/turkey.png',
       cities: [
         CityModel(
+          place: 'Turkey',
           name: 'Istanbul',
           imageUrls: List.generate(14, (_) => 'assets/images/istanbul.png'),
           placeCount: 7,
@@ -136,6 +148,7 @@ class SearchhController extends GetxController {
           review: 12,
         ),
         CityModel(
+          place: 'Riyad',
           name: 'Ankara',
           imageUrls: List.generate(14, (_) => 'assets/images/istanbul.png'),
           placeCount: 4,
@@ -143,6 +156,7 @@ class SearchhController extends GetxController {
           review: 5,
         ),
         CityModel(
+          place: 'London',
           name: 'Istanbul',
           imageUrls: List.generate(14, (_) => 'assets/images/istanbul.png'),
           placeCount: 7,
@@ -150,6 +164,7 @@ class SearchhController extends GetxController {
           review: 12,
         ),
         CityModel(
+          place: 'Riyad',
           name: 'Ankara',
           imageUrls: List.generate(14, (_) => 'assets/images/istanbul.png'),
           placeCount: 4,

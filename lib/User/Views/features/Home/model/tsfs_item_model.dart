@@ -1,4 +1,5 @@
 class TSFSItem {
+  final String place;
   final String title;
   final String subTitle;
   final String location;
@@ -10,6 +11,7 @@ class TSFSItem {
   final String category;
 
   TSFSItem({
+    required this.place,
     required this.title,
     required this.subTitle,
     required this.location,
@@ -23,6 +25,7 @@ class TSFSItem {
 
   factory TSFSItem.fromJson(Map<String, dynamic> json) {
     return TSFSItem(
+      place: json['place'] ?? '',
       title: json['title'] ?? '',
       subTitle: json['subTitle'] ?? '',
       location: json['location'] ?? '',
@@ -37,6 +40,7 @@ class TSFSItem {
 
   Map<String, dynamic> toJson() {
     return {
+      'place': place,
       'title': title,
       'subTitle': subTitle,
       'location': location,
@@ -50,6 +54,7 @@ class TSFSItem {
   }
 
   TSFSItem copyWith({
+    String? place,
     String? title,
     String? subTitle,
     String? location,
@@ -62,6 +67,7 @@ class TSFSItem {
 
   }) {
     return TSFSItem(
+      place: place ?? this.place,
       title: title ?? this.title,
       subTitle: subTitle ?? this.subTitle,
       location: location ?? this.location,

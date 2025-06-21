@@ -9,7 +9,8 @@ class TSFSController extends GetxController {
   final RxList<TSFSItem> bookmarkedItems = <TSFSItem>[].obs;
   final RxString selectedValue = 'Open Now'.obs;
   final RxBool isGridView = false.obs;
-  final RxString selectedCategory = ''.obs; // Track current category
+  final RxString selectedCategory = ''.obs;
+  final RxString categoryImage = 'assets/images/rest.png'.obs;
   late final BottomNavController bottomNavController;
 
   // Dropdown filter options
@@ -35,6 +36,7 @@ class TSFSController extends GetxController {
   void _initializeItems() {
     final sampleItems = [
       TSFSItem(
+        place: 'Riyad',
         title: 'Elephant Rock',
         subTitle: 'Activity, Culture, Sight, AIUIa',
         location: 'AIUIa, Saudi Arabia',
@@ -46,6 +48,7 @@ class TSFSController extends GetxController {
         category: 'things_to_do',
       ),
       TSFSItem(
+        place: 'Taif',
         title: "King's Fountain",
         subTitle: 'Activity, Sight, Jeddah',
         location:
@@ -58,6 +61,7 @@ class TSFSController extends GetxController {
         category: 'things_to_do',
       ),
       TSFSItem(
+        place: 'Mecca',
         title: 'Fakeeh Aquarium',
         subTitle: 'Activity, Jeddah',
         location:
@@ -70,6 +74,7 @@ class TSFSController extends GetxController {
         category: 'things_to_do',
       ),
       TSFSItem(
+        place: 'Madinah',
         title: 'Al Jazirah Stadium',
         subTitle: 'Activity, Sight, Jeddah',
         location: 'King Abdulaziz International Airport, Jeddah, Saudi Arabia',
@@ -81,6 +86,7 @@ class TSFSController extends GetxController {
         category: 'stay',
       ),
       TSFSItem(
+        place: 'Istanbul',
         title: "King's Fountain",
         subTitle: 'Activity, Sight, Jeddah',
         location:
@@ -93,6 +99,7 @@ class TSFSController extends GetxController {
         category: 'shopping',
       ),
       TSFSItem(
+        place: 'London',
         title: 'Elephant Rock',
         subTitle: 'Activity, Culture, Sight, AIUIa',
         location: 'AIUIa, Saudi Arabia',
@@ -103,8 +110,8 @@ class TSFSController extends GetxController {
         isBookmarked: false,
         category: 'things_to_do',
       ),
-      // Add sample items for other categories
       TSFSItem(
+        place: 'Jeddah',
         title: 'Jeddah Food Market',
         subTitle: 'Food, Jeddah',
         location: 'Al-Balad, Jeddah, Saudi Arabia',
@@ -113,9 +120,10 @@ class TSFSController extends GetxController {
         isClosed: false,
         provider: 'Local Vendors',
         isBookmarked: false,
-        category: 'food & drink',
+        category: 'food_drink', // Fixed from 'food & drink'
       ),
       TSFSItem(
+        place: 'Ankara',
         title: 'Red Sea Mall',
         subTitle: 'Shopping, Jeddah',
         location: 'King Abdulaziz Road, Jeddah, Saudi Arabia',
@@ -127,6 +135,7 @@ class TSFSController extends GetxController {
         category: 'shopping',
       ),
       TSFSItem(
+        place: 'Isfahan',
         title: 'Ritz-Carlton Jeddah',
         subTitle: 'Hotel, Luxury, Jeddah',
         location: 'Al-Hamra, Jeddah, Saudi Arabia',
@@ -143,8 +152,11 @@ class TSFSController extends GetxController {
     filteredItems.assignAll(sampleItems);
   }
 
-  void filterByCategory(String category) {
+  void filterByCategory(String category, String imagePath) {
     selectedCategory.value = category;
+    categoryImage.value = imagePath.isEmpty
+        ? 'assets/images/rest.png'
+        : imagePath;
     if (category.isEmpty) {
       filteredItems.assignAll(items);
     } else {
@@ -152,14 +164,11 @@ class TSFSController extends GetxController {
         items.where((item) => item.category == category).toList(),
       );
     }
-    // Apply existing sorting filter
     filterItems(selectedValue.value);
   }
 
-  /// Filtering logic for dropdown
   void filterItems(String selected) {
     selectedValue.value = selected;
-
     switch (selected) {
       case 'All':
         filteredItems.assignAll(
