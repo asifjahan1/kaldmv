@@ -34,13 +34,13 @@ class SignUpScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 28.sp,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFFF97C68),
+                          color: const Color(0xFF1B0400),
                         ),
                       ),
                     ),
                     SizedBox(height: 30.h),
                     Obx(
-                          () => Row(
+                      () => Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           _buildRoleButton(
@@ -62,19 +62,11 @@ class SignUpScreen extends StatelessWidget {
                     SizedBox(height: 15.h),
                     _buildTextField(controller.lastNameController, 'Last Name'),
                     SizedBox(height: 15.h),
-                    Obx(
-                          () => controller.isOwner
-                          ? Column(
-                        children: [
-                          _buildTextField(
-                            controller.companyNameController,
-                            'Company Name',
-                          ),
-                          SizedBox(height: 15.h),
-                        ],
-                      )
-                          : const SizedBox(),
+                    _buildTextField(
+                      controller.companyNameController,
+                      'Company Name (optional)',
                     ),
+                    SizedBox(height: 15.h),
                     _buildTextField(controller.emailController, 'Email'),
                     SizedBox(height: 15.h),
                     _buildPasswordField(
@@ -82,40 +74,34 @@ class SignUpScreen extends StatelessWidget {
                       'Password',
                       true,
                     ),
-                    SizedBox(height: 15.h),
-                    _buildPasswordField(
-                      controller.confirmPasswordController,
-                      'Confirm Password',
-                      false,
-                    ),
                     SizedBox(height: 30.h),
                     Obx(
-                          () => controller.isLoading.value
+                      () => controller.isLoading.value
                           ? Center(
-                        child: SpinKitWave(
-                          color: const Color(0xFFF97C68),
-                        ),
-                      )
+                              child: SpinKitWave(
+                                color: const Color(0xFFF97C68),
+                              ),
+                            )
                           : SizedBox(
-                        width: screenWidth * 0.9,
-                        height: 40.h,
-                        child: ElevatedButton(
-                          onPressed: controller.signup,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFF97C68),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(80.r),
+                              width: screenWidth * 0.9,
+                              height: 40.h,
+                              child: ElevatedButton(
+                                onPressed: controller.signup,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFF97C68),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(80.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
                     ),
                     SizedBox(height: 20.h),
                     CustomButton(
@@ -143,16 +129,17 @@ class SignUpScreen extends StatelessWidget {
                     Row(
                       children: [
                         Obx(
-                              () => Checkbox(
+                          () => Checkbox(
                             value: controller.acceptTerms.value,
                             onChanged: (val) =>
-                            controller.acceptTerms.value = val ?? false,
-                            fillColor: MaterialStateProperty.resolveWith<Color>(
-                                    (states) {
-                                  return states.contains(MaterialState.selected)
-                                      ? const Color(0xFFF97C68)
-                                      : Colors.grey;
-                                }),
+                                controller.acceptTerms.value = val ?? false,
+                            fillColor: WidgetStateProperty.resolveWith<Color>((
+                              states,
+                            ) {
+                              return states.contains(WidgetState.selected)
+                                  ? const Color(0xFFF97C68)
+                                  : Colors.transparent;
+                            }),
                           ),
                         ),
                         Flexible(
@@ -160,7 +147,7 @@ class SignUpScreen extends StatelessWidget {
                             text: TextSpan(
                               text: 'Accept the ',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Color(0xFF72544F),
                                 fontSize: 16.sp,
                               ),
                               children: [
@@ -174,7 +161,7 @@ class SignUpScreen extends StatelessWidget {
                                 ),
                                 const TextSpan(
                                   text: ' and ',
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Color(0xFF72544F)),
                                 ),
                                 TextSpan(
                                   text: 'Privacy Policy',
@@ -196,7 +183,10 @@ class SignUpScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Already have an account?',
-                          style: TextStyle(fontSize: 16.sp),
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Color(0xFF72544F),
+                          ),
                         ),
                         SizedBox(width: 5.w),
                         GestureDetector(
@@ -228,14 +218,15 @@ class SignUpScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => controller.changeRole(role),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 5.w),
+        // margin: EdgeInsets.symmetric(horizontal: 5.w),
         padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 10.h),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF21BABA) : const Color(0xFFF5E5E5),
+          color: isSelected ? const Color(0xFF21BABA) : const Color(0xFFF8EFEE),
           borderRadius: BorderRadius.circular(5.r),
           border: Border.all(
-            color:
-            isSelected ? const Color(0xFF21BABA) : const Color(0xFFF5E5E5),
+            color: isSelected
+                ? const Color(0xFF21BABA)
+                : const Color(0xFFF8EFEE),
           ),
         ),
         child: Row(
@@ -276,14 +267,17 @@ class SignUpScreen extends StatelessWidget {
   }
 
   Widget _buildPasswordField(
-      TextEditingController controller,
-      String hint,
-      bool isMainPassword,
-      ) {
+    TextEditingController controller,
+    String hint,
+    bool isMainPassword,
+  ) {
     return Obx(() {
       final isVisible = isMainPassword
           ? this.controller.isPasswordVisible.value
-          : this.controller.isConfirmPasswordVisible.value;
+          : this
+                .controller
+                .isPasswordVisible
+                .value; // Adjusted for single visibility
       return TextField(
         controller: controller,
         obscureText: !isVisible,
@@ -298,8 +292,6 @@ class SignUpScreen extends StatelessWidget {
             onPressed: () {
               if (isMainPassword) {
                 this.controller.togglePasswordVisibility();
-              } else {
-                this.controller.toggleConfirmPasswordVisibility();
               }
             },
           ),

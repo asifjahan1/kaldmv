@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:kaldmv/User/Auth/screens/find_account_screen.dart';
 import 'package:kaldmv/User/Auth/screens/sign_up_screen.dart';
 import '../../../core/const/app_loader.dart';
 import '../../../core/global_widegts/custom_button.dart';
@@ -36,7 +37,7 @@ class LoginScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 28.sp,
                     fontWeight: FontWeight.w700,
-                    color: Colors.black,
+                    color: Color(0xFF1B0400),
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.06),
@@ -78,7 +79,13 @@ class LoginScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(
+                        () => FindAccountScreen(
+                          email: controller.emailTEController.text.trim(),
+                        ),
+                      );
+                    },
                     child: Text(
                       'Forgot password?',
                       style: TextStyle(
@@ -166,14 +173,17 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     Text(
                       'New To Tamshyah? ',
-                      style: TextStyle(fontSize: 14.sp),
+                      style: TextStyle(
+                        color: Color(0xFF72544F),
+                        fontSize: 18.sp,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () => Get.to(() => SignUpScreen()),
                       child: Text(
                         'Sign Up',
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 18.sp,
                           color: const Color(0xFFF97C68),
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline,

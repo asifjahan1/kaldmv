@@ -42,9 +42,9 @@ class LoginController extends GetxController {
     await prefs.setString('user_role', role); // ensure lowercase
 
     if (role == 'owner') {
-      Get.offAll(() => OwnerProfile(isOwner: true));
+      Get.off(() => OwnerProfile(isOwner: true));
     } else if (role == 'guest') {
-      Get.offAll(() => GuestProfile());
+      Get.off(() => GuestProfile());
     } else {
       Get.snackbar('Error', 'Unknown user role: $role');
     }
@@ -65,7 +65,7 @@ class LoginController extends GetxController {
     await Future.delayed(const Duration(seconds: 1));
 
     // Navigate to main screen
-    Get.offAll(() => BottomNavScreen());
+    Get.off(() => BottomNavScreen());
     isLoginLoading.value = false;
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:kaldmv/User/Auth/screens/login_screen.dart';
 import '../../../core/global_widegts/custom_button.dart';
 import '../../../core/global_widegts/custom_text_field.dart';
 import '../controller/login_controller.dart';
@@ -12,119 +13,89 @@ class FindAccountScreen extends StatelessWidget {
 
   FindAccountScreen({this.email = '', super.key});
 
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    nameController.text = email;
+    emailController.text = email;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF000000),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/acc_found.png',
-              width: double.infinity,
-              height: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Find Your Account',
+      backgroundColor: const Color(0xFFFFFFFF),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(16.w),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      textAlign: TextAlign.start,
+                      'Reset Password',
                       style: TextStyle(
                         fontSize: 24.sp,
-                        color: const Color(0xFFFB4958),
+                        color: const Color(0xFF000000),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 50.h),
-
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '  Email',
-                        style: TextStyle(
-                          color: const Color(0xFFFFFFFF),
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Text(
+                    "Enter your email address and we'll send you a link to reset your password.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF000000).withAlpha(50),
+                      fontSize: 15.sp,
                     ),
-                    SizedBox(height: 10.h),
-
-                    CustomTextField(
-                      textEditingController: nameController,
-                      fillColor: Color(0xFFFFFFFF).withAlpha(40),
-                      hintText: 'Email',
+                  ),
+                  SizedBox(height: 50.h),
+                  CustomTextField(
+                    textEditingController: emailController,
+                    fillColor: Color(0xFFFFFFFF),
+                    hintText: 'Enter your email address',
+                    hintTextColor: Color(0xFF000000).withAlpha(80),
+                    borderSide: BorderSide(
+                      color: Color(0xFF000000).withAlpha(50),
                     ),
-
-                    // TextField(
-                    //   controller: nameController,
-                    //   autofocus: true,
-                    //   decoration: InputDecoration(
-                    //     labelText: 'Username',
-                    //     filled: true,
-                    //     fillColor: Colors.white,
-                    //     border: OutlineInputBorder(
-                    //       borderRadius: BorderRadius.circular(10),
-                    //     ),
-                    //     contentPadding: const EdgeInsets.symmetric(
-                    //       horizontal: 15,
-                    //       vertical: 10,
-                    //     ),
-                    //   ),
-                    // ),
-                    SizedBox(height: 40.h),
-
-                    // Removed the Obx wrapper since isForgotPasswordLoading is not available
-                    CustomButton(
-                      onPressed: () async {
-                        // await controller.forgotPassword(
-                        //   email: nameController.text.trim(),
-                        // );
-
-                        Get.to(
-                          () => ForgetPassOtpVerification(
-                            email: nameController.text.trim(),
-                          ),
-                        );
-                      },
-                      text: 'Search',
-                      textColor: Colors.white,
-                      backgroundColor: const Color(0xFFFB4958),
-                      width: screenWidth * 0.9,
-                      height: 40.h,
-                      borderRadius: 10.r,
-                    ),
-                    SizedBox(height: 15.h),
-
-                    CustomButton(
-                      text: 'Cancel',
-                      textColor: const Color(0xFFFFFFFF),
-                      backgroundColor: Colors.transparent,
-                      borderSide: BorderSide(color: Color(0xFFFB4958)),
-                      width: screenWidth * 0.9,
-                      height: 40.h,
-                      borderRadius: 10.r,
-                      onPressed: () {
-                        Get.back();
-                      },
-                    ),
-                  ],
-                ),
+                    textColor: Colors.black,
+                  ),
+                  SizedBox(height: 10.h),
+                  CustomButton(
+                    onPressed: () async {
+                      Get.to(
+                        () => ForgetPassOtpVerification(),
+                        arguments: emailController.text.trim(),
+                      );
+                    },
+                    text: 'Send Reset Link',
+                    textColor: Colors.white,
+                    backgroundColor: const Color(0xFFF97C68),
+                    width: screenWidth * 0.9,
+                    height: 40.h,
+                    borderRadius: 10.r,
+                  ),
+                  SizedBox(height: 15.h),
+                  CustomButton(
+                    text: 'Back to Login',
+                    fontSize: 16.sp,
+                    textColor: const Color(0xFFF97C68),
+                    backgroundColor: Colors.transparent,
+                    width: screenWidth * 0.9,
+                    height: 40.h,
+                    borderRadius: 10.r,
+                    onPressed: () {
+                      Get.off(() => LoginScreen());
+                    },
+                  ),
+                ],
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

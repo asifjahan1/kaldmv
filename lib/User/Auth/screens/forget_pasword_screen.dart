@@ -56,117 +56,114 @@ class ForgetPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE9EBF0),
+      backgroundColor: const Color(0xFFFFFFFF),
       body: SingleChildScrollView(
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/forget_password.png',
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height,
+            SizedBox(height: 100.h),
+            Text(
+              'Update Password',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFFF97C68),
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 100.h),
-                Text(
-                  'Forget Password',
+            SizedBox(height: 60.h),
+
+            // New Password
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 16.w),
+                child: Text(
+                  '  New Password',
                   style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFFFB4958),
+                    color: const Color(0xFF4C4C4C),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14.sp,
                   ),
                 ),
-                SizedBox(height: 60.h),
-
-                // New Password
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 16.w),
-                    child: Text(
-                      '  New Password',
-                      style: TextStyle(
-                        color: const Color(0xFFFFFFFF),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Obx(() {
-                  return CustomTextField(
-                    textEditingController: controller.passwordController,
-                    hintText: '*********',
-                    obscureText: !controller.isPasswordVisible.value,
-                    fillColor: const Color(0xFFFFFFFF).withAlpha(30),
-                    // suffixIcon: IconButton(
-                    //   icon: Icon(
-                    //     controller.isPasswordVisible.value
-                    //         ? Icons.visibility_off
-                    //         : Icons.visibility,
-                    //     color: const Color(0xFF4A4F5E),
-                    //   ),
-                    //   onPressed: controller.togglePasswordVisibility,
-                    // ),
-                  );
-                }),
-                SizedBox(height: 20.h),
-
-                // Confirm Password
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 16.w),
-                    child: Text(
-                      '  Confirm Password',
-                      style: TextStyle(
-                        color: const Color(0xFFFFFFFF),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Obx(() {
-                  return CustomTextField(
-                    textEditingController: controller.confirmPasswordController,
-                    hintText: '*********',
-                    obscureText: !controller.isConfirmPasswordVisible.value,
-                    fillColor: const Color(0xFFFFFFFF).withAlpha(30),
-                    // suffixIcon: IconButton(
-                    //   icon: Icon(
-                    //     controller.isConfirmPasswordVisible.value
-                    //         ? Icons.visibility_off
-                    //         : Icons.visibility,
-                    //     color: const Color(0xFF4A4F5E),
-                    //   ),
-                    //   onPressed: controller.toggleConfirmPasswordVisibility,
-                    // ),
-                  );
-                }),
-                SizedBox(height: 40.h),
-
-                // Submit Button or Loader
-                Obx(() {
-                  return controller.isLoginLoading.value
-                      ? loader()
-                      : CustomButton(
-                    onPressed: () {},
-                        // onPressed: () => _submit(context),
-                        text: 'Login',
-                        textColor: Colors.white,
-                        backgroundColor: const Color(0xFFFB4958),
-                        width: 0.9.sw,
-                        borderRadius: 10.r,
-                      );
-                }),
-                SizedBox(height: 40.h),
-              ],
+              ),
             ),
+            SizedBox(height: 10.h),
+            Obx(() {
+              return CustomTextField(
+                textEditingController: controller.passwordController,
+                hintText: '*********',
+                hintTextColor: Color(0xFF4C4C4C),
+                obscureText: !controller.isPasswordVisible.value,
+                fillColor: Colors.white,
+                borderSide: BorderSide(color: Color(0xFF4C4C4C).withAlpha(30)),
+                // suffixIcon: IconButton(
+                //   icon: Icon(
+                //     controller.isPasswordVisible.value
+                //         ? Icons.visibility_off
+                //         : Icons.visibility,
+                //     color: const Color(0xFF4A4F5E),
+                //   ),
+                //   onPressed: controller.togglePasswordVisibility,
+                // ),
+              );
+            }),
+            SizedBox(height: 20.h),
+
+            // Confirm Password
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 16.w),
+                child: Text(
+                  '  Confirm Password',
+                  style: TextStyle(
+                    color: const Color(0xFF4C4C4C),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10.h),
+            Obx(() {
+              return CustomTextField(
+                textEditingController: controller.confirmPasswordController,
+                hintText: '*********',
+                hintTextColor: Color(0xFF4C4C4C),
+                obscureText: !controller.isConfirmPasswordVisible.value,
+                fillColor: Colors.white,
+                textColor: Colors.black,
+                borderSide: BorderSide(color: Color(0xFF4C4C4C).withAlpha(30)),
+                // suffixIcon: IconButton(
+                //   icon: Icon(
+                //     controller.isConfirmPasswordVisible.value
+                //         ? Icons.visibility_off
+                //         : Icons.visibility,
+                //     color: const Color(0xFF4A4F5E),
+                //   ),
+                //   onPressed: controller.toggleConfirmPasswordVisibility,
+                // ),
+              );
+            }),
+            SizedBox(height: 40.h),
+
+            // Submit Button or Loader
+            Obx(() {
+              return controller.isLoginLoading.value
+                  ? loader()
+                  : CustomButton(
+                      onPressed: () {
+                        Get.off(() => LoginScreen());
+                      },
+                      // onPressed: () => _submit(context),
+                      text: 'Update',
+                      textColor: Colors.white,
+                      backgroundColor: const Color(0xFFF97C68),
+                      width: 0.9.sw,
+                      borderRadius: 10.r,
+                    );
+            }),
+            SizedBox(height: 40.h),
           ],
         ),
       ),
