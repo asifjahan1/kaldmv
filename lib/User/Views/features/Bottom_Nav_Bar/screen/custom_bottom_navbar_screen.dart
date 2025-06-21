@@ -54,28 +54,30 @@ class BottomNavScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: List.generate(icons.length, (index) {
-                    return GestureDetector(
-                      onTap: () => controller.changeIndex(index),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            icons[index],
-                            color: controller.selectedIndex.value == index
-                                ? const Color(0xFFF97C68)
-                                : const Color(0xFF867B79),
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            labels[index],
-                            style: TextStyle(
+                    return Expanded(
+                      child: InkWell(
+                        onTap: () => controller.changeIndex(index),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              icons[index],
                               color: controller.selectedIndex.value == index
-                                  ? Colors.redAccent
+                                  ? const Color(0xFFF97C68)
                                   : const Color(0xFF867B79),
-                              fontSize: 12.sp,
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 4.h),
+                            Text(
+                              labels[index],
+                              style: TextStyle(
+                                color: controller.selectedIndex.value == index
+                                    ? const Color(0xFFF97C68)
+                                    : const Color(0xFF867B79),
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }),
