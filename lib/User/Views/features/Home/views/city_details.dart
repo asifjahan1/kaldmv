@@ -1,15 +1,17 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
 import 'package:kaldmv/User/Views/features/Home/controller/tsfs_controller.dart';
 import 'package:kaldmv/User/Views/features/Home/views/custom_drawer.dart';
 import 'package:kaldmv/User/Views/features/Search/controller/search_controller.dart';
+import 'package:kaldmv/User/Views/features/Search/view/place_details.dart';
 import 'package:kaldmv/core/global_widegts/custom_header.dart';
 import 'package:kaldmv/User/Views/features/Home/model/tsfs_item_model.dart';
+import 'package:kaldmv/User/Views/features/Search/model/city_model.dart';
 
 class CityDetails extends StatelessWidget {
   CityDetails({super.key});
@@ -50,7 +52,24 @@ class CityDetails extends StatelessWidget {
                             final TSFSItem item =
                                 controller.filteredItems[index];
                             return GestureDetector(
-                              onTap: () => controller.onItemTap(index),
+                              onTap: () {
+                                sController.selectLocation('city', index);
+                                final BottomNavController nav =
+                                    Get.find<BottomNavController>();
+                                log('Nav controller found: $nav');
+                                final cityModel = CityModel(
+                                  name: item.title,
+                                  imageUrls: [item.imagePath],
+                                  placeCount: 1,
+                                  rating: item.rating,
+                                  review: index + 1,
+                                  categoryRatings: null,
+                                );
+                                nav.customSearchContent.value = PlaceDetails(
+                                  item: cityModel,
+                                );
+                                nav.changeIndex(1);
+                              },
                               child: Container(
                                 margin: EdgeInsets.symmetric(
                                   vertical: 10.h,
@@ -320,7 +339,7 @@ class CityDetails extends StatelessWidget {
               ),
               SizedBox(height: 10.h),
               Text(
-                '$primaryCity (${country.cities.length})', // Use primary city consistently
+                '$primaryCity (${country.cities.length})',
                 style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
               ),
             ],

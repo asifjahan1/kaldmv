@@ -9,6 +9,7 @@ class TSFSController extends GetxController {
   final RxList<TSFSItem> bookmarkedItems = <TSFSItem>[].obs;
   final RxString selectedValue = 'Open Now'.obs;
   final RxBool isGridView = false.obs;
+  final RxString selectedCategory = ''.obs; // Track current category
   late final BottomNavController bottomNavController;
 
   // Dropdown filter options
@@ -42,6 +43,7 @@ class TSFSController extends GetxController {
         isClosed: false,
         provider: 'Closed',
         isBookmarked: false,
+        category: 'things_to_do',
       ),
       TSFSItem(
         title: "King's Fountain",
@@ -53,6 +55,7 @@ class TSFSController extends GetxController {
         isClosed: false,
         provider: 'Closed',
         isBookmarked: false,
+        category: 'things_to_do',
       ),
       TSFSItem(
         title: 'Fakeeh Aquarium',
@@ -64,6 +67,7 @@ class TSFSController extends GetxController {
         isClosed: false,
         provider: 'Closed',
         isBookmarked: false,
+        category: 'things_to_do',
       ),
       TSFSItem(
         title: 'Al Jazirah Stadium',
@@ -74,6 +78,7 @@ class TSFSController extends GetxController {
         isClosed: true,
         provider: 'Closed',
         isBookmarked: false,
+        category: 'stay',
       ),
       TSFSItem(
         title: "King's Fountain",
@@ -85,6 +90,7 @@ class TSFSController extends GetxController {
         isClosed: false,
         provider: 'Closed',
         isBookmarked: false,
+        category: 'shopping',
       ),
       TSFSItem(
         title: 'Elephant Rock',
@@ -95,11 +101,59 @@ class TSFSController extends GetxController {
         isClosed: false,
         provider: 'Closed',
         isBookmarked: false,
+        category: 'things_to_do',
+      ),
+      // Add sample items for other categories
+      TSFSItem(
+        title: 'Jeddah Food Market',
+        subTitle: 'Food, Jeddah',
+        location: 'Al-Balad, Jeddah, Saudi Arabia',
+        imagePath: 'assets/images/food_market.png',
+        rating: 4.2,
+        isClosed: false,
+        provider: 'Local Vendors',
+        isBookmarked: false,
+        category: 'food & drink',
+      ),
+      TSFSItem(
+        title: 'Red Sea Mall',
+        subTitle: 'Shopping, Jeddah',
+        location: 'King Abdulaziz Road, Jeddah, Saudi Arabia',
+        imagePath: 'assets/images/mall.png',
+        rating: 4.0,
+        isClosed: false,
+        provider: 'Retail',
+        isBookmarked: false,
+        category: 'shopping',
+      ),
+      TSFSItem(
+        title: 'Ritz-Carlton Jeddah',
+        subTitle: 'Hotel, Luxury, Jeddah',
+        location: 'Al-Hamra, Jeddah, Saudi Arabia',
+        imagePath: 'assets/images/ritz.png',
+        rating: 4.8,
+        isClosed: false,
+        provider: 'Hotel',
+        isBookmarked: false,
+        category: 'stay',
       ),
     ];
 
     items.assignAll(sampleItems);
     filteredItems.assignAll(sampleItems);
+  }
+
+  void filterByCategory(String category) {
+    selectedCategory.value = category;
+    if (category.isEmpty) {
+      filteredItems.assignAll(items);
+    } else {
+      filteredItems.assignAll(
+        items.where((item) => item.category == category).toList(),
+      );
+    }
+    // Apply existing sorting filter
+    filterItems(selectedValue.value);
   }
 
   /// Filtering logic for dropdown
@@ -108,21 +162,62 @@ class TSFSController extends GetxController {
 
     switch (selected) {
       case 'All':
-        filteredItems.assignAll(items);
+        filteredItems.assignAll(
+          items
+              .where(
+                (item) =>
+                    selectedCategory.value.isEmpty ||
+                    item.category == selectedCategory.value,
+              )
+              .toList(),
+        );
         break;
       case 'Open Now':
-        filteredItems.assignAll(items.where((item) => !item.isClosed).toList());
+        filteredItems.assignAll(
+          items
+              .where(
+                (item) =>
+                    !item.isClosed &&
+                    (selectedCategory.value.isEmpty ||
+                        item.category == selectedCategory.value),
+              )
+              .toList(),
+        );
         break;
       case 'Closed':
-        filteredItems.assignAll(items.where((item) => item.isClosed).toList());
+        filteredItems.assignAll(
+          items
+              .where(
+                (item) =>
+                    item.isClosed &&
+                    (selectedCategory.value.isEmpty ||
+                        item.category == selectedCategory.value),
+              )
+              .toList(),
+        );
         break;
       case 'Highly Rated':
         filteredItems.assignAll(
-          items.where((item) => item.rating >= 4.0).toList(),
+          items
+              .where(
+                (item) =>
+                    item.rating >= 4.0 &&
+                    (selectedCategory.value.isEmpty ||
+                        item.category == selectedCategory.value),
+              )
+              .toList(),
         );
         break;
       default:
-        filteredItems.assignAll(items);
+        filteredItems.assignAll(
+          items
+              .where(
+                (item) =>
+                    selectedCategory.value.isEmpty ||
+                    item.category == selectedCategory.value,
+              )
+              .toList(),
+        );
     }
   }
 

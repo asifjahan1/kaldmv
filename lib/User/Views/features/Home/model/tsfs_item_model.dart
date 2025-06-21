@@ -7,6 +7,7 @@ class TSFSItem {
   final bool isClosed;
   final String provider;
   bool isBookmarked;
+  final String category;
 
   TSFSItem({
     required this.title,
@@ -17,6 +18,7 @@ class TSFSItem {
     required this.isClosed,
     required this.provider,
     this.isBookmarked = false,
+    required this.category,
   });
 
   factory TSFSItem.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class TSFSItem {
       isClosed: json['isClosed'] ?? false,
       isBookmarked: json['isBookmarked'] ?? false,
       provider: json['provider'] ?? '',
+      category: json['category'] ?? '',
     );
   }
 
@@ -42,6 +45,7 @@ class TSFSItem {
       'isClosed': isClosed,
       'isBookmarked': isBookmarked,
       'provider': provider,
+      'category': category,
     };
   }
 
@@ -54,6 +58,7 @@ class TSFSItem {
     bool? isClosed,
     bool? isBookmarked,
     String? provider,
+    String? category,
 
   }) {
     return TSFSItem(
@@ -65,6 +70,7 @@ class TSFSItem {
       isClosed: isClosed ?? this.isClosed,
       isBookmarked: isBookmarked ?? this.isBookmarked,
       provider: provider ?? this.provider,
+      category: category ?? this.category,
     );
   }
 }

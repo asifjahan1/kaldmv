@@ -1,11 +1,12 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
+import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
+import 'package:kaldmv/User/Views/features/Search/model/city_model.dart';
+import 'package:kaldmv/User/Views/features/Search/view/place_details.dart';
 import '../../../../../core/global_widegts/custom_button.dart';
 import '../../../../../core/global_widegts/custom_header.dart';
 import '../../Search/controller/search_controller.dart';
@@ -13,10 +14,22 @@ import '../controller/tsfs_controller.dart';
 import 'custom_drawer.dart';
 
 class TSFSScreen extends StatelessWidget {
-  TSFSScreen({super.key});
+  final String category;
+
+  TSFSScreen({super.key, this.category = ''});
 
   final TSFSController controller = Get.find<TSFSController>();
-  final SearchhController searchController = Get.find<SearchhController>();
+  final SearchhController sController = Get.find<SearchhController>();
+
+  // Helper function to format category name
+  String _formatCategoryName(String category) {
+    if (category.isEmpty) return 'Things to Do';
+    return category
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map((word) => word.capitalizeFirst!)
+        .join(' ');
+  }
 
   // Helper function to truncate location to first three words with ellipsis
   String _truncateToThreeWords(String text) {
@@ -27,6 +40,11 @@ class TSFSScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Apply category filter on initialization
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.filterByCategory(category);
+    });
+
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -39,12 +57,10 @@ class TSFSScreen extends StatelessWidget {
               menuIconPath: 'assets/images/menu11.png',
               logoPath: 'assets/images/logo22.png',
               backgroundColor: Colors.white,
-              // backgroundColor: isDefault ? const Color(0xFFF97C68) : Colors.white,
               showFilters: false,
               showSearchBar: false,
               isAISuggestionPanelVisible: false,
             ),
-            // Header: Title & Result Count + View Toggle
             Obx(
               () => Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -54,7 +70,9 @@ class TSFSScreen extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Things to do ',
+                          _formatCategoryName(
+                            controller.selectedCategory.value,
+                          ),
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
@@ -103,10 +121,7 @@ class TSFSScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             SizedBox(height: 8.h),
-
-            // Filter and Sort By
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: Row(
@@ -152,8 +167,6 @@ class TSFSScreen extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Main List/Grid
             Obx(
               () => Expanded(
                 child: Padding(
@@ -175,7 +188,24 @@ class TSFSScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final item = controller.filteredItems[index];
                             return GestureDetector(
-                              onTap: () => controller.onItemTap(index),
+                              onTap: () {
+                                sController.selectLocation('city', index);
+                                final BottomNavController nav =
+                                    Get.find<BottomNavController>();
+                                log('Nav controller found: $nav');
+                                final cityModel = CityModel(
+                                  name: item.title,
+                                  imageUrls: [item.imagePath],
+                                  placeCount: 1,
+                                  rating: item.rating,
+                                  review: index + 1,
+                                  categoryRatings: null,
+                                );
+                                nav.customSearchContent.value = PlaceDetails(
+                                  item: cityModel,
+                                );
+                                nav.changeIndex(1);
+                              },
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -232,14 +262,19 @@ class TSFSScreen extends StatelessWidget {
                                           right: 8.w,
                                           child: InkWell(
                                             onTap: () {
-                                              log('Bookmark Tapped');
+                                              controller.toggleBookmark(index);
+                                              log(
+                                                'Bookmark Tapped for ${item.title}, isBookmarked: ${item.isBookmarked}',
+                                              );
                                             },
                                             child: CircleAvatar(
                                               backgroundColor: Color(
                                                 0xFFFFFFFF,
                                               ).withAlpha(80),
                                               child: Image.asset(
-                                                'assets/images/bookmark1.png',
+                                                item.isBookmarked
+                                                    ? 'assets/images/bookmark22.png'
+                                                    : 'assets/images/bookmark1.png',
                                                 height: 20.h,
                                                 width: 20.w,
                                               ),
@@ -384,7 +419,24 @@ class TSFSScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final item = controller.filteredItems[index];
                             return GestureDetector(
-                              onTap: () => controller.onItemTap(index),
+                              onTap: () {
+                                sController.selectLocation('city', index);
+                                final BottomNavController nav =
+                                    Get.find<BottomNavController>();
+                                log('Nav controller found: $nav');
+                                final cityModel = CityModel(
+                                  name: item.title,
+                                  imageUrls: [item.imagePath],
+                                  placeCount: 1,
+                                  rating: item.rating,
+                                  review: index + 1,
+                                  categoryRatings: null,
+                                );
+                                nav.customSearchContent.value = PlaceDetails(
+                                  item: cityModel,
+                                );
+                                nav.changeIndex(1);
+                              },
                               child: Container(
                                 margin: EdgeInsets.symmetric(
                                   vertical: 10.h,
@@ -553,7 +605,7 @@ class TSFSScreen extends StatelessWidget {
                                                   ),
                                                   SizedBox(width: 5.w),
                                                   Text(
-                                                    ' (${(index + 0) * 1} Reviews)',
+                                                    ' (${index + 1} Reviews)',
                                                     style: TextStyle(
                                                       fontSize: 14.sp,
                                                       color: Colors.grey,

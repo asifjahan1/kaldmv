@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -18,7 +17,6 @@ class CustomDrawer extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            // Top Row with Image and Cross Button
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
               child: Row(
@@ -33,14 +31,16 @@ class CustomDrawer extends StatelessWidget {
                     onTap: () {
                       Get.back();
                     },
-                    child: const Icon(Icons.close, color: Colors.white, size: 24,),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 24,
+                    ),
                   ),
                 ],
               ),
             ),
             SizedBox(height: 20.h),
-
-            // Menu Items
             ...List.generate(6, (index) {
               final menuItems = [
                 'Things to do',
@@ -48,45 +48,36 @@ class CustomDrawer extends StatelessWidget {
                 'Shopping',
                 'Stay',
                 'Wishlist',
-                'My Places'
+                'My Places',
               ];
               final searchTypes = [
                 'things_to_do',
                 'food_drink',
                 'shopping',
                 'stay',
-                '', // Wishlist (not used for search)
-                ''  // My Places (not used for search)
               ];
-              // final menuRoutes = [
-              //   ThingsToDoScreen(),
-              //   FoodDrinkScreen(),
-              //   ShoppingScreen(),
-              //   StayScreen(),
-              //   WishlistScreen(),
-              //   MyPlacesScreen(),
-              // ];
 
               return Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 10.h,
+                    ),
                     child: GestureDetector(
                       onTap: () {
                         log('Tapped on ${menuItems[index]}');
                         Get.back();
-
-                        final bottomNavController = Get.find<BottomNavController>();
-
+                        final bottomNavController =
+                            Get.find<BottomNavController>();
                         if (index >= 0 && index <= 3) {
-                          // Use openSearchScreen to set search parameters and switch to index 1
                           bottomNavController.openSearchScreen(
                             searchTypes[index],
                             index,
                             menuItems[index],
                           );
-                          // Set customSearchContent to TSFSScreen
-                          bottomNavController.customSearchContent.value = TSFSScreen();
+                          bottomNavController.customSearchContent.value =
+                              TSFSScreen(category: searchTypes[index]);
                         } else {
                           switch (index) {
                             case 4: // Wishlist tab
@@ -98,31 +89,33 @@ class CustomDrawer extends StatelessWidget {
                           }
                         }
                       },
-
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             menuItems[index],
-                            style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           Transform.rotate(
                             angle: 3.14,
-                              child: Icon(Icons.arrow_back_ios_new_outlined, color: Colors.white, size: 16,)),
+                            child: Icon(
+                              Icons.arrow_back_ios_new_outlined,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  )
+                  ),
                 ],
               );
             }),
-
             const Spacer(),
-
-            // Logout Button
-
-            // padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
               child: CustomButton(
@@ -131,13 +124,17 @@ class CustomDrawer extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 prefixIconPath: 'assets/images/logout.png',
                 suffixIcon: Transform.rotate(
-                    angle: 3.14,
-                    child: Icon(Icons.arrow_back_ios_new_outlined, color: Colors.white, size: 18,),
+                  angle: 3.14,
+                  child: Icon(
+                    Icons.arrow_back_ios_new_outlined,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                 ),
                 spaceBetweenSuffix: true,
               ),
             ),
-            SizedBox(height: 10.h)
+            SizedBox(height: 10.h),
           ],
         ),
       ),
