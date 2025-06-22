@@ -106,7 +106,13 @@ class HomeController extends GetxController {
     'Premium (\$5000+)',
   ];
 
-  List<String> groupTypes = ['Solo', 'Couple', 'Family', 'Friends'];
+  List<String> groupTypes = [
+    'Solo Traveler',
+    'Couple',
+    'Family',
+    'Friends',
+    'Business',
+  ];
 
   // Sample data for popular countries and cities
   var popularCountries = [
