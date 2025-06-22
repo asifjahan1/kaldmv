@@ -16,6 +16,40 @@ import 'package:file_picker/file_picker.dart';
 class HomePage extends StatelessWidget {
   final HomeController controller = Get.put(HomeController());
 
+  // List of time options for Start Time and End Time dropdowns
+  // final List<String> timeOptions = List.generate(
+  //   24,
+  //   (index) => '${index.toString().padLeft(2, '0')}:00',
+  // );
+
+  //   final List<String> timeOptions = [
+  //   '12:00 AM', '1:00 AM', '2:00 AM', '3:00 AM', '4:00 AM', '5:00 AM',
+  //   '6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
+  //   '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM',
+  //   '6:00 PM', '7:00 PM', '8:00 PM', '9:00 PM', '10:00 PM', '11:00 PM',
+  // ];
+
+  final List<String> startTimeOptions = [
+    '9:00 AM',
+    '10:00 AM',
+    '11:00 AM',
+    '12:00 PM',
+    '1:00 PM',
+    '2:00 PM',
+    '3:00 PM',
+    '4:00 PM',
+  ];
+
+  final List<String> endTimeOptions = [
+    '5:00 PM',
+    '6:00 PM',
+    '7:00 PM',
+    '8:00 PM',
+    '9:00 PM',
+    '10:00 PM',
+    '11:00 PM',
+  ];
+
   HomePage({super.key});
 
   @override
@@ -116,9 +150,9 @@ class HomePage extends StatelessWidget {
                               textEditingController: controller.cityController,
                             ),
                             SizedBox(height: 10.h),
-                            // Date
+                            // Start Date
                             Text(
-                              'Date',
+                              'Start Date',
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
@@ -127,7 +161,8 @@ class HomePage extends StatelessWidget {
                             SizedBox(height: 5.h),
                             CustomTextField(
                               prefixIconPath: 'assets/images/date.png',
-                              textEditingController: controller.dateController,
+                              textEditingController:
+                                  controller.startDateController,
                               fillColor: Color(0xFFFFFFFF),
                               textColor: Colors.black,
                               hintText: 'Select date',
@@ -145,14 +180,53 @@ class HomePage extends StatelessWidget {
                                   lastDate: DateTime(2100),
                                 );
                                 if (pickedDate != null) {
-                                  controller.dateController.text = DateFormat(
-                                    'yyyy-MM-dd',
-                                  ).format(pickedDate);
+                                  controller.startDateController.text =
+                                      DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(pickedDate);
                                 }
                               },
                             ),
                             SizedBox(height: 10.h),
-                            // Duration Dropdown Row
+                            // End Date
+                            Text(
+                              'End Date',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5.h),
+                            CustomTextField(
+                              prefixIconPath: 'assets/images/date.png',
+                              textEditingController:
+                                  controller.endDateController,
+                              fillColor: Color(0xFFFFFFFF),
+                              textColor: Colors.black,
+                              hintText: 'Select date',
+                              hintTextColor: Colors.grey[500],
+                              fontSize: 14.sp,
+                              borderSide: const BorderSide(
+                                color: Color(0xFF867B79),
+                              ),
+                              readOnly: true,
+                              onTap: () async {
+                                final pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2100),
+                                );
+                                if (pickedDate != null) {
+                                  controller.endDateController.text =
+                                      DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(pickedDate);
+                                }
+                              },
+                            ),
+                            SizedBox(height: 10.h),
+                            // Start Time and End Time Dropdown Row
                             Text(
                               'Duration',
                               style: TextStyle(
@@ -167,11 +241,11 @@ class HomePage extends StatelessWidget {
                                   child: Obx(
                                     () => CustomTextField(
                                       textEditingController:
-                                          controller.durationController,
+                                          controller.startTimeController,
                                       prefixIconPath:
                                           'assets/images/timer1.png',
                                       isDropdown: true,
-                                      dropdownItems: controller.durationTimes,
+                                      dropdownItems: startTimeOptions,
                                       selectedDropdownValue:
                                           controller.startTime.value.isEmpty
                                           ? null
@@ -179,7 +253,7 @@ class HomePage extends StatelessWidget {
                                       onDropdownChanged: (value) {
                                         if (value != null) {
                                           controller.startTime.value = value;
-                                          controller.durationController.text =
+                                          controller.startTimeController.text =
                                               value;
                                         }
                                       },
@@ -198,13 +272,11 @@ class HomePage extends StatelessWidget {
                                   child: Obx(
                                     () => CustomTextField(
                                       textEditingController:
-                                          TextEditingController(
-                                            text: controller.endTime.value,
-                                          ),
+                                          controller.endTimeController,
                                       prefixIconPath:
                                           'assets/images/timer1.png',
                                       isDropdown: true,
-                                      dropdownItems: controller.durationTimes,
+                                      dropdownItems: endTimeOptions,
                                       selectedDropdownValue:
                                           controller.endTime.value.isEmpty
                                           ? null
@@ -212,7 +284,7 @@ class HomePage extends StatelessWidget {
                                       onDropdownChanged: (value) {
                                         if (value != null) {
                                           controller.endTime.value = value;
-                                          controller.durationController.text =
+                                          controller.endTimeController.text =
                                               value;
                                         }
                                       },
@@ -347,6 +419,7 @@ class HomePage extends StatelessWidget {
                               validator: null,
                               prefixIconPath: 'assets/images/attachment.png',
                             ),
+                            SizedBox(height: 10.h),
                             // Special Requirements
                             Text(
                               'Special Requirements',
@@ -385,9 +458,12 @@ class HomePage extends StatelessWidget {
                                 final tourPlanData = {
                                   'country': controller.countryController.text,
                                   'city': controller.cityController.text,
-                                  'date': controller.dateController.text,
-                                  'duration':
-                                      controller.durationController.text,
+                                  'startDate':
+                                      controller.startDateController.text,
+                                  'endDate': controller.endDateController.text,
+                                  'startTime':
+                                      controller.startTimeController.text,
+                                  'endTime': controller.endTimeController.text,
                                   'budget': controller.budgetController.text,
                                   'groupType':
                                       controller.groupTypeController.text,
@@ -512,7 +588,8 @@ class HomePage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          final BottomNavController nav = Get.find();
+                          final BottomNavController nav =
+                              Get.find<BottomNavController>();
                           final country = controller.popularCountries[index];
                           nav.openSearchScreen('country', index, country.name);
                         },
@@ -591,16 +668,17 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 10.h),
               // Popular Cities
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Popular Cities',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -612,7 +690,7 @@ class HomePage extends StatelessWidget {
                         nav.customSearchContent.value = PopularCities();
                         nav.changeIndex(1);
                       },
-                      child: const Text(
+                      child: Text(
                         'See all',
                         style: TextStyle(color: Color(0xFFF97C68)),
                       ),

@@ -5,8 +5,14 @@ class HomeController extends GetxController {
   var selectedCategory = 'Things To Do'.obs;
 
   var categories = [
-    CategoryItem(name: 'Things To Do', imageUrl: 'assets/images/things_to_do.png'),
-    CategoryItem(name: 'Food & Drink', imageUrl: 'assets/images/food_drink.png'),
+    CategoryItem(
+      name: 'Things To Do',
+      imageUrl: 'assets/images/things_to_do.png',
+    ),
+    CategoryItem(
+      name: 'Food & Drink',
+      imageUrl: 'assets/images/food_drink.png',
+    ),
     CategoryItem(name: 'Shopping', imageUrl: 'assets/images/shopping.png'),
     CategoryItem(name: 'Stay', imageUrl: 'assets/images/stay.png'),
   ].obs;
@@ -38,11 +44,14 @@ class HomeController extends GetxController {
   // Text controllers
   TextEditingController countryController = TextEditingController();
   TextEditingController cityController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
+  TextEditingController startDateController = TextEditingController();
+  TextEditingController endDateController = TextEditingController();
   TextEditingController filePathController = TextEditingController();
   TextEditingController specialRequirementController = TextEditingController();
   TextEditingController groupTypeController = TextEditingController();
-  TextEditingController durationController = TextEditingController();
+  // TextEditingController durationController = TextEditingController();
+  TextEditingController startTimeController = TextEditingController();
+  TextEditingController endTimeController = TextEditingController();
   TextEditingController budgetController = TextEditingController();
 
   // Dropdown selections
@@ -52,36 +61,108 @@ class HomeController extends GetxController {
   RxString selectedGroupType = ''.obs;
 
   // Dropdown options
-  List<String> durationTimes = [
-    '1 Day', '2 Days', '3 Days', '4 Days',
-    '5 Days', '6 Days', '7 Days', '8 Days',
-    '9 Days', '10 Days', '11 Days', '12 Days',
-    '13 Days', '14 Days', '15 Days', '16 Days'
+  List<String> startTimes = [
+    '1 Day',
+    '2 Days',
+    '3 Days',
+    '4 Days',
+    '5 Days',
+    '6 Days',
+    '7 Days',
+    '8 Days',
+    '9 Days',
+    '10 Days',
+    '11 Days',
+    '12 Days',
+    '13 Days',
+    '14 Days',
+    '15 Days',
+    '16 Days',
+  ];
+
+  List<String> endTimes = [
+    '1 Day',
+    '2 Days',
+    '3 Days',
+    '4 Days',
+    '5 Days',
+    '6 Days',
+    '7 Days',
+    '8 Days',
+    '9 Days',
+    '10 Days',
+    '11 Days',
+    '12 Days',
+    '13 Days',
+    '14 Days',
+    '15 Days',
+    '16 Days',
   ];
 
   List<String> budgetRanges = [
-    '\$100 - \$300', '\$300 - \$500', '\$500 - \$1000', 'Above \$1000'
+    'Basic (\$0 - \$500)',
+    'Mid-range(\$500 - \$1500)',
+    'Luxury (\$1500 - \$5000)',
+    'Premium (\$5000+)',
   ];
 
-  List<String> groupTypes = [
-    'Solo', 'Couple', 'Family', 'Friends'
-  ];
+  List<String> groupTypes = ['Solo', 'Couple', 'Family', 'Friends'];
 
   // Sample data for popular countries and cities
   var popularCountries = [
-    PopularPlace(name: 'United Kingdom', placeCount: 6, imageUrl: 'assets/images/uk.png'),
-    PopularPlace(name: 'Saudi Arabia', placeCount: 4, imageUrl: 'assets/images/ksa.png'),
-    PopularPlace(name: 'Dubai', placeCount: 8, imageUrl: 'assets/images/ksa1.png'),
-    PopularPlace(name: 'Turkey', placeCount: 5, imageUrl: 'assets/images/iran.png'),
+    PopularPlace(
+      name: 'United Kingdom',
+      placeCount: 6,
+      imageUrl: 'assets/images/uk.png',
+    ),
+    PopularPlace(
+      name: 'Saudi Arabia',
+      placeCount: 4,
+      imageUrl: 'assets/images/ksa.png',
+    ),
+    PopularPlace(
+      name: 'Dubai',
+      placeCount: 8,
+      imageUrl: 'assets/images/ksa1.png',
+    ),
+    PopularPlace(
+      name: 'Turkey',
+      placeCount: 5,
+      imageUrl: 'assets/images/iran.png',
+    ),
   ].obs;
 
   var popularCities = [
-    PopularPlace(name: 'London, United Kingdom', placeCount: 6, imageUrl: 'assets/images/uk1.png'),
-    PopularPlace(name: 'AIUIa, Saudi Arabia', placeCount: 8, imageUrl: 'assets/images/ksa2.png'),
-    PopularPlace(name: 'Ispahan, Iran', placeCount: 5, imageUrl: 'assets/images/iran.png'),
-    PopularPlace(name: 'Turkey', placeCount: 4, imageUrl: 'assets/images/istanbul.png'),
-    PopularPlace(name: 'United Kingdom', placeCount: 6, imageUrl: 'assets/images/uk.png'),
-    PopularPlace(name: 'Birmingham, United Kingdom', placeCount: 8, imageUrl: 'assets/images/birmingham.png'),
+    PopularPlace(
+      name: 'London, United Kingdom',
+      placeCount: 6,
+      imageUrl: 'assets/images/uk1.png',
+    ),
+    PopularPlace(
+      name: 'AIUIa, Saudi Arabia',
+      placeCount: 8,
+      imageUrl: 'assets/images/ksa2.png',
+    ),
+    PopularPlace(
+      name: 'Ispahan, Iran',
+      placeCount: 5,
+      imageUrl: 'assets/images/iran.png',
+    ),
+    PopularPlace(
+      name: 'Turkey',
+      placeCount: 4,
+      imageUrl: 'assets/images/istanbul.png',
+    ),
+    PopularPlace(
+      name: 'United Kingdom',
+      placeCount: 6,
+      imageUrl: 'assets/images/uk.png',
+    ),
+    PopularPlace(
+      name: 'Birmingham, United Kingdom',
+      placeCount: 8,
+      imageUrl: 'assets/images/birmingham.png',
+    ),
   ].obs;
 
   void setCategory(String category) {
@@ -101,7 +182,11 @@ class PopularPlace {
   final int placeCount;
   final String imageUrl;
 
-  PopularPlace({required this.name, required this.placeCount, required this.imageUrl});
+  PopularPlace({
+    required this.name,
+    required this.placeCount,
+    required this.imageUrl,
+  });
 }
 
 class ActivityItem {

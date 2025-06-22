@@ -49,7 +49,7 @@ class ResetPasswordScreen extends StatelessWidget {
                   CustomTextField(
                     textEditingController: newPasswordController,
                     hintText: 'New password',
-                    bacgroundColor: Colors.white,
+                    // bacgroundColor: Colors.white,
                     width: screenWidth * 0.9,
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.visibility),
@@ -62,7 +62,7 @@ class ResetPasswordScreen extends StatelessWidget {
                   CustomTextField(
                     textEditingController: confirmPasswordController,
                     hintText: 'Confirm password',
-                    bacgroundColor: Colors.white,
+                    // bacgroundColor: Colors.white,
                     width: screenWidth * 0.9,
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.visibility),
