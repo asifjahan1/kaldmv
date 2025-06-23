@@ -18,6 +18,22 @@ class TourPlan {
     required this.dailySchedules,
   });
 
+  factory TourPlan.fromJson(Map<String, dynamic> json) {
+    return TourPlan(
+      title: json['title'] ?? 'Default Itinerary',
+      region: json['region'] ?? '',
+      destination: json['destination'] ?? '',
+      duration: json['duration'] ?? '',
+      accommodation: json['accommodation'] ?? '',
+      specialConsiderations: List<String>.from(
+        json['specialConsiderations'] ?? [],
+      ),
+      dailySchedules: (json['dailySchedules'] as List<dynamic>? ?? [])
+          .map((item) => DailySchedule.fromJson(item))
+          .toList(),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'title': title,
@@ -46,6 +62,17 @@ class DailySchedule {
     required this.scheduleItems,
   });
 
+  factory DailySchedule.fromJson(Map<String, dynamic> json) {
+    return DailySchedule(
+      day: 'Day ${json['day'] ?? 1}',
+      description: json['description'] ?? 'Default Exploration',
+      theme: json['theme'] ?? 'Default Theme',
+      scheduleItems: (json['scheduleItems'] as List<dynamic>? ?? [])
+          .map((item) => ScheduleItem.fromJson(item))
+          .toList(),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'day': day,
@@ -66,6 +93,14 @@ class ScheduleItem {
     required this.activity,
     required this.details,
   });
+
+  factory ScheduleItem.fromJson(Map<String, dynamic> json) {
+    return ScheduleItem(
+      time: json['time'] ?? '',
+      activity: json['title'] ?? json['activity'] ?? '',
+      details: json['description'] ?? json['details'] ?? '',
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {'time': time, 'activity': activity, 'details': details};
