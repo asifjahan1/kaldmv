@@ -11,6 +11,7 @@ import 'package:kaldmv/User/Views/features/Home/controller/tsfs_controller.dart'
 import 'package:kaldmv/User/Views/features/Profile/controller/profile_controller.dart';
 import 'package:kaldmv/User/Views/features/Search/controller/search_controller.dart';
 import 'package:kaldmv/User/Views/features/Search/controller/video_controller.dart';
+import 'package:kaldmv/core/global_widegts/custom_text_field.dart';
 
 class AppBinding extends Bindings {
   @override
@@ -28,6 +29,7 @@ class AppBinding extends Bindings {
     Get.put(HeaderController(), permanent: true);
     Get.put(TSFSController(), permanent: true);
     Get.put(DrawerControllerX(), permanent: true);
+    Get.put(CustomTextFieldController(), permanent: true);
 
     final featuredImageController = Get.create<FileUploadController>(
       () => FileUploadController(),

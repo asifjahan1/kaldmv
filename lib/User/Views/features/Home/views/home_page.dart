@@ -14,6 +14,12 @@ import 'custom_drawer.dart';
 import 'package:file_picker/file_picker.dart';
 
 class HomePage extends StatelessWidget {
+  HomePage({super.key}) {
+    Get.put(CustomTextFieldController(), tag: 'start_time_dropdown');
+    Get.put(CustomTextFieldController(), tag: 'end_time_dropdown');
+    Get.put(CustomTextFieldController(), tag: 'budget_dropdown');
+    Get.put(CustomTextFieldController(), tag: 'group_type_dropdown');
+  }
   final HomeController controller = Get.put(HomeController());
 
   // List of time options for Start Time and End Time dropdowns
@@ -49,8 +55,6 @@ class HomePage extends StatelessWidget {
     '10:00 PM',
     '11:00 PM',
   ];
-
-  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -166,6 +170,7 @@ class HomePage extends StatelessWidget {
                               fillColor: Color(0xFFFFFFFF),
                               textColor: Colors.black,
                               hintText: 'Select date',
+                              dropdownBackgroundColor: Colors.white,
                               hintTextColor: Colors.grey[500],
                               fontSize: 14.sp,
                               borderSide: const BorderSide(
@@ -202,6 +207,7 @@ class HomePage extends StatelessWidget {
                               textEditingController:
                                   controller.endDateController,
                               fillColor: Color(0xFFFFFFFF),
+                              dropdownBackgroundColor: Colors.white,
                               textColor: Colors.black,
                               hintText: 'Select date',
                               hintTextColor: Colors.grey[500],
@@ -245,6 +251,7 @@ class HomePage extends StatelessWidget {
                                       prefixIconPath:
                                           'assets/images/timer1.png',
                                       isDropdown: true,
+                                      dropdownBackgroundColor: Colors.white,
                                       dropdownItems: startTimeOptions,
                                       selectedDropdownValue:
                                           controller.startTime.value.isEmpty
@@ -276,6 +283,7 @@ class HomePage extends StatelessWidget {
                                       prefixIconPath:
                                           'assets/images/timer1.png',
                                       isDropdown: true,
+                                      dropdownBackgroundColor: Colors.white,
                                       dropdownItems: endTimeOptions,
                                       selectedDropdownValue:
                                           controller.endTime.value.isEmpty
@@ -316,6 +324,7 @@ class HomePage extends StatelessWidget {
                                     controller.budgetController,
                                 prefixIconPath: 'assets/images/budget.png',
                                 isDropdown: true,
+                                dropdownBackgroundColor: Colors.white,
                                 dropdownItems: controller.budgetRanges,
                                 selectedDropdownValue:
                                     controller.selectedBudget.value.isEmpty
@@ -352,6 +361,7 @@ class HomePage extends StatelessWidget {
                                     controller.groupTypeController,
                                 prefixIconPath: 'assets/images/group.png',
                                 isDropdown: true,
+                                dropdownBackgroundColor: Colors.white,
                                 dropdownItems: controller.groupTypes,
                                 selectedDropdownValue:
                                     controller.selectedGroupType.value.isEmpty
