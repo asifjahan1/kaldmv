@@ -167,10 +167,9 @@ class HomePage extends StatelessWidget {
                               prefixIconPath: 'assets/images/date.png',
                               textEditingController:
                                   controller.startDateController,
-                              fillColor: Color(0xFFFFFFFF),
+                              fillColor: Colors.white,
                               textColor: Colors.black,
                               hintText: 'Select date',
-                              dropdownBackgroundColor: Colors.white,
                               hintTextColor: Colors.grey[500],
                               fontSize: 14.sp,
                               borderSide: const BorderSide(
@@ -189,11 +188,28 @@ class HomePage extends StatelessWidget {
                                       DateFormat(
                                         'yyyy-MM-dd',
                                       ).format(pickedDate);
+                                  controller.calculateDuration();
                                 }
                               },
                             ),
+                            // // Display Calculated Duration
+                            // SizedBox(height: 10.h),
+                            // Obx(
+                            //   () => Text(
+                            //     controller.calculatedDuration.value.isEmpty
+                            //         ? 'Please select start and end dates'
+                            //         : controller.calculatedDuration.value,
+                            //     style: TextStyle(
+                            //       fontSize: 14.sp,
+                            //       color:
+                            //           controller.calculatedDuration.value
+                            //               .contains('Invalid')
+                            //           ? Colors.red
+                            //           : Colors.black,
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(height: 10.h),
-                            // End Date
                             Text(
                               'End Date',
                               style: TextStyle(
@@ -206,8 +222,7 @@ class HomePage extends StatelessWidget {
                               prefixIconPath: 'assets/images/date.png',
                               textEditingController:
                                   controller.endDateController,
-                              fillColor: Color(0xFFFFFFFF),
-                              dropdownBackgroundColor: Colors.white,
+                              fillColor: Colors.white,
                               textColor: Colors.black,
                               hintText: 'Select date',
                               hintTextColor: Colors.grey[500],
@@ -228,9 +243,11 @@ class HomePage extends StatelessWidget {
                                       DateFormat(
                                         'yyyy-MM-dd',
                                       ).format(pickedDate);
+                                  controller.calculateDuration();
                                 }
                               },
                             ),
+
                             SizedBox(height: 10.h),
                             // Start Time and End Time Dropdown Row
                             Text(

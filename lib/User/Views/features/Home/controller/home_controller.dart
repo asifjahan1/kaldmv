@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class HomeController extends GetxController {
   var selectedCategory = 'Things To Do'.obs;
@@ -59,6 +60,7 @@ class HomeController extends GetxController {
   RxString endTime = ''.obs;
   RxString selectedBudget = ''.obs;
   RxString selectedGroupType = ''.obs;
+  RxString calculatedDuration = ''.obs;
 
   // Dropdown options
   List<String> startTimes = [
@@ -173,6 +175,31 @@ class HomeController extends GetxController {
 
   void setCategory(String category) {
     selectedCategory.value = category;
+  }
+
+  void calculateDuration() {
+    if (startDateController.text.isNotEmpty &&
+        endDateController.text.isNotEmpty) {
+      try {
+        DateTime startDate = DateFormat(
+          'yyyy-MM-dd',
+        ).parse(startDateController.text);
+        DateTime endDate = DateFormat(
+          'yyyy-MM-dd',
+        ).parse(endDateController.text);
+        int durationDays = endDate.difference(startDate).inDays + 1;
+        if (durationDays >= 1) {
+          calculatedDuration.value =
+              '$durationDays Day${durationDays > 1 ? 's' : ''}';
+        } else {
+          calculatedDuration.value = 'Invalid duration';
+        }
+      } catch (e) {
+        calculatedDuration.value = 'Invalid date format';
+      }
+    } else {
+      calculatedDuration.value = '';
+    }
   }
 }
 

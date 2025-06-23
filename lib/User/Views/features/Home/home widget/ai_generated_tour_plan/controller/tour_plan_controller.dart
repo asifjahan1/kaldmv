@@ -191,10 +191,16 @@ class TourPlanController extends GetxController {
 // tour_plan_controller.dart
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kaldmv/User/Views/features/Home/home%20widget/ai_generated_tour_plan/model/tour_plan_model.dart';
 
 class TourPlanController extends GetxController {
+  final startDateController = TextEditingController();
+  final endDateController = TextEditingController();
+  final RxString duration = ''.obs;
+
   final Rx<TourPlan> tourPlan = TourPlan(
     title: '5 Day Luxury Default Itinerary',
     region: 'Middle East',
@@ -233,7 +239,6 @@ class TourPlanController extends GetxController {
           ),
         ],
       ),
-
       DailySchedule(
         day: 'Arrival & Coastal Relaxation',
         description: 'Arrival & Coastal Relaxation',
@@ -264,7 +269,6 @@ class TourPlanController extends GetxController {
           ),
         ],
       ),
-
       DailySchedule(
         day: 'Arrival & Coastal Relaxation',
         description: 'Arrival & Coastal Relaxation',
@@ -295,7 +299,6 @@ class TourPlanController extends GetxController {
           ),
         ],
       ),
-
       DailySchedule(
         day: 'Arrival & Coastal Relaxation',
         description: 'Arrival & Coastal Relaxation',
@@ -326,7 +329,6 @@ class TourPlanController extends GetxController {
           ),
         ],
       ),
-
       DailySchedule(
         day: 'Arrival & Coastal Relaxation',
         description: 'Arrival & Coastal Relaxation',
@@ -360,27 +362,57 @@ class TourPlanController extends GetxController {
     ],
   ).obs;
 
+  void calculateDuration() {
+    try {
+      final start = DateFormat('yyyy-MM-dd').parse(startDateController.text);
+      final end = DateFormat('yyyy-MM-dd').parse(endDateController.text);
+      final diff = end.difference(start).inDays;
+
+      if (diff >= 0) {
+        duration.value = '${diff + 1} days';
+      } else {
+        duration.value = 'Invalid range';
+      }
+    } catch (e) {
+      duration.value = '';
+    }
+  }
+
   void generateDynamicPlan(Map<String, String>? tourPlanData) {
     if (tourPlanData == null) {
-      // Log or handle the null case if needed
       return;
     }
 
-    // Safely parse duration to determine number of days
-    final String durationStr = tourPlanData['duration']?.trim() ?? '5 days';
+    // Calculate durationStr using startDate and endDate from tourPlanData
+    String durationStr = '';
+    final String startDate = tourPlanData['startDate']?.trim() ?? '';
+    final String endDate = tourPlanData['endDate']?.trim() ?? '';
+    if (startDate.isNotEmpty && endDate.isNotEmpty) {
+      try {
+        DateTime start = DateFormat('yyyy-MM-dd').parse(startDate);
+        DateTime end = DateFormat('yyyy-MM-dd').parse(endDate);
+        int durationDays = end.difference(start).inDays + 1; // Include end date
+        if (durationDays >= 1) {
+          durationStr = '$durationDays Day${durationDays > 1 ? 's' : ''}';
+        } else {
+          durationStr = 'Invalid duration';
+        }
+      } catch (e) {
+        durationStr = 'Invalid date format';
+      }
+    } else {
+      durationStr = '5 days'; // Default fallback
+    }
+
     final int days = _parseDaysFromDuration(durationStr);
     if (days <= 0) {
-      // Fallback to default 5 days if parsing fails
       log('Invalid duration format, defaulting to 5 days: $durationStr');
     }
 
-    // Extract and handle other fields with fallbacks
     final String city = tourPlanData['city']?.trim() ?? 'Default City';
     final String country = tourPlanData['country']?.trim() ?? 'Unknown';
-    // final String date = tourPlanData['date']?.trim() ?? '2025-06-15';
     final String specialReq = tourPlanData['specialRequirements']?.trim() ?? '';
 
-    // Generate dynamic daily schedules
     final List<DailySchedule> schedules = [];
     for (int i = 1; i <= days; i++) {
       schedules.add(
@@ -397,8 +429,8 @@ class TourPlanController extends GetxController {
               time: i == 1
                   ? '14:00'
                   : i == days
-                  ? 'Time: 16:00-18:00'
-                  : 'Time: 14:00-14:30',
+                  ? '16:00-18:00'
+                  : '14:00-14:30',
               activity: i == 1
                   ? 'Airport Arrival'
                   : i == days
@@ -406,7 +438,6 @@ class TourPlanController extends GetxController {
                   : 'Activity $i',
               details: i == 1
                   ? 'VIP Meet & Greet at King Abdulaziz International Airport\nPrivate car transfer to hotel (30 min)'
-                  // $date
                   : i == days
                   ? 'Check-out and transfer to airport'
                   : 'Explore $city landmarks',
@@ -416,9 +447,8 @@ class TourPlanController extends GetxController {
       );
     }
 
-    // Update the tour plan reactively
     tourPlan.update((val) {
-      if (val == null) return; // Safety check
+      if (val == null) return;
       val.title = '$durationStr Luxury $city Itinerary';
       val.destination = '$city, $country';
       val.duration = durationStr;
@@ -430,13 +460,12 @@ class TourPlanController extends GetxController {
     });
   }
 
-  // Helper method to parse days from duration string (e.g., "5 days", "3 days")
   int _parseDaysFromDuration(String duration) {
     final RegExp regExp = RegExp(r'(\d+)\s*days?');
     final Match? match = regExp.firstMatch(duration);
     if (match != null && match.groupCount >= 1) {
       return int.tryParse(match.group(1) ?? '5') ?? 5;
     }
-    return 5; // Default to 5 days if parsing fails
+    return 5;
   }
 }

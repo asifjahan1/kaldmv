@@ -1,5 +1,4 @@
 // tour_plan_model.dart
-
 class TourPlan {
   String title;
   String region;
@@ -18,13 +17,27 @@ class TourPlan {
     required this.specialConsiderations,
     required this.dailySchedules,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'region': region,
+      'destination': destination,
+      'duration': duration,
+      'accommodation': accommodation,
+      'specialConsiderations': specialConsiderations,
+      'dailySchedules': dailySchedules
+          .map((schedule) => schedule.toJson())
+          .toList(),
+    };
+  }
 }
 
 class DailySchedule {
-  final String day;
-  final String description;
-  final String theme;
-  final List<ScheduleItem> scheduleItems;
+  String day;
+  String description;
+  String theme;
+  List<ScheduleItem> scheduleItems;
 
   DailySchedule({
     required this.day,
@@ -32,16 +45,29 @@ class DailySchedule {
     required this.theme,
     required this.scheduleItems,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'day': day,
+      'description': description,
+      'theme': theme,
+      'scheduleItems': scheduleItems.map((item) => item.toJson()).toList(),
+    };
+  }
 }
 
 class ScheduleItem {
-  final String time;
-  final String activity;
-  final String details;
+  String time;
+  String activity;
+  String details;
 
   ScheduleItem({
     required this.time,
     required this.activity,
     required this.details,
   });
+
+  Map<String, dynamic> toJson() {
+    return {'time': time, 'activity': activity, 'details': details};
+  }
 }
