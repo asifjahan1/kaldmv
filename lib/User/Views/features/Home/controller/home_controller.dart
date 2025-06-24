@@ -254,18 +254,31 @@ class HomeController extends GetxController {
       log("generateItnerary url $url");
 
       final Map<String, dynamic> inputData = {
-        "Country": countryController.text.trim(),
-        "City": cityController.text.trim(),
-        "Start_date": startDateController.text.trim(),
-        "End_date": endDateController.text.trim(),
-        "Start_Time": startTimeController.text.trim(),
-        "End_Time": endTimeController.text.trim(),
-        "Hotel_budget": cityController.text.trim(),
-        "food_budget": cityController.text.trim(),
-        "transportation_budget": cityController.text.trim(),
-        "Group_type": cityController.text.trim(),
-        "preferences": cityController.text.trim(),
-        "Special_requirements": cityController.text.trim(),
+        "Country": "Japan",
+        "City": "Tokyo",
+        "Start_date": "2025-06-01",
+        "End_date": "2025-06-07",
+        "Start_Time": "09:00",
+        "End_Time": "17:00",
+        "Hotel_budget": "luxury",
+        "food_budget": "luxury",
+        "transportation_budget": "mid-range",
+        "Group_type": "family",
+        "preferences": ["adventure", "outdoor activities"],
+        "Special_requirements": "Wheelchair Accessing",
+
+        // "Country": countryController.text.trim(),
+        // "City": cityController.text.trim(),
+        // "Start_date": startDateController.text.trim(),
+        // "End_date": endDateController.text.trim(),
+        // "Start_Time": startTimeController.text.trim(),
+        // "End_Time": endTimeController.text.trim(),
+        // "Hotel_budget": accomodationController.text.trim(),
+        // "food_budget": budgetController.text.trim(),
+        // "transportation_budget": transportationController.text.trim(),
+        // "Group_type": groupTypeController.text.trim(),
+        // "preferences": preferenceController.text.trim(),
+        // "Special_requirements": specialRequirementController.text.trim(),
       };
 
       log('generateItnerary url (JSON): ${jsonEncode(inputData)}');

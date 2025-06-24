@@ -399,7 +399,89 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 10.h),
-                            // File Upload (Read Only Field)
+                            // Accomodation
+                            Text(
+                              'Accomodation',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5.h),
+                            CustomTextField(
+                              dropdownBackgroundColor: Colors.white,
+                              prefixIconPath: 'assets/images/bed.png',
+                              hintText: 'Select Accomodation Type',
+                              hintTextColor: Colors.grey[500],
+                              isDropdown: true,
+                              fillColor: Colors.white,
+                              textColor: Colors.black,
+                              borderSide: const BorderSide(
+                                color: Color(0xFF867B79),
+                              ),
+                              textEditingController:
+                                  controller.accomodationController,
+                              dropdownItems: controller.accomodationTypes,
+                              selectedDropdownValue:
+                                  controller
+                                      .selectedAccomodationTypes
+                                      .value
+                                      .isEmpty
+                                  ? null
+                                  : controller.selectedAccomodationTypes.value,
+                              onDropdownChanged: (value) {
+                                if (value != null) {
+                                  controller.selectedAccomodationTypes.value =
+                                      value;
+                                  controller.accomodationController.text =
+                                      value;
+                                }
+                              },
+                            ),
+                            SizedBox(height: 10.h),
+                            // Transportation
+                            Text(
+                              'Transportation',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5.h),
+                            CustomTextField(
+                              dropdownBackgroundColor: Colors.white,
+                              prefixIconPath: 'assets/images/location1.png',
+                              hintText: 'Select Transportation',
+                              hintTextColor: Colors.grey[500],
+                              isDropdown: true,
+                              fillColor: Colors.white,
+                              textColor: Colors.black,
+                              borderSide: const BorderSide(
+                                color: Color(0xFF867B79),
+                              ),
+                              textEditingController:
+                                  controller.transportationController,
+                              dropdownItems: controller.transportationTypes,
+                              selectedDropdownValue:
+                                  controller
+                                      .selectedTransportationTypes
+                                      .value
+                                      .isEmpty
+                                  ? null
+                                  : controller
+                                        .selectedTransportationTypes
+                                        .value,
+                              onDropdownChanged: (value) {
+                                if (value != null) {
+                                  controller.selectedTransportationTypes.value =
+                                      value;
+                                  controller.transportationController.text =
+                                      value;
+                                }
+                              },
+                            ),
+                            SizedBox(height: 10.h),
+                            // Preferences
                             Text(
                               'Preferences',
                               style: TextStyle(
@@ -415,36 +497,19 @@ class HomePage extends StatelessWidget {
                               dropdownBackgroundColor: Colors.white,
                               dropdownItems: controller.preferenceTypes,
                               selectedDropdownValue:
-                                  controller.selectedGroupType.value.isEmpty
+                                  controller
+                                      .selectedPreferenceTypes
+                                      .value
+                                      .isEmpty
                                   ? null
-                                  : controller.selectedGroupType.value,
+                                  : controller.selectedPreferenceTypes.value,
                               onDropdownChanged: (value) {
                                 if (value != null) {
-                                  controller.selectedGroupType.value = value;
+                                  controller.selectedPreferenceTypes.value =
+                                      value;
                                   controller.groupTypeController.text = value;
                                 }
                               },
-                              // onTap: () async {
-                              //   FilePickerResult? result = await FilePicker
-                              //       .platform
-                              //       .pickFiles(
-                              //         type: FileType.custom,
-                              //         allowedExtensions: [
-                              //           'jpg',
-                              //           'png',
-                              //           'jpeg',
-                              //           'pdf',
-                              //           'doc',
-                              //           'docx',
-                              //         ],
-                              //       );
-
-                              //   if (result != null &&
-                              //       result.files.single.path != null) {
-                              //     controller.preferenceController.text =
-                              //         result.files.single.name;
-                              //   }
-                              // },
                               textEditingController:
                                   controller.preferenceController,
                               fillColor: Colors.white,
@@ -521,7 +586,7 @@ class HomePage extends StatelessWidget {
                                 ); // Navigate to TourPlanScreen
                                 controller.showAISuggestionPanel.value =
                                     false; // Hide panel
-                                // controller.generateItnerary();
+                                controller.generateItnerary();
                               },
                             ),
                           ],
