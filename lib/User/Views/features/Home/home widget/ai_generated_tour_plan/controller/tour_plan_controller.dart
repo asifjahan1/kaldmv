@@ -499,21 +499,16 @@ class TourPlanController extends GetxController {
 
     // Calculate durationStr as difference between startDate and endDate
     String durationStr = '';
+    int durationDays = 1; // Default to 1 day if calculation fails
     if (startDate.isNotEmpty && endDate.isNotEmpty) {
       try {
         DateTime start = DateFormat('yyyy-MM-dd').parse(startDate);
         DateTime end = DateFormat('yyyy-MM-dd').parse(endDate);
-        int durationDays = end.difference(start).inDays + 1; // Include end date
-        if (durationDays >= 1) {
-          durationStr = '$durationDays Day${durationDays > 1 ? 's' : ''}';
-        } else {
-          durationStr = 'Invalid duration';
-        }
+        durationDays = end.difference(start).inDays + 1; // Include end date
+        durationStr = '$durationDays Day${durationDays > 1 ? 's' : ''}';
       } catch (e) {
         durationStr = 'Invalid date format';
       }
-    } else {
-      durationStr = '';
     }
 
     List<DailySchedule> schedules = [

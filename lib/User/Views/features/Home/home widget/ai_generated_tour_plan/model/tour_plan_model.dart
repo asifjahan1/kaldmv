@@ -1,4 +1,3 @@
-// tour_plan_model.dart
 class TourPlan {
   String title;
   String region;
@@ -18,6 +17,8 @@ class TourPlan {
     required this.dailySchedules,
   });
 
+
+  /*
   factory TourPlan.fromJson(Map<String, dynamic> json) {
     return TourPlan(
       title: json['title'] ?? 'Default Itinerary',
@@ -29,6 +30,22 @@ class TourPlan {
         json['specialConsiderations'] ?? [],
       ),
       dailySchedules: (json['dailySchedules'] as List<dynamic>? ?? [])
+          .map((item) => DailySchedule.fromJson(item))
+          .toList(),
+    );
+  }
+  */
+
+  factory TourPlan.fromJson(Map<String, dynamic> json) {
+    return TourPlan(
+      title: json['title'] ?? 'Default Itinerary',
+      region: json['region'] ?? '',
+      destination: json['destination'] ?? '',
+      duration: '${json['duration'] ?? 1} days',
+      accommodation: json['accommodation']?['name'] ?? '',
+      specialConsiderations: (json['general_tips'] as List<dynamic>? ?? [])
+          .cast<String>(),
+      dailySchedules: (json['itinerary'] as List<dynamic>? ?? [])
           .map((item) => DailySchedule.fromJson(item))
           .toList(),
     );
@@ -62,6 +79,7 @@ class DailySchedule {
     required this.scheduleItems,
   });
 
+  /*
   factory DailySchedule.fromJson(Map<String, dynamic> json) {
     return DailySchedule(
       day: 'Day ${json['day'] ?? 1}',
@@ -69,6 +87,18 @@ class DailySchedule {
       theme: json['theme'] ?? 'Default Theme',
       scheduleItems: (json['scheduleItems'] as List<dynamic>? ?? [])
           .map((item) => ScheduleItem.fromJson(item))
+          .toList(),
+    );
+  }
+  */
+
+  factory DailySchedule.fromJson(Map<String, dynamic> json) {
+    return DailySchedule(
+      day: 'Day ${json['day'] ?? 1}',
+      description: json['theme'] ?? 'Default Exploration',
+      theme: json['theme'] ?? 'Default Theme',
+      scheduleItems: (json['activities'] as List<dynamic>? ?? [])
+          .map((activity) => ScheduleItem.fromJson(activity))
           .toList(),
     );
   }
@@ -94,11 +124,21 @@ class ScheduleItem {
     required this.details,
   });
 
+  /*
   factory ScheduleItem.fromJson(Map<String, dynamic> json) {
     return ScheduleItem(
       time: json['time'] ?? '',
       activity: json['title'] ?? json['activity'] ?? '',
       details: json['description'] ?? json['details'] ?? '',
+    );
+  }
+  */
+
+  factory ScheduleItem.fromJson(Map<String, dynamic> json) {
+    return ScheduleItem(
+      time: json['time'] ?? '',
+      activity: json['title'] ?? '',
+      details: json['description'] ?? '',
     );
   }
 

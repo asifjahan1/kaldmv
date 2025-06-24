@@ -609,41 +609,40 @@ class TourPlanScreen extends StatelessWidget {
                       return Column(
                         children: List.generate(days, (index) {
                           final dayNumber = index + 1;
+                          final schedule =
+                              tourPlan.dailySchedules.length > index
+                              ? tourPlan.dailySchedules[index]
+                              : DailySchedule(
+                                  day: 'Day $dayNumber',
+                                  description: 'Default Exploration',
+                                  theme: dayNumber == 1
+                                      ? 'Arrival & Exploration'
+                                      : dayNumber == days
+                                      ? 'Departure & Reflection'
+                                      : 'Day $dayNumber Activities',
+                                  scheduleItems: [
+                                    ScheduleItem(
+                                      time: dayNumber == 1
+                                          ? '14:00'
+                                          : dayNumber == days
+                                          ? '10:00'
+                                          : '14:00-14:30',
+                                      activity: dayNumber == 1
+                                          ? 'Airport Arrival'
+                                          : dayNumber == days
+                                          ? 'Departure'
+                                          : 'Activity $dayNumber',
+                                      details: dayNumber == 1
+                                          ? 'VIP Meet & Greet at Airport\nPrivate car transfer to hotel'
+                                          : dayNumber == days
+                                          ? 'Check-out and transfer to airport'
+                                          : 'Explore local landmarks',
+                                    ),
+                                  ],
+                                );
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: _buildDailySchedule(
-                              tourPlan.dailySchedules.length > index
-                                  ? tourPlan.dailySchedules[index]
-                                  : DailySchedule(
-                                      day: 'Day $dayNumber',
-                                      description: 'Default Exploration',
-                                      theme: dayNumber == 1
-                                          ? 'Arrival & Exploration'
-                                          : dayNumber == days
-                                          ? 'Departure & Reflection'
-                                          : 'Day $dayNumber Activities',
-                                      scheduleItems: [
-                                        ScheduleItem(
-                                          time: dayNumber == 1
-                                              ? '14:00'
-                                              : dayNumber == days
-                                              ? '10:00'
-                                              : '14:00-14:30',
-                                          activity: dayNumber == 1
-                                              ? 'Airport Arrival'
-                                              : dayNumber == days
-                                              ? 'Departure'
-                                              : 'Activity $dayNumber',
-                                          details: dayNumber == 1
-                                              ? 'VIP Meet & Greet at Airport\nPrivate car transfer to hotel (30 min)'
-                                              : dayNumber == days
-                                              ? 'Check-out and transfer to airport'
-                                              : 'Explore local landmarks',
-                                        ),
-                                      ],
-                                    ),
-                              dayNumber,
-                            ),
+                            child: _buildDailySchedule(schedule, dayNumber),
                           );
                         }),
                       );
@@ -674,51 +673,71 @@ class TourPlanScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildDetailItem(
-            'Destination: ${tourPlan.destination}',
+            'Destination',
+            tourPlan.destination,
             'assets/images/location.png',
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Image.asset(
-                  'assets/images/timer.png',
-                  height: 24.h,
-                  width: 24.w,
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  'Duration:',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: Text(
-                    tourPlan.duration.isEmpty
-                        ? 'Please select start and end dates'
-                        : tourPlan.duration,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: tourPlan.duration.contains('Invalid')
-                          ? Colors.red
-                          : Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
           _buildDetailItem(
-            'Accommodation: ${tourPlan.accommodation}',
+            'Duration',
+            tourPlan.duration,
+            'assets/images/timer.png',
+          ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.start,
+          //     children: [
+          //       Image.asset(
+          //         'assets/images/timer.png',
+          //         height: 24.h,
+          //         width: 24.w,
+          //       ),
+          //       SizedBox(width: 8.w),
+          //       // Expanded(
+          //       //   child: RichText(
+          //       //     text: TextSpan(
+          //       //       text: tourPlan.duration.isEmpty
+          //       //           ? 'Please select start and end dates'
+          //       //           : tourPlan.duration,
+          //       //       style: TextStyle(
+          //       //         fontSize: 14.sp,
+          //       //         color:
+          //       //             tourPlan.duration.contains('Invalid') ||
+          //       //                 tourPlan.duration.contains('Error')
+          //       //             ? Colors.red
+          //       //             : Colors.black,
+          //       //       ),
+          //       //     ),
+
+          //       //     /*
+          //       //     Text(
+          //       //     tourPlan.duration.isEmpty
+          //       //         ? 'Please select start and end dates'
+          //       //         : tourPlan.duration,
+          //       //     style: TextStyle(
+          //       //       fontSize: 14.sp,
+          //       //       color:
+          //       //           tourPlan.duration.contains('Invalid') ||
+          //       //               tourPlan.duration.contains('Error')
+          //       //           ? Colors.red
+          //       //           : Colors.black,
+          //       //     ),
+          //       //   ),
+          //       //     */
+          //       //   ),
+          //       // ),
+          //     ],
+          //   ),
+          // ),
+          _buildDetailItem(
+            'Accommodation',
+            tourPlan.accommodation,
             'assets/images/bed.png',
           ),
           if (tourPlan.specialConsiderations.isNotEmpty)
             _buildDetailItem(
-              'Special Considerations: ${tourPlan.specialConsiderations.join(', ')}',
+              'Special Considerations',
+              tourPlan.specialConsiderations.join(', '),
               'assets/images/info1.png',
             ),
         ],
@@ -726,7 +745,7 @@ class TourPlanScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildDetailItem(String text, String iconPath) {
+  Widget _buildDetailItem(String label, String text, String iconPath) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
       child: Row(
@@ -734,15 +753,30 @@ class TourPlanScreen extends StatelessWidget {
         children: [
           Image.asset(iconPath, height: 24.h, width: 24.w),
           SizedBox(width: 8.w),
-          // Text(
-          //   'Duration:',
-          //   style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
-          // ),
-          // SizedBox(width: 8.w),
           Expanded(
-            child: Text(
-              text,
-              style: TextStyle(fontSize: 14.sp, color: Color(0xFF72544F)),
+            // child: Text(
+            //   text,
+            //   style: TextStyle(fontSize: 14.sp, color: Colors.black),
+            // ),
+            child: RichText(
+              text: TextSpan(
+                text: "$label: ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF3F201C),
+                  fontSize: 15.sp,
+                ),
+                children: [
+                  TextSpan(
+                    text: text,
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Color(0xFF72544F),
+                      fontSize: 15.sp,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -755,7 +789,7 @@ class TourPlanScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Day $dayNumber: ${schedule.description}',
+          '${schedule.day}: ${schedule.description}',
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -806,14 +840,19 @@ class TourPlanScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 16.r,
-                    backgroundColor: Color(0xFFF97C68),
-                    child: Text(
-                      '$index',
-                      style: TextStyle(color: Colors.white, fontSize: 14.sp),
-                    ),
+                  Image.asset(
+                    'assets/images/pin-outline.png',
+                    height: 32.h,
+                    width: 32.w,
                   ),
+                  // CircleAvatar(
+                  //   radius: 16.r,
+                  //   backgroundColor: Color(0xFFF97C68),
+                  //   child: Text(
+                  //     '$index',
+                  //     style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                  //   ),
+                  // ),
                   SizedBox(width: 12.w),
                   Expanded(
                     child: Column(

@@ -1,6 +1,12 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:kaldmv/core/const/urls.dart';
 
 class HomeController extends GetxController {
   var selectedCategory = 'Things To Do'.obs;
@@ -47,7 +53,9 @@ class HomeController extends GetxController {
   TextEditingController cityController = TextEditingController();
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
-  TextEditingController filePathController = TextEditingController();
+  TextEditingController preferenceController = TextEditingController();
+  TextEditingController accomodationController = TextEditingController();
+  TextEditingController transportationController = TextEditingController();
   TextEditingController specialRequirementController = TextEditingController();
   TextEditingController groupTypeController = TextEditingController();
   // TextEditingController durationController = TextEditingController();
@@ -60,46 +68,49 @@ class HomeController extends GetxController {
   RxString endTime = ''.obs;
   RxString selectedBudget = ''.obs;
   RxString selectedGroupType = ''.obs;
+  RxString selectedPreferenceTypes = ''.obs;
+  RxString selectedAccomodationTypes = ''.obs;
+  RxString selectedTransportationTypes = ''.obs;
   RxString calculatedDuration = ''.obs;
 
   // Dropdown options
-  List<String> startTimes = [
-    '1 Day',
-    '2 Days',
-    '3 Days',
-    '4 Days',
-    '5 Days',
-    '6 Days',
-    '7 Days',
-    '8 Days',
-    '9 Days',
-    '10 Days',
-    '11 Days',
-    '12 Days',
-    '13 Days',
-    '14 Days',
-    '15 Days',
-    '16 Days',
-  ];
+  // List<String> startTimes = [
+  //   '1 Day',
+  //   '2 Days',
+  //   '3 Days',
+  //   '4 Days',
+  //   '5 Days',
+  //   '6 Days',
+  //   '7 Days',
+  //   '8 Days',
+  //   '9 Days',
+  //   '10 Days',
+  //   '11 Days',
+  //   '12 Days',
+  //   '13 Days',
+  //   '14 Days',
+  //   '15 Days',
+  //   '16 Days',
+  // ];
 
-  List<String> endTimes = [
-    '1 Day',
-    '2 Days',
-    '3 Days',
-    '4 Days',
-    '5 Days',
-    '6 Days',
-    '7 Days',
-    '8 Days',
-    '9 Days',
-    '10 Days',
-    '11 Days',
-    '12 Days',
-    '13 Days',
-    '14 Days',
-    '15 Days',
-    '16 Days',
-  ];
+  // List<String> endTimes = [
+  //   '1 Day',
+  //   '2 Days',
+  //   '3 Days',
+  //   '4 Days',
+  //   '5 Days',
+  //   '6 Days',
+  //   '7 Days',
+  //   '8 Days',
+  //   '9 Days',
+  //   '10 Days',
+  //   '11 Days',
+  //   '12 Days',
+  //   '13 Days',
+  //   '14 Days',
+  //   '15 Days',
+  //   '16 Days',
+  // ];
 
   List<String> budgetRanges = [
     'Basic (\$0 - \$500)',
@@ -114,6 +125,40 @@ class HomeController extends GetxController {
     'Family',
     'Friends',
     'Business',
+  ];
+
+  List<String> accomodationTypes = [
+    'Hotel',
+    'Resort',
+    'Apartment',
+    'Hostel',
+    'Villa',
+  ];
+
+  List<String> transportationTypes = [
+    'Flight',
+    'Train',
+    'Bus',
+    'Car Portal',
+    'Cruise',
+  ];
+
+  List<String> preferenceTypes = [
+    'Adventure & Outdoor Activities',
+    'Culture Experiences',
+    'Food & Culinary Tours',
+    'Nightlife & Entertainment',
+    'Shopping',
+    'Relaxation & Spa',
+    'Nature & Wildlife',
+    'Historical Sites',
+    'Photography',
+    'Sports & Fitness',
+    'Art & Museums',
+    'Music & Festivals',
+    'Beach & Water Activities',
+    'Mountain & Hiking',
+    'Luxury Experience',
   ];
 
   // Sample data for popular countries and cities
@@ -199,6 +244,52 @@ class HomeController extends GetxController {
       }
     } else {
       calculatedDuration.value = '';
+    }
+  }
+
+  Future<void> generateItnerary() async {
+    try {
+      EasyLoading.show(status: "Loading...");
+      final url = ApiUrl.generateItnerary;
+      log("generateItnerary url $url");
+
+      final Map<String, dynamic> inputData = {
+        "Country": countryController.text.trim(),
+        "City": cityController.text.trim(),
+        "Start_date": startDateController.text.trim(),
+        "End_date": endDateController.text.trim(),
+        "Start_Time": startTimeController.text.trim(),
+        "End_Time": endTimeController.text.trim(),
+        "Hotel_budget": cityController.text.trim(),
+        "food_budget": cityController.text.trim(),
+        "transportation_budget": cityController.text.trim(),
+        "Group_type": cityController.text.trim(),
+        "preferences": cityController.text.trim(),
+        "Special_requirements": cityController.text.trim(),
+      };
+
+      log('generateItnerary url (JSON): ${jsonEncode(inputData)}');
+
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(inputData),
+      );
+
+      log("generateItnerary url Status Code: ${response.statusCode}");
+      log("generateItnerary url Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        EasyLoading.showSuccess("success");
+      } else {
+        var responseData = jsonDecode(response.body);
+        EasyLoading.showError(responseData["message"]);
+      }
+    } catch (e) {
+      log("generateItnerary error: $e");
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 }

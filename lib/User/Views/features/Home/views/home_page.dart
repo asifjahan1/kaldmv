@@ -11,7 +11,6 @@ import '../../../../../core/global_widegts/custom_text_field.dart';
 import '../../Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
 import '../controller/home_controller.dart';
 import 'custom_drawer.dart';
-import 'package:file_picker/file_picker.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key}) {
@@ -410,32 +409,44 @@ class HomePage extends StatelessWidget {
                             ),
                             SizedBox(height: 5.h),
                             CustomTextField(
-                              hintText: 'Click to select image or file',
+                              hintText: 'Select Your Preferred Experience',
                               hintTextColor: Colors.grey[500],
-                              readOnly: true,
-                              onTap: () async {
-                                FilePickerResult? result = await FilePicker
-                                    .platform
-                                    .pickFiles(
-                                      type: FileType.custom,
-                                      allowedExtensions: [
-                                        'jpg',
-                                        'png',
-                                        'jpeg',
-                                        'pdf',
-                                        'doc',
-                                        'docx',
-                                      ],
-                                    );
-
-                                if (result != null &&
-                                    result.files.single.path != null) {
-                                  controller.filePathController.text =
-                                      result.files.single.name;
+                              isDropdown: true,
+                              dropdownBackgroundColor: Colors.white,
+                              dropdownItems: controller.preferenceTypes,
+                              selectedDropdownValue:
+                                  controller.selectedGroupType.value.isEmpty
+                                  ? null
+                                  : controller.selectedGroupType.value,
+                              onDropdownChanged: (value) {
+                                if (value != null) {
+                                  controller.selectedGroupType.value = value;
+                                  controller.groupTypeController.text = value;
                                 }
                               },
+                              // onTap: () async {
+                              //   FilePickerResult? result = await FilePicker
+                              //       .platform
+                              //       .pickFiles(
+                              //         type: FileType.custom,
+                              //         allowedExtensions: [
+                              //           'jpg',
+                              //           'png',
+                              //           'jpeg',
+                              //           'pdf',
+                              //           'doc',
+                              //           'docx',
+                              //         ],
+                              //       );
+
+                              //   if (result != null &&
+                              //       result.files.single.path != null) {
+                              //     controller.preferenceController.text =
+                              //         result.files.single.name;
+                              //   }
+                              // },
                               textEditingController:
-                                  controller.filePathController,
+                                  controller.preferenceController,
                               fillColor: Colors.white,
                               textColor: Colors.black,
                               borderSide: const BorderSide(
@@ -495,7 +506,7 @@ class HomePage extends StatelessWidget {
                                   'groupType':
                                       controller.groupTypeController.text,
                                   'filePath':
-                                      controller.filePathController.text,
+                                      controller.preferenceController.text,
                                   'specialRequirements': controller
                                       .specialRequirementController
                                       .text,
@@ -510,6 +521,7 @@ class HomePage extends StatelessWidget {
                                 ); // Navigate to TourPlanScreen
                                 controller.showAISuggestionPanel.value =
                                     false; // Hide panel
+                                // controller.generateItnerary();
                               },
                             ),
                           ],
