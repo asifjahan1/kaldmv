@@ -27,14 +27,27 @@ class CustomTextFieldController extends GetxController
     BuildContext context,
     GlobalKey key,
     List<String> items,
-    TextEditingController textController,
-    void Function(String)? onItemSelected, [
+    TextEditingController textController, {
     Color? dropdownBackgroundColor,
-  ]) {
+    void Function(String)? onItemSelected,
+    List<String>? selectedCheckboxItems,
+    void Function(List<String>)? onCheckboxChanged,
+    bool isCheckboxDropdown = false,
+  }) {
     if (isDropdownOpen.value) {
       closeDropdown();
     } else {
-      openDropdown(context, key, items, textController, onItemSelected);
+      openDropdown(
+        context,
+        key,
+        items,
+        textController,
+        dropdownBackgroundColor: dropdownBackgroundColor,
+        onItemSelected: onItemSelected,
+        selectedCheckboxItems: selectedCheckboxItems,
+        onCheckboxChanged: onCheckboxChanged,
+        isCheckboxDropdown: isCheckboxDropdown,
+      );
     }
   }
 
@@ -42,14 +55,19 @@ class CustomTextFieldController extends GetxController
     BuildContext context,
     GlobalKey key,
     List<String> items,
-    TextEditingController textController,
-    void Function(String)? onItemSelected, [
+    TextEditingController textController, {
     Color? dropdownBackgroundColor,
-  ]) {
+    void Function(String)? onItemSelected,
+    List<String>? selectedCheckboxItems,
+    void Function(List<String>)? onCheckboxChanged,
+    bool isCheckboxDropdown = false,
+  }) {
     final RenderBox renderBox =
         key.currentContext!.findRenderObject() as RenderBox;
     final Size size = renderBox.size;
     final Offset offset = renderBox.localToGlobal(Offset.zero);
+
+    final localSelectedItems = List<String>.from(selectedCheckboxItems ?? []);
 
     overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -69,31 +87,70 @@ class CustomTextFieldController extends GetxController
                 child: ListView(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
-                  children: items
-                      .map(
-                        (item) => GestureDetector(
-                          onTap: () {
-                            textController.text = item;
-                            onItemSelected?.call(item);
-                            closeDropdown();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                              vertical: 12.h,
-                            ),
-                            child: Text(
-                              item,
-                              style: GoogleFonts.dmSans(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: isCheckboxDropdown
+                      ? items
+                            .map(
+                              (item) => StatefulBuilder(
+                                builder: (context, setState) {
+                                  final isSelected = localSelectedItems
+                                      .contains(item);
+                                  return CheckboxListTile(
+                                    title: Text(
+                                      item,
+                                      style: GoogleFonts.dmSans(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    value: isSelected,
+                                    onChanged: (bool? value) {
+                                      if (value == true) {
+                                        localSelectedItems.add(item);
+                                      } else {
+                                        localSelectedItems.remove(item);
+                                      }
+                                      setState(() {}); // Update checkbox UI
+                                      onCheckboxChanged?.call(
+                                        List.from(localSelectedItems),
+                                      );
+                                      closeDropdown(); // Auto-close after selection
+                                    },
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 10.w,
+                                    ),
+                                    dense: true,
+                                  );
+                                },
                               ),
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
+                            )
+                            .toList()
+                      : items
+                            .map(
+                              (item) => GestureDetector(
+                                onTap: () {
+                                  textController.text = item;
+                                  onItemSelected?.call(item);
+                                  closeDropdown();
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10.w,
+                                    vertical: 12.h,
+                                  ),
+                                  child: Text(
+                                    item,
+                                    style: GoogleFonts.dmSans(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
                 ),
               ),
             ),
@@ -110,12 +167,14 @@ class CustomTextFieldController extends GetxController
   void closeDropdown() {
     animationController.reverse().then((_) {
       overlayEntry?.remove();
+      overlayEntry = null;
       isDropdownOpen.value = false;
     });
   }
 
   @override
   void onClose() {
+    closeDropdown();
     animationController.dispose();
     super.onClose();
   }
@@ -150,6 +209,9 @@ class CustomTextField extends StatelessWidget {
     this.onDropdownChanged,
     this.controllerTag = 'default',
     this.dropdownBackgroundColor,
+    this.isCheckboxDropdown = false,
+    this.selectedCheckboxItems,
+    this.onCheckboxChanged,
   });
 
   final String? hintText;
@@ -173,44 +235,47 @@ class CustomTextField extends StatelessWidget {
   final int? maxLines;
   final int? minLines;
   final Color? dropdownBackgroundColor;
-
   final bool isDropdown;
   final List<String>? dropdownItems;
   final String? selectedDropdownValue;
   final void Function(String?)? onDropdownChanged;
   final String controllerTag;
+  final bool isCheckboxDropdown;
+  final List<String>? selectedCheckboxItems;
+  final void Function(List<String>)? onCheckboxChanged;
 
   @override
   Widget build(BuildContext context) {
-    // Ensure controller is available
     final controller = Get.put(CustomTextFieldController(), tag: controllerTag);
+    final GlobalKey textFieldKey = GlobalKey();
 
-    if (isDropdown && selectedDropdownValue != null) {
+    if (isDropdown && selectedDropdownValue != null && !isCheckboxDropdown) {
       textEditingController.text = selectedDropdownValue!;
     }
-
-    final GlobalKey textFieldKey = GlobalKey();
 
     return SizedBox(
       width: width ?? MediaQuery.of(context).size.width * 0.9,
       child: TextFormField(
-        key: isDropdown ? textFieldKey : null,
+        key: isDropdown || isCheckboxDropdown ? textFieldKey : null,
         controller: textEditingController,
         obscureText: obscureText,
         maxLines: maxLines ?? 1,
         minLines: minLines,
         validator: validator,
-        readOnly: isDropdown ? true : readOnly,
+        readOnly: isDropdown || isCheckboxDropdown ? true : readOnly,
         onTap: () {
           onTap?.call();
-          if (isDropdown && dropdownItems != null) {
+          if ((isDropdown || isCheckboxDropdown) && dropdownItems != null) {
             controller.toggleDropdown(
               context,
               textFieldKey,
               dropdownItems!,
               textEditingController,
-              onDropdownChanged,
-              dropdownBackgroundColor,
+              onItemSelected: onDropdownChanged,
+              dropdownBackgroundColor: dropdownBackgroundColor,
+              selectedCheckboxItems: selectedCheckboxItems ?? [],
+              onCheckboxChanged: onCheckboxChanged,
+              isCheckboxDropdown: isCheckboxDropdown,
             );
           }
         },
@@ -252,7 +317,7 @@ class CustomTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.r),
             borderSide: borderSide ?? BorderSide.none,
           ),
-          suffixIcon: isDropdown
+          suffixIcon: isDropdown || isCheckboxDropdown
               ? Obx(
                   () => Transform.rotate(
                     angle: controller.isDropdownOpen.value ? 0 : 1.57,
@@ -265,7 +330,7 @@ class CustomTextField extends StatelessWidget {
                         ),
                   ),
                 )
-              : suffixIcon,
+              : null,
           filled: true,
           fillColor: fillColor ?? const Color(0xFFFFFFFF),
         ),

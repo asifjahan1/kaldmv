@@ -68,7 +68,8 @@ class HomeController extends GetxController {
   RxString endTime = ''.obs;
   RxString selectedBudget = ''.obs;
   RxString selectedGroupType = ''.obs;
-  RxString selectedPreferenceTypes = ''.obs;
+  // RxString selectedPreferenceTypes = ''.obs;
+  RxList<String> selectedPreferenceTypes = <String>[].obs;
   RxString selectedAccomodationTypes = ''.obs;
   RxString selectedTransportationTypes = ''.obs;
   RxString calculatedDuration = ''.obs;
@@ -160,6 +161,12 @@ class HomeController extends GetxController {
     'Mountain & Hiking',
     'Luxury Experience',
   ];
+
+  void updatePreferenceText() {
+    preferenceController.text = selectedPreferenceTypes.isEmpty
+        ? ''
+        : selectedPreferenceTypes.join(', ');
+  }
 
   // Sample data for popular countries and cities
   var popularCountries = [
@@ -277,7 +284,7 @@ class HomeController extends GetxController {
         // "food_budget": budgetController.text.trim(),
         // "transportation_budget": transportationController.text.trim(),
         // "Group_type": groupTypeController.text.trim(),
-        // "preferences": preferenceController.text.trim(),
+        // "preferences": selectedPreferenceTypes.toList(),
         // "Special_requirements": specialRequirementController.text.trim(),
       };
 

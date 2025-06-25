@@ -490,38 +490,38 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 5.h),
-                            CustomTextField(
-                              hintText: 'Select Your Preferred Experience',
-                              hintTextColor: Colors.grey[500],
-                              isDropdown: true,
-                              dropdownBackgroundColor: Colors.white,
-                              dropdownItems: controller.preferenceTypes,
-                              selectedDropdownValue:
-                                  controller
-                                      .selectedPreferenceTypes
-                                      .value
-                                      .isEmpty
-                                  ? null
-                                  : controller.selectedPreferenceTypes.value,
-                              onDropdownChanged: (value) {
-                                if (value != null) {
-                                  controller.selectedPreferenceTypes.value =
-                                      value;
-                                  controller.groupTypeController.text = value;
-                                }
-                              },
-                              textEditingController:
-                                  controller.preferenceController,
-                              fillColor: Colors.white,
-                              textColor: Colors.black,
-                              borderSide: const BorderSide(
-                                color: Color(0xFF867B79),
-                              ),
-                              fontWeight: FontWeight.w400,
-                              obscureText: false,
-                              validator: null,
-                              prefixIconPath: 'assets/images/attachment.png',
-                            ),
+                            Obx(() {
+                              final _ =
+                                  controller.selectedPreferenceTypes.length;
+                              return CustomTextField(
+                                hintText: 'Select Your Preferred Experience',
+                                hintTextColor: Colors.grey[500],
+                                fillColor: Colors.white,
+                                textColor: Colors.black,
+                                borderSide: const BorderSide(
+                                  color: Color(0xFF867B79),
+                                ),
+                                textEditingController:
+                                    controller.preferenceController,
+                                prefixIconPath: 'assets/images/attachment.png',
+                                isDropdown: true,
+                                isCheckboxDropdown: true,
+                                dropdownItems: controller.preferenceTypes,
+                                selectedCheckboxItems:
+                                    controller.selectedPreferenceTypes,
+                                onCheckboxChanged:
+                                    (List<String> selectedItems) {
+                                      controller.selectedPreferenceTypes
+                                          .assignAll(selectedItems);
+                                      controller.updatePreferenceText();
+                                    },
+                                dropdownBackgroundColor: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                obscureText: false,
+                                validator: null,
+                                controllerTag: 'preference_dropdown',
+                              );
+                            }),
                             SizedBox(height: 10.h),
                             // Special Requirements
                             Text(
