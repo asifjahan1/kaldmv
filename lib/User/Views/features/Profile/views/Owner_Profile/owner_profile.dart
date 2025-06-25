@@ -7,9 +7,8 @@ import 'package:kaldmv/User/Views/features/Home/views/custom_drawer.dart';
 import 'package:kaldmv/User/Views/features/Profile/views/profile_info.dart';
 import 'package:kaldmv/User/Views/features/Profile/views/settings.dart';
 import 'package:kaldmv/core/global_widegts/custom_header.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/// A widget that displays the profile page for an owner, including stats and navigation options.
-/// Only accessible to users with [isOwner] set to true.
 class OwnerProfile extends StatelessWidget {
   final bool isOwner;
   final int activePlacesCount;
@@ -24,6 +23,12 @@ class OwnerProfile extends StatelessWidget {
     this.totalViewsCount = 3,
   });
 
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Get.offAll(() => LoginScreen());
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!isOwner) {
@@ -32,13 +37,14 @@ class OwnerProfile extends StatelessWidget {
       );
     }
 
+    final BottomNavController nav = Get.find<BottomNavController>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: const CustomDrawer(),
       body: SafeArea(
         child: Column(
           children: [
-            // Fixed header
             CustomHeader(
               menuIconPath: 'assets/images/menu11.png',
               logoPath: 'assets/images/logo22.png',
@@ -47,12 +53,10 @@ class OwnerProfile extends StatelessWidget {
               showSearchBar: false,
               isAISuggestionPanelVisible: false,
             ),
-            // Scrollable content
             Expanded(
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                 children: [
-                  // Stats Cards Row 1
                   Row(
                     children: [
                       Expanded(
@@ -60,11 +64,10 @@ class OwnerProfile extends StatelessWidget {
                           title: 'Active Places',
                           value: activePlacesCount.toString(),
                           color: Colors.green,
-                          showProgress: true,
-                          progressValue: (totalViewsCount / 10).clamp(
-                            10.0,
-                            10.0,
-                          ), // Max views = 10
+                          progressValue: (activePlacesCount / 10).clamp(
+                            0.0,
+                            1.0,
+                          ),
                         ),
                       ),
                       SizedBox(width: 16.w),
@@ -72,64 +75,54 @@ class OwnerProfile extends StatelessWidget {
                         child: _buildStatCard(
                           title: 'Total Reviews',
                           value: totalReviewsCount.toString(),
-                          color: Colors.amber,
-                          showProgress: true,
-                          progressValue: (totalViewsCount / 10).clamp(
-                            10.0,
-                            10.0,
-                          ), // Max views = 10
+                          color: Colors.orange,
+                          progressValue: (totalReviewsCount / 10).clamp(
+                            0.0,
+                            1.0,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 16.h),
-                  // Stats Card Row 2 - Full width
                   _buildStatCard(
                     title: 'Total Views',
                     value: totalViewsCount.toString(),
                     color: Colors.blue,
-                    showProgress: true,
-                    progressValue: (totalViewsCount / 10).clamp(
-                      10.0,
-                      10.0,
-                    ), // Max views = 10
+                    progressValue: (totalViewsCount / 100).clamp(0.0, 1.0),
                   ),
                   SizedBox(height: 30.h),
-                  // Profile Section
+
                   _buildSectionTitle('Profile'),
                   _buildNavTile(
                     title: 'Edit Profile Information',
                     icon: Icons.edit,
                     onTap: () {
-                      final BottomNavController nav =
-                          Get.find<BottomNavController>();
                       nav.changeIndex(3);
                       Get.to(() => ProfileInfo());
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
+
                   SizedBox(height: 20.h),
-                  // Settings Section
                   _buildSectionTitle('Settings'),
                   _buildNavTile(
                     title: 'Settings',
                     icon: Icons.settings,
                     onTap: () {
-                      final BottomNavController nav =
-                          Get.find<BottomNavController>();
                       nav.changeIndex(3);
                       Get.to(() => Settings());
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
+
                   SizedBox(height: 20.h),
-                  // More Section
                   _buildSectionTitle('More'),
                   _buildNavTile(
                     title: 'About Us',
                     icon: Icons.info_outline,
                     onTap: () {
-                      // TODO: Navigate to about us screen
+                      // Add About Us screen navigation
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
@@ -137,10 +130,11 @@ class OwnerProfile extends StatelessWidget {
                     title: 'Privacy Policy',
                     icon: Icons.privacy_tip_outlined,
                     onTap: () {
-                      // TODO: Navigate to privacy policy screen
+                      // Add Privacy Policy screen navigation
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
+
                   SizedBox(height: 10.h),
                   ListTile(
                     leading: const Icon(Icons.logout, color: Colors.red),
@@ -149,12 +143,10 @@ class OwnerProfile extends StatelessWidget {
                       style: TextStyle(color: Colors.red),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios, size: 16.sp),
-                    onTap: () {
-                      Get.offAll(() => LoginScreen());
-                    },
+                    onTap: logout,
                   ),
                   Divider(color: Color(0xFFDE2222).withAlpha(40)),
-                  SizedBox(height: 16.h), // Bottom padding
+                  SizedBox(height: 16.h),
                 ],
               ),
             ),
@@ -164,12 +156,10 @@ class OwnerProfile extends StatelessWidget {
     );
   }
 
-  /// Builds a stat card with a title, value, and optional progress bar.
   Widget _buildStatCard({
     required String title,
     required String value,
     required Color color,
-    bool showProgress = false,
     double progressValue = 0.0,
   }) {
     return Container(
@@ -177,7 +167,7 @@ class OwnerProfile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Color(0xFFF8EFEE)),
+        border: Border.all(color: const Color(0xFFF8EFEE)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -200,25 +190,19 @@ class OwnerProfile extends StatelessWidget {
               color: color,
             ),
           ),
-          if (showProgress) ...[
-            SizedBox(height: 8.h),
-            LinearProgressIndicator(
-              borderRadius: BorderRadius.horizontal(
-                left: Radius.circular(10.r),
-                right: Radius.circular(10.r),
-              ),
-              value: progressValue,
-              backgroundColor: Colors.grey[300],
-              color: color, // Match progress bar color with stat color
-              minHeight: 8.h,
-            ),
-          ],
+          SizedBox(height: 8.h),
+          LinearProgressIndicator(
+            value: progressValue,
+            backgroundColor: Colors.grey[300],
+            color: color,
+            minHeight: 8.h,
+            borderRadius: BorderRadius.circular(8.r),
+          ),
         ],
       ),
     );
   }
 
-  /// Builds a section title with consistent styling.
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.h),
@@ -227,13 +211,12 @@ class OwnerProfile extends StatelessWidget {
         style: TextStyle(
           fontSize: 20.sp,
           fontWeight: FontWeight.bold,
-          color: Color(0xFF1B0400),
+          color: const Color(0xFF1B0400),
         ),
       ),
     );
   }
 
-  /// Builds a navigation tile with an icon, title, and tap callback.
   Widget _buildNavTile({
     required String title,
     required IconData icon,
