@@ -7,15 +7,15 @@ import 'package:kaldmv/User/Views/features/Home/views/custom_drawer.dart';
 import 'package:kaldmv/User/Views/features/Profile/views/profile_info.dart';
 import 'package:kaldmv/User/Views/features/Profile/views/settings.dart';
 import 'package:kaldmv/core/global_widegts/custom_header.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kaldmv/core/services/auth_service.dart';
 
 class GuestProfile extends StatelessWidget {
   const GuestProfile({super.key});
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // clear saved role/email/etc.
+    await AuthService.logout();
     Get.offAll(() => LoginScreen());
+    Get.find<BottomNavController>().changeIndex(0);
   }
 
   @override
@@ -101,7 +101,21 @@ class GuestProfile extends StatelessWidget {
                       ),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios, size: 16.sp),
-                    onTap: logout,
+                    onTap: () {
+                      Get.defaultDialog(
+                        title: "Logout",
+                        buttonColor: Colors.red,
+                        cancelTextColor: Colors.black,
+                        middleText: "Are you sure you want to logout?",
+                        textConfirm: "Yes",
+                        textCancel: "Cancel",
+                        confirmTextColor: Colors.white,
+                        onConfirm: () async {
+                          await logout();
+                          Get.back();
+                        },
+                      );
+                    },
                   ),
                 ],
               ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/screen/custom_bottom_navbar_screen.dart';
+import 'package:kaldmv/core/services/auth_service.dart';
 import 'package:kaldmv/splash_screen/splash_gateway2.dart';
 
 import '../core/global_widegts/custom_button.dart';
@@ -67,9 +68,15 @@ class SplashGateway extends StatelessWidget {
                           height: 40.h,
                           borderRadius: 40.r,
                           width: sw * 0.9,
-                          onPressed: () {
-                            Get.to(() => SplashGateway2());
+                          onPressed: () async {
+                            bool loggedIn = await AuthService.isLoggedIn();
+                            if (loggedIn) {
+                              Get.offAll(() => BottomNavScreen());
+                            } else {
+                              Get.to(() => SplashGateway2());
+                            }
                           },
+
                           text: 'Get Started',
                           centerText: true,
                           backgroundColor: Colors.white,
@@ -77,15 +84,10 @@ class SplashGateway extends StatelessWidget {
                           suffixIcon: CircleAvatar(
                             radius: 14.r,
                             backgroundColor: Color(0xFFF97C68),
-                            child: GestureDetector(
-                              onTap: () {
-                                Get.to(() => SplashGateway2());
-                              },
-                              child: Icon(
-                                Icons.arrow_right_alt_rounded,
-                                color: Colors.white,
-                                size: 30.sp,
-                              ),
+                            child: Icon(
+                              Icons.arrow_right_alt_rounded,
+                              color: Colors.white,
+                              size: 30.sp,
                             ),
                           ),
                           suffixIconHeight: 35.h,

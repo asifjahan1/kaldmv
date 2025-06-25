@@ -167,18 +167,37 @@ class LoginController extends GetxController {
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 200 && data['success'] == true) {
-        final role = data['data']?['role'] ?? 'user'; // Default fallback
+      // if (response.statusCode == 200) {
+      //   final role = data['data']?['role'] ?? 'user'; // Default fallback
+      //   await _prefs.setString('user_role', role.toLowerCase());
+      //   storedRole.value = role.toLowerCase();
+
+      //   final bottomNavController = Get.find<BottomNavController>();
+      //   await bottomNavController.refreshRole();
+
+      //   EasyLoading.showSuccess("Login successful");
+      //   Get.offAll(() => BottomNavScreen());
+      // }
+      if (response.statusCode == 200) {
+        final token = data['data']?['token'] ?? '';
+        final role = data['data']?['role'] ?? 'user';
+
+        await _prefs.setString('auth_token', token);
         await _prefs.setString('user_role', role.toLowerCase());
+        await _prefs.setBool('is_logged_in', true);
+
         storedRole.value = role.toLowerCase();
 
         final bottomNavController = Get.find<BottomNavController>();
         await bottomNavController.refreshRole();
 
-        EasyLoading.showSuccess("Login successful");
-        Get.off(() => BottomNavScreen());
+        EasyLoading.showSuccess("Login Successful");
+        Get.offAll(() => BottomNavScreen());
       } else {
-        EasyLoading.showError(data['message'] ?? "Login failed");
+        EasyLoading.showError(
+          data['message'] ?? "Login failed",
+          duration: Duration(seconds: 3),
+        );
       }
     } catch (e) {
       log("Login error: $e");

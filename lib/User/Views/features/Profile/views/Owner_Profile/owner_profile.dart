@@ -7,7 +7,7 @@ import 'package:kaldmv/User/Views/features/Home/views/custom_drawer.dart';
 import 'package:kaldmv/User/Views/features/Profile/views/profile_info.dart';
 import 'package:kaldmv/User/Views/features/Profile/views/settings.dart';
 import 'package:kaldmv/core/global_widegts/custom_header.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kaldmv/core/services/auth_service.dart';
 
 class OwnerProfile extends StatelessWidget {
   final bool isOwner;
@@ -24,8 +24,8 @@ class OwnerProfile extends StatelessWidget {
   });
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await AuthService.logout();
+    Get.find<BottomNavController>().changeIndex(0);
     Get.offAll(() => LoginScreen());
   }
 
@@ -143,7 +143,21 @@ class OwnerProfile extends StatelessWidget {
                       style: TextStyle(color: Colors.red),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios, size: 16.sp),
-                    onTap: logout,
+                    onTap: () {
+                      Get.defaultDialog(
+                        title: "Logout",
+                        buttonColor: Colors.red,
+                        cancelTextColor: Colors.black,
+                        middleText: "Are you sure you want to logout?",
+                        textConfirm: "Yes",
+                        textCancel: "Cancel",
+                        confirmTextColor: Colors.white,
+                        onConfirm: () async {
+                          await logout();
+                          Get.back();
+                        },
+                      );
+                    },
                   ),
                   Divider(color: Color(0xFFDE2222).withAlpha(40)),
                   SizedBox(height: 16.h),
