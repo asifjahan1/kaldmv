@@ -7,12 +7,21 @@ import 'package:kaldmv/User/Views/features/Home/views/custom_drawer.dart';
 import 'package:kaldmv/User/Views/features/Profile/views/profile_info.dart';
 import 'package:kaldmv/User/Views/features/Profile/views/settings.dart';
 import 'package:kaldmv/core/global_widegts/custom_header.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GuestProfile extends StatelessWidget {
   const GuestProfile({super.key});
 
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear(); // clear saved role/email/etc.
+    Get.offAll(() => LoginScreen());
+  }
+
   @override
   Widget build(BuildContext context) {
+    final BottomNavController nav = Get.find<BottomNavController>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: CustomDrawer(),
@@ -29,7 +38,6 @@ class GuestProfile extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
 
-            // Profile Options List
             Expanded(
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -39,8 +47,6 @@ class GuestProfile extends StatelessWidget {
                     title: 'Edit Profile Information',
                     icon: Icons.edit,
                     onTap: () {
-                      final BottomNavController nav =
-                          Get.find<BottomNavController>();
                       nav.changeIndex(3);
                       Get.to(() => ProfileInfo());
                     },
@@ -53,8 +59,6 @@ class GuestProfile extends StatelessWidget {
                     title: 'Settings',
                     icon: Icons.settings,
                     onTap: () {
-                      final BottomNavController nav =
-                          Get.find<BottomNavController>();
                       nav.changeIndex(3);
                       Get.to(() => Settings());
                     },
@@ -67,10 +71,8 @@ class GuestProfile extends StatelessWidget {
                     title: 'About Us',
                     icon: Icons.info_outline,
                     onTap: () {
-                      final BottomNavController nav =
-                          Get.find<BottomNavController>();
                       nav.changeIndex(3);
-                      // Get.to(() => ProfileInfo());
+                      // Placeholder for future screen
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
@@ -78,16 +80,15 @@ class GuestProfile extends StatelessWidget {
                     title: 'Privacy Policy',
                     icon: Icons.privacy_tip_outlined,
                     onTap: () {
-                      final BottomNavController nav =
-                          Get.find<BottomNavController>();
                       nav.changeIndex(3);
-                      // Get.to(() => ProfileInfo());
+                      // Placeholder for future screen
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
 
                   SizedBox(height: 16.h),
                   const Divider(),
+
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.logout, color: Colors.red),
@@ -100,21 +101,7 @@ class GuestProfile extends StatelessWidget {
                       ),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios, size: 16.sp),
-                    onTap: () {
-                      Get.offAll(() => LoginScreen());
-                      // Example logout dialog trigger:
-                      // showCustomDialog(
-                      //   context: context,
-                      //   icon: Icons.question_mark,
-                      //   iconColor: Colors.red,
-                      //   title: 'Log Out',
-                      //   message: 'Want to log out?',
-                      //   buttonText: 'Log Out',
-                      //   onButtonPressed: () {
-                      //     // logout logic here
-                      //   },
-                      // );
-                    },
+                    onTap: logout,
                   ),
                 ],
               ),
@@ -156,22 +143,3 @@ class GuestProfile extends StatelessWidget {
     );
   }
 }
-
-//   Widget _buildNavTile(IconData icon, String title, required VoidCallback onTap) {
-//     return ListTile(
-//       contentPadding: EdgeInsets.zero,
-//       leading: Icon(icon, color: Colors.black54),
-//       title: Text(
-//         title,
-//         style: TextStyle(fontSize: 14.sp, color: Colors.black87),
-//       ),
-//       trailing: Icon(Icons.arrow_forward_ios, size: 16.sp),
-//       onTap: onTap,
-//       // onTap: () {
-//       //   final BottomNavController nav = Get.find<BottomNavController>();
-//       //   nav.changeIndex(3);
-//       //   Get.to(() => ProfileInfo());
-//       // },
-//     );
-//   }
-// }

@@ -1,5 +1,10 @@
 class ApiUrl {
-  static const String baseUrl = "https://ai.tamshyah.com";
+  static const String baseUrl1 ="https://ai.tamshyah.com";
+  static const String baseUrl = "https://api.tamshyah.com";
   static const String generateItnerary =
-      "$baseUrl/api/v1/travel/generate-itinerary";
+      "$baseUrl1/api/v1/travel/generate-itinerary";
+  static const String createUser = "$baseUrl/api/v1/users/create";
+  static const String loginUser = "$baseUrl/api/v1/auth/login";
+  static const String loginAdmin = "$baseUrl/api/v1/auth/login-admin";
+  static const String refreshToken = "$baseUrl/api/v1/auth/refresh-token";
 }
