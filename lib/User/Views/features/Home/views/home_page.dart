@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
 import 'package:kaldmv/User/Views/features/Home/home%20widget/ai_generated_tour_plan/view/tour_plan_screen.dart';
 import 'package:kaldmv/User/Views/features/Home/views/city_details.dart';
 import 'package:kaldmv/User/Views/features/Home/views/popular_cities.dart';
 import 'package:kaldmv/core/global_widegts/custom_button.dart';
-import '../../../../../core/global_widegts/custom_header.dart';
-import '../../../../../core/global_widegts/custom_text_field.dart';
-import '../../Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
-import '../controller/home_controller.dart';
+import 'package:kaldmv/core/global_widegts/custom_header.dart';
+import 'package:kaldmv/core/global_widegts/custom_text_field.dart';
+import 'package:kaldmv/User/Views/features/Home/controller/home_controller.dart';
 import 'custom_drawer.dart';
 
 class HomePage extends StatelessWidget {
@@ -20,19 +20,6 @@ class HomePage extends StatelessWidget {
     Get.put(CustomTextFieldController(), tag: 'group_type_dropdown');
   }
   final HomeController controller = Get.put(HomeController());
-
-  // List of time options for Start Time and End Time dropdowns
-  // final List<String> timeOptions = List.generate(
-  //   24,
-  //   (index) => '${index.toString().padLeft(2, '0')}:00',
-  // );
-
-  //   final List<String> timeOptions = [
-  //   '12:00 AM', '1:00 AM', '2:00 AM', '3:00 AM', '4:00 AM', '5:00 AM',
-  //   '6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
-  //   '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM',
-  //   '6:00 PM', '7:00 PM', '8:00 PM', '9:00 PM', '10:00 PM', '11:00 PM',
-  // ];
 
   final List<String> startTimeOptions = [
     '9:00 AM',
@@ -66,7 +53,7 @@ class HomePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Header (Dynamic based on showAISuggestionPanel)
+              // Header
               Obx(
                 () => CustomHeader(
                   logoPath: 'assets/images/logo111.png',
@@ -75,7 +62,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10.h),
-              // AI Suggestion Button (Toggles to show AI Suggestion Panel)
+              // AI Suggestion Button
               Obx(() {
                 return !controller.showAISuggestionPanel.value
                     ? CustomButton(
@@ -85,8 +72,7 @@ class HomePage extends StatelessWidget {
                         width: screenWidth * 0.9,
                         text: 'Use Advance AI Suggestion',
                         onPressed: () {
-                          controller.showAISuggestionPanel.value =
-                              true; // Show panel on first click
+                          controller.showAISuggestionPanel.value = true;
                         },
                       )
                     : const SizedBox.shrink();
@@ -191,24 +177,8 @@ class HomePage extends StatelessWidget {
                                 }
                               },
                             ),
-                            // // Display Calculated Duration
-                            // SizedBox(height: 10.h),
-                            // Obx(
-                            //   () => Text(
-                            //     controller.calculatedDuration.value.isEmpty
-                            //         ? 'Please select start and end dates'
-                            //         : controller.calculatedDuration.value,
-                            //     style: TextStyle(
-                            //       fontSize: 14.sp,
-                            //       color:
-                            //           controller.calculatedDuration.value
-                            //               .contains('Invalid')
-                            //           ? Colors.red
-                            //           : Colors.black,
-                            //     ),
-                            //   ),
-                            // ),
                             SizedBox(height: 10.h),
+                            // End Date
                             Text(
                               'End Date',
                               style: TextStyle(
@@ -246,7 +216,6 @@ class HomePage extends StatelessWidget {
                                 }
                               },
                             ),
-
                             SizedBox(height: 10.h),
                             // Start Time and End Time Dropdown Row
                             Text(
@@ -276,8 +245,6 @@ class HomePage extends StatelessWidget {
                                       onDropdownChanged: (value) {
                                         if (value != null) {
                                           controller.startTime.value = value;
-                                          controller.startTimeController.text =
-                                              value;
                                         }
                                       },
                                       fillColor: Colors.white,
@@ -308,8 +275,6 @@ class HomePage extends StatelessWidget {
                                       onDropdownChanged: (value) {
                                         if (value != null) {
                                           controller.endTime.value = value;
-                                          controller.endTimeController.text =
-                                              value;
                                         }
                                       },
                                       fillColor: Colors.white,
@@ -341,7 +306,9 @@ class HomePage extends StatelessWidget {
                                 prefixIconPath: 'assets/images/budget.png',
                                 isDropdown: true,
                                 dropdownBackgroundColor: Colors.white,
-                                dropdownItems: controller.budgetRanges,
+                                dropdownItems: controller.budgetRanges
+                                    .map((e) => e['display']!)
+                                    .toList(),
                                 selectedDropdownValue:
                                     controller.selectedBudget.value.isEmpty
                                     ? null
@@ -349,7 +316,6 @@ class HomePage extends StatelessWidget {
                                 onDropdownChanged: (value) {
                                   if (value != null) {
                                     controller.selectedBudget.value = value;
-                                    controller.budgetController.text = value;
                                   }
                                 },
                                 fillColor: Colors.white,
@@ -378,7 +344,9 @@ class HomePage extends StatelessWidget {
                                 prefixIconPath: 'assets/images/group.png',
                                 isDropdown: true,
                                 dropdownBackgroundColor: Colors.white,
-                                dropdownItems: controller.groupTypes,
+                                dropdownItems: controller.groupTypes
+                                    .map((e) => e['display']!)
+                                    .toList(),
                                 selectedDropdownValue:
                                     controller.selectedGroupType.value.isEmpty
                                     ? null
@@ -386,7 +354,6 @@ class HomePage extends StatelessWidget {
                                 onDropdownChanged: (value) {
                                   if (value != null) {
                                     controller.selectedGroupType.value = value;
-                                    controller.groupTypeController.text = value;
                                   }
                                 },
                                 fillColor: Colors.white,
@@ -421,7 +388,9 @@ class HomePage extends StatelessWidget {
                               ),
                               textEditingController:
                                   controller.accomodationController,
-                              dropdownItems: controller.accomodationTypes,
+                              dropdownItems: controller.accomodationTypes
+                                  .map((e) => e['display']!)
+                                  .toList(),
                               selectedDropdownValue:
                                   controller
                                       .selectedAccomodationTypes
@@ -432,8 +401,6 @@ class HomePage extends StatelessWidget {
                               onDropdownChanged: (value) {
                                 if (value != null) {
                                   controller.selectedAccomodationTypes.value =
-                                      value;
-                                  controller.accomodationController.text =
                                       value;
                                 }
                               },
@@ -461,7 +428,9 @@ class HomePage extends StatelessWidget {
                               ),
                               textEditingController:
                                   controller.transportationController,
-                              dropdownItems: controller.transportationTypes,
+                              dropdownItems: controller.transportationTypes
+                                  .map((e) => e['display']!)
+                                  .toList(),
                               selectedDropdownValue:
                                   controller
                                       .selectedTransportationTypes
@@ -474,8 +443,6 @@ class HomePage extends StatelessWidget {
                               onDropdownChanged: (value) {
                                 if (value != null) {
                                   controller.selectedTransportationTypes.value =
-                                      value;
-                                  controller.transportationController.text =
                                       value;
                                 }
                               },
@@ -513,7 +480,6 @@ class HomePage extends StatelessWidget {
                                     (List<String> selectedItems) {
                                       controller.selectedPreferenceTypes
                                           .assignAll(selectedItems);
-                                      controller.updatePreferenceText();
                                     },
                                 dropdownBackgroundColor: Colors.white,
                                 fontWeight: FontWeight.w400,
@@ -549,7 +515,7 @@ class HomePage extends StatelessWidget {
                               fontWeight: FontWeight.w400,
                             ),
                             SizedBox(height: 10.h),
-                            // Generate AI Suggestions Button (Navigates to TourPlanScreen)
+                            // Generate AI Suggestions Button
                             CustomButton(
                               borderRadius: 12.r,
                               backgroundImagePath: 'assets/images/ai_image.png',
@@ -557,7 +523,21 @@ class HomePage extends StatelessWidget {
                               width: screenWidth * 0.9,
                               text: 'Generate AI Suggestions',
                               onPressed: () {
-                                // Collect data from controllers
+                                // Validate required fields
+                                if (controller.countryController.text.isEmpty ||
+                                    controller.cityController.text.isEmpty ||
+                                    controller
+                                        .startDateController
+                                        .text
+                                        .isEmpty ||
+                                    controller.endDateController.text.isEmpty) {
+                                  Get.snackbar(
+                                    'Error',
+                                    'Please fill in all required fields',
+                                  );
+                                  return;
+                                }
+
                                 final tourPlanData = {
                                   'country': controller.countryController.text,
                                   'city': controller.cityController.text,
@@ -570,23 +550,26 @@ class HomePage extends StatelessWidget {
                                   'budget': controller.budgetController.text,
                                   'groupType':
                                       controller.groupTypeController.text,
-                                  'filePath':
-                                      controller.preferenceController.text,
+                                  'preference': controller
+                                      .selectedPreferenceTypes
+                                      .join(', '),
+                                  'accomodation':
+                                      controller.accomodationController.text,
+                                  'transportation':
+                                      controller.transportationController.text,
                                   'specialRequirements': controller
                                       .specialRequirementController
                                       .text,
                                 };
+
                                 final BottomNavController nav =
                                     Get.find<BottomNavController>();
                                 nav.customSearchContent.value = TourPlanScreen(
                                   tourPlanData: tourPlanData,
                                 );
-                                nav.changeIndex(
-                                  1,
-                                ); // Navigate to TourPlanScreen
-                                controller.showAISuggestionPanel.value =
-                                    false; // Hide panel
-                                controller.generateItnerary();
+                                nav.changeIndex(1);
+                                controller.showAISuggestionPanel.value = false;
+                                controller.generateItinerary();
                               },
                             ),
                           ],

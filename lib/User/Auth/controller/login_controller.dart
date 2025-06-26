@@ -180,7 +180,8 @@ class LoginController extends GetxController {
       // }
       if (response.statusCode == 200) {
         final token = data['data']?['token'] ?? '';
-        final role = data['data']?['role'] ?? 'user';
+        // decoded the token to get the role
+                final role = data['data']?['role'] ?? 'user';
 
         await _prefs.setString('auth_token', token);
         await _prefs.setString('user_role', role.toLowerCase());

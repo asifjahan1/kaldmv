@@ -58,7 +58,6 @@ class HomeController extends GetxController {
   TextEditingController transportationController = TextEditingController();
   TextEditingController specialRequirementController = TextEditingController();
   TextEditingController groupTypeController = TextEditingController();
-  // TextEditingController durationController = TextEditingController();
   TextEditingController startTimeController = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
   TextEditingController budgetController = TextEditingController();
@@ -68,83 +67,44 @@ class HomeController extends GetxController {
   RxString endTime = ''.obs;
   RxString selectedBudget = ''.obs;
   RxString selectedGroupType = ''.obs;
-  // RxString selectedPreferenceTypes = ''.obs;
   RxList<String> selectedPreferenceTypes = <String>[].obs;
   RxString selectedAccomodationTypes = ''.obs;
   RxString selectedTransportationTypes = ''.obs;
   RxString calculatedDuration = ''.obs;
 
-  // Dropdown options
-  // List<String> startTimes = [
-  //   '1 Day',
-  //   '2 Days',
-  //   '3 Days',
-  //   '4 Days',
-  //   '5 Days',
-  //   '6 Days',
-  //   '7 Days',
-  //   '8 Days',
-  //   '9 Days',
-  //   '10 Days',
-  //   '11 Days',
-  //   '12 Days',
-  //   '13 Days',
-  //   '14 Days',
-  //   '15 Days',
-  //   '16 Days',
-  // ];
-
-  // List<String> endTimes = [
-  //   '1 Day',
-  //   '2 Days',
-  //   '3 Days',
-  //   '4 Days',
-  //   '5 Days',
-  //   '6 Days',
-  //   '7 Days',
-  //   '8 Days',
-  //   '9 Days',
-  //   '10 Days',
-  //   '11 Days',
-  //   '12 Days',
-  //   '13 Days',
-  //   '14 Days',
-  //   '15 Days',
-  //   '16 Days',
-  // ];
-
-  List<String> budgetRanges = [
-    'Basic (\$0 - \$500)',
-    'Mid-range(\$500 - \$1500)',
-    'Luxury (\$1500 - \$5000)',
-    'Premium (\$5000+)',
+  // Dropdown options with display and API values
+  final List<Map<String, String>> budgetRanges = [
+    {'display': 'Basic (\$0 - \$500)', 'api': 'budget'},
+    {'display': 'Mid-range (\$500 - \$1500)', 'api': 'mid-range'},
+    {'display': 'Luxury (\$1500 - \$5000)', 'api': 'luxury'},
+    {'display': 'Premium (\$5000+)', 'api': 'luxury'},
   ];
 
-  List<String> groupTypes = [
-    'Solo Traveler',
-    'Couple',
-    'Family',
-    'Friends',
-    'Business',
+  final List<Map<String, String>> groupTypes = [
+    {'display': 'Solo Traveler', 'api': 'solo'},
+    {'display': 'Couple', 'api': 'couple'},
+    {'display': 'Family', 'api': 'family'},
+    {'display': 'Friends', 'api': 'family'},
+    {'display': 'Business', 'api': 'family'},
   ];
 
-  List<String> accomodationTypes = [
-    'Hotel',
-    'Resort',
-    'Apartment',
-    'Hostel',
-    'Villa',
+  final List<Map<String, String>> accomodationTypes = [
+    {'display': 'Hotel', 'api': 'mid-range'},
+    {'display': 'Resort', 'api': 'luxury'},
+    {'display': 'Apartment', 'api': 'budget'},
+    {'display': 'Hostel', 'api': 'budget'},
+    {'display': 'Villa', 'api': 'luxury'},
   ];
 
-  List<String> transportationTypes = [
-    'Flight',
-    'Train',
-    'Bus',
-    'Car Portal',
-    'Cruise',
+  final List<Map<String, String>> transportationTypes = [
+    {'display': 'Flight', 'api': 'mid-range'},
+    {'display': 'Train', 'api': 'budget'},
+    {'display': 'Bus', 'api': 'budget'},
+    {'display': 'Car Rental', 'api': 'mid-range'},
+    {'display': 'Cruise', 'api': 'luxury'},
   ];
 
-  List<String> preferenceTypes = [
+  final List<String> preferenceTypes = [
     'Adventure & Outdoor Activities',
     'Culture Experiences',
     'Food & Culinary Tours',
@@ -161,6 +121,26 @@ class HomeController extends GetxController {
     'Mountain & Hiking',
     'Luxury Experience',
   ];
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Sync TextEditingControllers with Rx variables
+    ever(selectedBudget, (_) => budgetController.text = selectedBudget.value);
+    ever(
+      selectedGroupType,
+      (_) => groupTypeController.text = selectedGroupType.value,
+    );
+    ever(
+      selectedAccomodationTypes,
+      (_) => accomodationController.text = selectedAccomodationTypes.value,
+    );
+    ever(
+      selectedTransportationTypes,
+      (_) => transportationController.text = selectedTransportationTypes.value,
+    );
+    ever(selectedPreferenceTypes, (_) => updatePreferenceText());
+  }
 
   void updatePreferenceText() {
     preferenceController.text = selectedPreferenceTypes.isEmpty
@@ -254,41 +234,57 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> generateItnerary() async {
+  String mapToApiValue(String displayValue, List<Map<String, String>> options) {
+    final option = options.firstWhere(
+      (e) => e['display'] == displayValue,
+      orElse: () => {'api': 'budget'},
+    );
+    return option['api']!;
+  }
+
+  Future<void> generateItinerary() async {
     try {
       EasyLoading.show(status: "Loading...");
       final url = ApiUrl.generateItnerary;
-      log("generateItnerary url $url");
+      log("generateItinerary url $url");
+
+      // Validate required fields
+      if (countryController.text.trim().isEmpty ||
+          cityController.text.trim().isEmpty ||
+          startDateController.text.trim().isEmpty ||
+          endDateController.text.trim().isEmpty) {
+        EasyLoading.showError("Please fill in all required fields");
+        return;
+      }
 
       final Map<String, dynamic> inputData = {
-        // "Country": "Japan",
-        // "City": "Tokyo",
-        // "Start_date": "2025-06-01",
-        // "End_date": "2025-06-07",
-        // "Start_Time": "09:00",
-        // "End_Time": "17:00",
-        // "Hotel_budget": "luxury",
-        // "food_budget": "luxury",
-        // "transportation_budget": "mid-range",
-        // "Group_type": "family",
-        // "preferences": ["adventure", "outdoor activities"],
-        // "Special_requirements": "Wheelchair Accessing",
-
         "Country": countryController.text.trim(),
         "City": cityController.text.trim(),
         "Start_date": startDateController.text.trim(),
         "End_date": endDateController.text.trim(),
         "Start_Time": startTimeController.text.trim(),
         "End_Time": endTimeController.text.trim(),
-        "Hotel_budget": accomodationController.text.trim(),
-        "food_budget": budgetController.text.trim(),
-        "transportation_budget": transportationController.text.trim(),
-        "Group_type": groupTypeController.text.trim(),
+        "Hotel_budget": mapToApiValue(
+          accomodationController.text.trim(),
+          accomodationTypes,
+        ),
+        "food_budget": mapToApiValue(
+          budgetController.text.trim(),
+          budgetRanges,
+        ),
+        "transportation_budget": mapToApiValue(
+          transportationController.text.trim(),
+          transportationTypes,
+        ),
+        "Group_type": mapToApiValue(
+          groupTypeController.text.trim(),
+          groupTypes,
+        ),
         "preferences": selectedPreferenceTypes.toList(),
         "Special_requirements": specialRequirementController.text.trim(),
       };
 
-      log('generateItnerary url (JSON): ${jsonEncode(inputData)}');
+      log('generateItinerary url (JSON): ${jsonEncode(inputData)}');
 
       final response = await http.post(
         Uri.parse(url),
@@ -296,18 +292,21 @@ class HomeController extends GetxController {
         body: jsonEncode(inputData),
       );
 
-      log("generateItnerary url Status Code: ${response.statusCode}");
-      log("generateItnerary url Body: ${response.body}");
+      log("generateItinerary url Status Code: ${response.statusCode}");
+      log("generateItinerary url Body: ${response.body}");
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
-        EasyLoading.showSuccess("success");
+        EasyLoading.showSuccess("Success");
       } else {
         var responseData = jsonDecode(response.body);
-        EasyLoading.showError(responseData["message"]);
+        EasyLoading.showError(
+          responseData["message"] ?? "Failed to generate itinerary",
+        );
       }
     } catch (e) {
-      log("generateItnerary error: $e");
+      log("generateItinerary error: $e");
+      EasyLoading.showError("An error occurred");
     } finally {
       EasyLoading.dismiss();
     }
