@@ -65,6 +65,7 @@ dependencies:
   dotted_border: ^3.0.1
   get_storage: ^2.1.1
   google_sign_in: ^7.0.0
+  jwt_decoder: ^2.0.1
 
 dev_dependencies:
   flutter_test:

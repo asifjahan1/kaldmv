@@ -10,14 +10,12 @@ import 'package:kaldmv/core/global_widegts/custom_header.dart';
 import 'package:kaldmv/core/services/auth_service.dart';
 
 class OwnerProfile extends StatelessWidget {
-  final bool isOwner;
   final int activePlacesCount;
   final int totalReviewsCount;
   final int totalViewsCount;
 
   const OwnerProfile({
     super.key,
-    required this.isOwner,
     this.activePlacesCount = 1,
     this.totalReviewsCount = 5,
     this.totalViewsCount = 3,
@@ -31,12 +29,6 @@ class OwnerProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!isOwner) {
-      return const Scaffold(
-        body: Center(child: Text('This page is only accessible to Owners.')),
-      );
-    }
-
     final BottomNavController nav = Get.find<BottomNavController>();
 
     return Scaffold(
@@ -53,6 +45,22 @@ class OwnerProfile extends StatelessWidget {
               showSearchBar: false,
               isAISuggestionPanelVisible: false,
             ),
+            SizedBox(height: 20.h),
+            // Role Display
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Obx(
+                () => Text(
+                  'Role: ${nav.displayRole}',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1B0400),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10.h),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
@@ -92,7 +100,6 @@ class OwnerProfile extends StatelessWidget {
                     progressValue: (totalViewsCount / 100).clamp(0.0, 1.0),
                   ),
                   SizedBox(height: 30.h),
-
                   _buildSectionTitle('Profile'),
                   _buildNavTile(
                     title: 'Edit Profile Information',
@@ -103,7 +110,6 @@ class OwnerProfile extends StatelessWidget {
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
-
                   SizedBox(height: 20.h),
                   _buildSectionTitle('Settings'),
                   _buildNavTile(
@@ -115,7 +121,6 @@ class OwnerProfile extends StatelessWidget {
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
-
                   SizedBox(height: 20.h),
                   _buildSectionTitle('More'),
                   _buildNavTile(
@@ -134,7 +139,6 @@ class OwnerProfile extends StatelessWidget {
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
-
                   SizedBox(height: 10.h),
                   ListTile(
                     leading: const Icon(Icons.logout, color: Colors.red),

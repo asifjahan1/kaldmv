@@ -42,7 +42,7 @@ class AppRoute {
       page: () {
         final args = Get.arguments as Map<String, dynamic>? ?? {};
         return OwnerProfile(
-          isOwner: args['isOwner'] ?? true,
+          // isOwner: args['isOwner'] ?? true,
           activePlacesCount: args['activePlacesCount'] ?? 1,
           totalReviewsCount: args['totalReviewsCount'] ?? 5,
           totalViewsCount: args['totalViewsCount'] ?? 3,

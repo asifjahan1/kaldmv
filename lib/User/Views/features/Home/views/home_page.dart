@@ -20,6 +20,7 @@ class HomePage extends StatelessWidget {
     Get.put(CustomTextFieldController(), tag: 'group_type_dropdown');
   }
   final HomeController controller = Get.put(HomeController());
+  final BottomNavController navController = Get.find<BottomNavController>();
 
   final List<String> startTimeOptions = [
     '9:00 AM',
@@ -53,6 +54,22 @@ class HomePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              // Role Display
+              Obx(
+                () => Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 10.h,
+                  ),
+                  child: Text(
+                    'Logged in as: ${navController.displayRole}',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
               // Header
               Obx(
                 () => CustomHeader(

@@ -235,11 +235,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../controller/bottom_nav_bar_controller.dart';
+import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
 
 class BottomNavScreen extends StatelessWidget {
   BottomNavScreen({super.key});
-  final BottomNavController controller = Get.put(BottomNavController());
+  final BottomNavController controller = Get.find<BottomNavController>();
 
   final List<IconData> icons = [
     Icons.home_outlined,
@@ -252,7 +252,30 @@ class BottomNavScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(() => controller.currentScreen),
+      body: Stack(
+        children: [
+          // Main content
+          Obx(() => controller.currentScreen),
+          // Debug banner to show role
+          Obx(
+            () => Positioned(
+              top: 10.h,
+              right: 10.w,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Text(
+                  'Role: ${controller.displayRole}',
+                  style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Obx(() {
         final role = controller.storedRole.value.toLowerCase();
@@ -270,7 +293,7 @@ class BottomNavScreen extends StatelessWidget {
                 height: 100.h / 3,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5FAF8),
+                    color: Color(0xFFF5FAF8),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24.r),
                       topRight: Radius.circular(24.r),
@@ -285,7 +308,10 @@ class BottomNavScreen extends StatelessWidget {
                   children: List.generate(icons.length, (index) {
                     return Expanded(
                       child: InkWell(
-                        onTap: () => controller.changeIndex(index),
+                        onTap: () {
+                          log('Tapped tab: ${labels[index]}');
+                          controller.changeIndex(index);
+                        },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -319,7 +345,7 @@ class BottomNavScreen extends StatelessWidget {
                   child: FloatingActionButton(
                     backgroundColor: const Color(0xFFF97C68),
                     onPressed: () {
-                      log("FAB tapped!");
+                      log('FAB tapped, navigating to AddNewPlaceScreen');
                       controller.changeIndex(
                         BottomNavController.addItemScreenIndex,
                       );

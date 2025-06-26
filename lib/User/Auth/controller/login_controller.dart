@@ -106,11 +106,13 @@
 
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
 import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/screen/custom_bottom_navbar_screen.dart';
@@ -134,14 +136,29 @@ class LoginController extends GetxController {
 
   Future<void> _initPrefs() async {
     _prefs = await SharedPreferences.getInstance();
+    final savedRole = _prefs.getString('user_role');
+    if (savedRole != null) {
+      storedRole.value = savedRole;
+      log('Loaded role from SharedPreferences: $savedRole');
+    }
   }
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  // Login
   Future<void> handleLogin() async {
+    // Validate required fields
+    if (emailTEController.text.trim().isEmpty ||
+        passwordTEController.text.trim().isEmpty) {
+      Get.snackbar(
+        "Missing fields",
+        "Please enter both email and password.",
+        snackPosition: SnackPosition.TOP,
+      );
+      return;
+    }
+
     isLoginLoading.value = true;
     EasyLoading.show(status: "Logging in...");
 
@@ -165,44 +182,60 @@ class LoginController extends GetxController {
       log("Login response code: ${response.statusCode}");
       log("Login response body: ${response.body}");
 
-      final data = jsonDecode(response.body);
-
-      // if (response.statusCode == 200) {
-      //   final role = data['data']?['role'] ?? 'user'; // Default fallback
-      //   await _prefs.setString('user_role', role.toLowerCase());
-      //   storedRole.value = role.toLowerCase();
-
-      //   final bottomNavController = Get.find<BottomNavController>();
-      //   await bottomNavController.refreshRole();
-
-      //   EasyLoading.showSuccess("Login successful");
-      //   Get.offAll(() => BottomNavScreen());
-      // }
       if (response.statusCode == 200) {
-        final token = data['data']?['token'] ?? '';
-        // decoded the token to get the role
-                final role = data['data']?['role'] ?? 'user';
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          // Extract JWT
+          final String? token = data['data']?['token'] ?? data['token'];
+          if (token == null) {
+            throw Exception("No token found in response");
+          }
 
-        await _prefs.setString('auth_token', token);
-        await _prefs.setString('user_role', role.toLowerCase());
-        await _prefs.setBool('is_logged_in', true);
+          // Decode JWT to get role
+          try {
+            final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+            log("Decoded JWT: $decodedToken");
+            final String? role = decodedToken['role']?.toString();
+            if (role == null || !['user', 'admin'].contains(role)) {
+              throw Exception("Invalid or missing role in JWT");
+            }
 
-        storedRole.value = role.toLowerCase();
+            // Save token, role, and login status
+            await _prefs.setString('auth_token', token);
+            await _prefs.setString('user_role', role.toLowerCase());
+            await _prefs.setBool('is_logged_in', true);
+            storedRole.value = role.toLowerCase();
+            log(
+              "Saved to SharedPreferences: auth_token=$token, user_role=$role, is_logged_in=true",
+            );
 
-        final bottomNavController = Get.find<BottomNavController>();
-        await bottomNavController.refreshRole();
+            // Refresh BottomNavController role
+            final bottomNavController = Get.find<BottomNavController>();
+            await bottomNavController.refreshRole();
 
-        EasyLoading.showSuccess("Login Successful");
-        Get.offAll(() => BottomNavScreen());
+            EasyLoading.showSuccess("Login Successful");
+            Get.offAll(() => BottomNavScreen());
+          } catch (e) {
+            log("JWT decode error: $e");
+            EasyLoading.showError("Failed to process user role");
+            return;
+          }
+        } else {
+          EasyLoading.showError(
+            data['message'] ?? "Login failed",
+            duration: const Duration(seconds: 3),
+          );
+        }
       } else {
+        final data = jsonDecode(response.body);
         EasyLoading.showError(
           data['message'] ?? "Login failed",
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         );
       }
     } catch (e) {
       log("Login error: $e");
-      EasyLoading.showError("An error occurred");
+      EasyLoading.showError("An error occurred: $e");
     } finally {
       isLoginLoading.value = false;
       EasyLoading.dismiss();

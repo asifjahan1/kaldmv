@@ -37,7 +37,21 @@ class GuestProfile extends StatelessWidget {
               isAISuggestionPanelVisible: false,
             ),
             SizedBox(height: 20.h),
-
+            // Role Display
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Obx(
+                () => Text(
+                  'Role: ${nav.displayRole}',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1B0400),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10.h),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -52,7 +66,6 @@ class GuestProfile extends StatelessWidget {
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
-
                   SizedBox(height: 16.h),
                   _buildSectionTitle("Settings"),
                   _buildNavTile(
@@ -64,7 +77,6 @@ class GuestProfile extends StatelessWidget {
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
-
                   SizedBox(height: 16.h),
                   _buildSectionTitle("More"),
                   _buildNavTile(
@@ -85,10 +97,8 @@ class GuestProfile extends StatelessWidget {
                     },
                   ),
                   Divider(color: Color(0xFF01150E).withAlpha(10)),
-
                   SizedBox(height: 16.h),
                   const Divider(),
-
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.logout, color: Colors.red),
