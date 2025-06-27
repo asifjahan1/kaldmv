@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:kaldmv/User/Auth/controller/login_controller.dart';
 import 'package:kaldmv/User/Auth/screens/login_screen.dart';
 import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_bar_controller.dart';
 import 'package:kaldmv/User/Views/features/Home/views/custom_drawer.dart';
 import 'package:kaldmv/User/Views/features/Profile/views/profile_info.dart';
 import 'package:kaldmv/User/Views/features/Profile/views/settings.dart';
 import 'package:kaldmv/core/global_widegts/custom_header.dart';
-import 'package:kaldmv/core/services/auth_service.dart';
 
 class OwnerProfile extends StatelessWidget {
   final int activePlacesCount;
@@ -20,12 +20,6 @@ class OwnerProfile extends StatelessWidget {
     this.totalReviewsCount = 5,
     this.totalViewsCount = 3,
   });
-
-  Future<void> logout() async {
-    await AuthService.logout();
-    Get.find<BottomNavController>().changeIndex(0);
-    Get.offAll(() => LoginScreen());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,21 +39,21 @@ class OwnerProfile extends StatelessWidget {
               showSearchBar: false,
               isAISuggestionPanelVisible: false,
             ),
-            SizedBox(height: 20.h),
-            // Role Display
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Obx(
-                () => Text(
-                  'Role: ${nav.displayRole}',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1B0400),
-                  ),
-                ),
-              ),
-            ),
+            // SizedBox(height: 20.h),
+            // // Role Display
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 16.w),
+            //   child: Obx(
+            //     () => Text(
+            //       'Role: ${nav.displayRole}',
+            //       style: TextStyle(
+            //         fontSize: 16.sp,
+            //         fontWeight: FontWeight.bold,
+            //         color: const Color(0xFF1B0400),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             SizedBox(height: 10.h),
             Expanded(
               child: ListView(
@@ -157,8 +151,14 @@ class OwnerProfile extends StatelessWidget {
                         textCancel: "Cancel",
                         confirmTextColor: Colors.white,
                         onConfirm: () async {
-                          await logout();
+                          final loginController = Get.find<LoginController>();
+                          final success = await loginController.logout();
                           Get.back();
+
+                          if (success) {
+                            Get.find<BottomNavController>().changeIndex(0);
+                            Get.offAll(() => LoginScreen());
+                          }
                         },
                       );
                     },

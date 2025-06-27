@@ -44,36 +44,39 @@ class SearchScreen extends StatelessWidget {
     return Scaffold(
       drawer: const CustomDrawer(),
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Obx(() {
-              final isDefault = controller.isDefaultView;
-              return CustomHeader(
-                menuIconPath: isDefault
-                    ? 'assets/images/menu.png'
-                    : 'assets/images/menu11.png',
-                logoPath: isDefault
-                    ? 'assets/images/logo111.png'
-                    : 'assets/images/logo22.png',
-                backgroundColor:
-                isDefault ? const Color(0xFFF97C68) : Colors.white,
-                showFilters: isDefault,
-                showSearchBar: isDefault,
-                isAISuggestionPanelVisible: false,
-              );
-            }),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Obx(() {
-                  return controller.isDefaultView
-                      ? _buildDefaultView()
-                      : _buildSelectedDetail(context);
-                }),
-              ),
+      body: Column(
+        children: [
+          Container(
+            height: 25.h,
+            decoration: BoxDecoration(color: Color(0xFFF97C68)),
+          ),
+          Obx(() {
+            final isDefault = controller.isDefaultView;
+            return CustomHeader(
+              menuIconPath: isDefault
+                  ? 'assets/images/menu.png'
+                  : 'assets/images/menu11.png',
+              logoPath: isDefault
+                  ? 'assets/images/logo111.png'
+                  : 'assets/images/logo22.png',
+              backgroundColor: isDefault
+                  ? const Color(0xFFF97C68)
+                  : Colors.white,
+              showFilters: isDefault,
+              showSearchBar: isDefault,
+              isAISuggestionPanelVisible: false,
+            );
+          }),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Obx(() {
+                return controller.isDefaultView
+                    ? _buildDefaultView()
+                    : _buildSelectedDetail(context);
+              }),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -97,19 +100,12 @@ class SearchScreen extends StatelessWidget {
   Widget _buildLocationRow(String location) {
     return Row(
       children: [
-        Image.asset(
-          'assets/images/location1.png',
-          height: 24.h,
-          width: 24.w,
-        ),
+        Image.asset('assets/images/location1.png', height: 24.h, width: 24.w),
         SizedBox(width: 10.w),
         Expanded(
           child: Text(
             location,
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 14.sp,
-            ),
+            style: TextStyle(color: Colors.grey, fontSize: 14.sp),
           ),
         ),
       ],
@@ -143,20 +139,21 @@ class SearchScreen extends StatelessWidget {
               SizedBox(height: 4.h),
               Text(
                 country.name,
-                style: TextStyle(
-                    fontSize: 22.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 12.h),
               _buildIconRow(Icons.cloud, 'Weather', country.weather),
               _buildIconRow(Icons.attach_money, 'Currency', country.currency),
               _buildIconRow(Icons.language, 'Language', country.language),
-              _buildIconRow(Icons.calendar_month, 'Best Time To Visit',
-                  country.bestTimeToVisit),
+              _buildIconRow(
+                Icons.calendar_month,
+                'Best Time To Visit',
+                country.bestTimeToVisit,
+              ),
               SizedBox(height: 20.h),
               Text(
                 'All Cities (${country.cities.length})',
-                style:
-                TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10.h),
             ],
@@ -169,23 +166,25 @@ class SearchScreen extends StatelessWidget {
             runSpacing: 12.h,
             children: List.generate(country.cities.length, (index) {
               final city = country.cities[index];
-              final double cardWidth = (MediaQuery.of(context).size.width - 20.w * 2 - 12.w) / 2;
+              final double cardWidth =
+                  (MediaQuery.of(context).size.width - 20.w * 2 - 12.w) / 2;
               return SizedBox(
                 width: cardWidth,
                 child: GestureDetector(
                   onTap: () {
                     // Get.to(() => PlaceDetails(item: city));
                     final BottomNavController nav =
-                            Get.find<BottomNavController>();
-                        nav.openSearchScreen('city', -1, '');
-                        nav.customSearchContent.value = PlaceDetails(item: city);
-                        nav.changeIndex(1);
+                        Get.find<BottomNavController>();
+                    nav.openSearchScreen('city', -1, '');
+                    nav.customSearchContent.value = PlaceDetails(item: city);
+                    nav.changeIndex(1);
                   },
-                    child: _buildCityCard(city, imageHeight: 180)),
+                  child: _buildCityCard(city, imageHeight: 180),
+                ),
               );
             }),
           ),
-        )
+        ),
       ],
     );
   }
@@ -202,10 +201,7 @@ class SearchScreen extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
           ),
           Expanded(
-            child: Text(
-              value,
-              style: TextStyle(fontSize: 14.sp),
-            ),
+            child: Text(value, style: TextStyle(fontSize: 14.sp)),
           ),
         ],
       ),
@@ -245,10 +241,7 @@ class SearchScreen extends StatelessWidget {
               children: [
                 Text(
                   '${city.placeCount} Places',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.grey,
-                  ),
+                  style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                 ),
                 SizedBox(height: 4.h),
                 Text(
@@ -265,5 +258,4 @@ class SearchScreen extends StatelessWidget {
       ),
     );
   }
-
 }

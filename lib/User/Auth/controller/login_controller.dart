@@ -136,11 +136,12 @@ class LoginController extends GetxController {
 
   Future<void> _initPrefs() async {
     _prefs = await SharedPreferences.getInstance();
-    final savedRole = _prefs.getString('user_role');
-    if (savedRole != null) {
-      storedRole.value = savedRole;
-      log('Loaded user_role from SharedPreferences: $savedRole');
-    }
+    storedRole.value = _prefs.getString('user_role') ?? '';
+    emailTEController.text = _prefs.getString('email') ?? '';
+    passwordTEController.text = _prefs.getString('password') ?? '';
+    log(
+      "Loaded prefs -> email: ${emailTEController.text}, password: ${passwordTEController.text}, token: ${_prefs.getString('auth_token')}",
+    );
   }
 
   void togglePasswordVisibility() {
@@ -168,7 +169,6 @@ class LoginController extends GetxController {
       log("Login API URL: $url");
 
       final body = {"email": email, "password": password};
-
       log("Login request body: ${jsonEncode(body)}");
 
       final response = await http.post(
@@ -189,10 +189,7 @@ class LoginController extends GetxController {
         }
 
         final decodedToken = JwtDecoder.decode(token);
-        log("Decoded JWT: $decodedToken");
-
         final String? roleFromToken = decodedToken['role']?.toString();
-        log("Role from token: $roleFromToken");
 
         final normalizedRole =
             (roleFromToken != null &&
@@ -201,13 +198,16 @@ class LoginController extends GetxController {
             ? roleFromToken.toLowerCase()
             : storedRole.value;
 
+        // Save all to SharedPreferences
         await _prefs.setString('auth_token', token);
+        await _prefs.setString('email', email);
+        await _prefs.setString('password', password);
         await _prefs.setString('user_role', normalizedRole);
         await _prefs.setBool('is_logged_in', true);
 
         storedRole.value = normalizedRole;
 
-        // Refresh BottomNav role
+        // Refresh bottom nav
         final bottomNavController = Get.find<BottomNavController>();
         await bottomNavController.refreshRole();
 
@@ -221,6 +221,53 @@ class LoginController extends GetxController {
       EasyLoading.showError("An error occurred: ${e.toString()}");
     } finally {
       isLoginLoading.value = false;
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<bool> logout() async {
+    EasyLoading.show(status: "Logging out...");
+
+    try {
+      final token = _prefs.getString('auth_token');
+      final email = _prefs.getString('email');
+      final password = _prefs.getString('password');
+
+      log("Logout token: $token");
+      log("Logout email: $email");
+      log("Logout password: $password");
+
+      if (token == null || email == null || password == null) {
+        throw Exception("Missing token or credentials");
+      }
+
+      final response = await http.post(
+        Uri.parse(ApiUrl.logout),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({"email": email, "password": password}),
+      );
+
+      log("Logout response code: ${response.statusCode}");
+      log("Logout response body: ${response.body}");
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        await _prefs.clear();
+        EasyLoading.showSuccess("Logout successful");
+        return true;
+      } else {
+        EasyLoading.showError(data['message'] ?? "Logout failed");
+        return false;
+      }
+    } catch (e) {
+      log("Logout error: $e");
+      EasyLoading.showError("Logout error: ${e.toString()}");
+      return false;
+    } finally {
       EasyLoading.dismiss();
     }
   }

@@ -70,6 +70,10 @@ class HomePage extends StatelessWidget {
             //   ),
             // ),
             // Header
+            Container(
+              height: 25.h,
+              decoration: BoxDecoration(color: Color(0xFFF97C68)),
+            ),
             Obx(
               () => CustomHeader(
                 logoPath: 'assets/images/logo111.png',
