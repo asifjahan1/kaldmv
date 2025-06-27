@@ -238,6 +238,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:kaldmv/User/Views/features/Home/views/home_page.dart';
 import 'package:kaldmv/User/Views/features/Add_New_Item/view/add_new_item_screen.dart';
 import 'package:kaldmv/User/Views/features/Profile/views/Guest_profile/guest_profile.dart';
@@ -248,12 +249,13 @@ import 'package:kaldmv/User/Views/features/Home/views/tsfs_screen.dart';
 
 class BottomNavController extends GetxController {
   var selectedIndex = 0.obs;
-  var storedRole = ''.obs;
+  var storedRole = ''.obs; // 'admin' or 'user'
   var isRoleLoaded = false.obs;
 
   var searchType = ''.obs;
   var searchIndex = 0.obs;
   var searchPlaceName = ''.obs;
+
   var customSearchContent = Rx<Widget?>(null);
   var customTab2Content = Rxn<Widget>();
 
@@ -265,93 +267,56 @@ class BottomNavController extends GetxController {
     loadRole();
   }
 
-  /// Loads user role from SharedPreferences and sets isRoleLoaded to true
+  /// Loads role from SharedPreferences
   Future<void> loadRole() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final role = prefs.getString('user_role')?.toLowerCase() ?? 'user';
-      if (['user', 'admin'].contains(role)) {
-        storedRole.value = role;
-      } else {
-        storedRole.value = 'user'; // Default to user for invalid roles
-        log(
-          'Invalid role found in SharedPreferences: $role, defaulting to user',
-        );
-      }
+      storedRole.value = (role == 'admin' || role == 'user') ? role : 'user';
       isRoleLoaded.value = true;
-      log('Loaded role: ${storedRole.value}');
+      log('[BottomNav] Role loaded: ${storedRole.value}');
     } catch (e) {
-      log('Error loading role: $e');
+      log('[BottomNav] Role load error: $e');
       storedRole.value = 'user';
       isRoleLoaded.value = true;
     }
   }
 
-  /// Refreshes the role from SharedPreferences (for explicit manual refresh)
-  Future<void> refreshRole() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final role = prefs.getString('user_role')?.toLowerCase() ?? 'user';
-      if (['user', 'admin'].contains(role)) {
-        storedRole.value = role;
-      } else {
-        storedRole.value = 'user';
-        log(
-          'Invalid role found in SharedPreferences: $role, defaulting to user',
-        );
-      }
-      log('Refreshed role: ${storedRole.value}');
-    } catch (e) {
-      log('Error refreshing role: $e');
-      storedRole.value = 'user';
-    }
-  }
+  /// Manual refresh role
+  Future<void> refreshRole() async => await loadRole();
 
-  /// Returns UI-friendly role name
+  /// Display-friendly role name
   String get displayRole => storedRole.value == 'admin' ? 'Owner' : 'Guest';
 
-  /// Returns the profile screen widget based on storedRole
+  /// Route to correct profile screen
   Widget getProfileScreen() {
-    final role = storedRole.value;
-    if (role == 'admin') {
-      log('Returning OwnerProfile for role: $role');
+    if (storedRole.value == 'admin') {
       return const OwnerProfile(
         activePlacesCount: 1,
         totalReviewsCount: 5,
         totalViewsCount: 3,
       );
-    }
-    if (role == 'user') {
-      log('Returning GuestProfile for role: $role');
+    } else {
       return const GuestProfile();
     }
-    log('Invalid role: $role, returning default GuestProfile');
-    return const GuestProfile();
   }
 
-  /// Change selected bottom nav index and refresh stored role
+  /// Safely update selected tab index & refresh role
   Future<void> changeIndex(int index) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final role = prefs.getString('user_role')?.toLowerCase() ?? 'user';
-      if (['user', 'admin'].contains(role)) {
-        storedRole.value = role;
-      } else {
-        storedRole.value = 'user';
-        log(
-          'Invalid role found in SharedPreferences: $role, defaulting to user',
-        );
-      }
+      storedRole.value = (role == 'admin' || role == 'user') ? role : 'user';
       selectedIndex.value = index;
-      log('Changed index to $index, role: ${storedRole.value}');
+      log('[BottomNav] Changed tab to $index | role: ${storedRole.value}');
     } catch (e) {
-      log('Error changing index: $e');
+      log('[BottomNav] changeIndex error: $e');
       selectedIndex.value = index;
       storedRole.value = 'user';
     }
   }
 
-  /// Resets navigation state after logout
+  /// Reset all nav states
   void resetNavigation() {
     selectedIndex.value = 0;
     searchType.value = '';
@@ -361,15 +326,15 @@ class BottomNavController extends GetxController {
     customTab2Content.value = null;
     storedRole.value = 'user';
     isRoleLoaded.value = false;
-    log('Navigation state reset');
+    log('[BottomNav] Navigation state reset');
   }
 
-  /// Returns the current screen widget based on selectedIndex and role
+  /// Main screen switch logic
   Widget get currentScreen {
     if (!isRoleLoaded.value) {
-      log('Role not loaded, showing loading indicator');
       return const Center(child: CircularProgressIndicator());
     }
+
     switch (selectedIndex.value) {
       case 0:
         return HomePage();
@@ -385,34 +350,43 @@ class BottomNavController extends GetxController {
       case 3:
         return getProfileScreen();
       case addItemScreenIndex:
-        return AddNewPlaceScreen();
+        if (storedRole.value == 'admin') {
+          return AddNewPlaceScreen();
+        } else {
+          return const Center(
+            child: Text(
+              "Only Owners can add new places.",
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+          );
+        }
       default:
-        log('Invalid index ${selectedIndex.value}, defaulting to HomePage');
+        log('[BottomNav] Invalid index: ${selectedIndex.value}');
         return HomePage();
     }
   }
 
-  /// Opens search screen and selects search tab
+  /// Quick search tab jump
   void openSearchScreen(String type, int index, String name) {
     searchType.value = type;
     searchIndex.value = index;
     searchPlaceName.value = name;
     customSearchContent.value = null;
     selectedIndex.value = 1;
-    log('Opened search screen: type=$type, index=$index, name=$name');
+    log('[BottomNav] openSearchScreen → $type | $index | $name');
   }
 
-  /// Opens TSFSScreen inside Search tab (tab index 1)
+  /// Load TSFS screen in Search tab
   void openTSFSScreen() {
     customSearchContent.value = TSFSScreen();
     selectedIndex.value = 1;
-    log('Opened TSFSScreen in Search tab');
+    log('[BottomNav] openTSFSScreen in Search tab');
   }
 
-  /// Opens TSFSScreen inside tab index 2
+  /// Load TSFS screen in Tab 2
   void openTSFSScreenInTab2() {
     customTab2Content.value = TSFSScreen();
     selectedIndex.value = 2;
-    log('Opened TSFSScreen in tab 2');
+    log('[BottomNav] openTSFSScreen in Tab 2');
   }
 }

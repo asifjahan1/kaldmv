@@ -139,7 +139,7 @@ class LoginController extends GetxController {
     final savedRole = _prefs.getString('user_role');
     if (savedRole != null) {
       storedRole.value = savedRole;
-      log('Loaded role from SharedPreferences: $savedRole');
+      log('Loaded user_role from SharedPreferences: $savedRole');
     }
   }
 
@@ -148,12 +148,13 @@ class LoginController extends GetxController {
   }
 
   Future<void> handleLogin() async {
-    // Validate required fields
-    if (emailTEController.text.trim().isEmpty ||
-        passwordTEController.text.trim().isEmpty) {
+    final email = emailTEController.text.trim();
+    final password = passwordTEController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
       Get.snackbar(
-        "Missing fields",
-        "Please enter both email and password.",
+        "Missing Fields",
+        "Please enter both email and password",
         snackPosition: SnackPosition.TOP,
       );
       return;
@@ -166,10 +167,7 @@ class LoginController extends GetxController {
       final url = ApiUrl.loginUser;
       log("Login API URL: $url");
 
-      final Map<String, dynamic> body = {
-        "email": emailTEController.text.trim(),
-        "password": passwordTEController.text.trim(),
-      };
+      final body = {"email": email, "password": password};
 
       log("Login request body: ${jsonEncode(body)}");
 
@@ -182,60 +180,45 @@ class LoginController extends GetxController {
       log("Login response code: ${response.statusCode}");
       log("Login response body: ${response.body}");
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        if (data['success'] == true) {
-          // Extract JWT
-          final String? token = data['data']?['token'] ?? data['token'];
-          if (token == null) {
-            throw Exception("No token found in response");
-          }
+      final data = jsonDecode(response.body);
 
-          // Decode JWT to get role
-          try {
-            final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-            log("Decoded JWT: $decodedToken");
-            final String? role = decodedToken['role']?.toString();
-            if (role == null || !['user', 'admin'].contains(role)) {
-              throw Exception("Invalid or missing role in JWT");
-            }
-
-            // Save token, role, and login status
-            await _prefs.setString('auth_token', token);
-            await _prefs.setString('user_role', role.toLowerCase());
-            await _prefs.setBool('is_logged_in', true);
-            storedRole.value = role.toLowerCase();
-            log(
-              "Saved to SharedPreferences: auth_token=$token, user_role=$role, is_logged_in=true",
-            );
-
-            // Refresh BottomNavController role
-            final bottomNavController = Get.find<BottomNavController>();
-            await bottomNavController.refreshRole();
-
-            EasyLoading.showSuccess("Login Successful");
-            Get.offAll(() => BottomNavScreen());
-          } catch (e) {
-            log("JWT decode error: $e");
-            EasyLoading.showError("Failed to process user role");
-            return;
-          }
-        } else {
-          EasyLoading.showError(
-            data['message'] ?? "Login failed",
-            duration: const Duration(seconds: 3),
-          );
+      if (response.statusCode == 200 && data['success'] == true) {
+        final token = data['data']?['accessToken'] ?? data['accessToken'];
+        if (token == null || token.isEmpty) {
+          throw Exception("No token found in response");
         }
+
+        final decodedToken = JwtDecoder.decode(token);
+        log("Decoded JWT: $decodedToken");
+
+        final String? roleFromToken = decodedToken['role']?.toString();
+        log("Role from token: $roleFromToken");
+
+        final normalizedRole =
+            (roleFromToken != null &&
+                (roleFromToken.toLowerCase() == 'admin' ||
+                    roleFromToken.toLowerCase() == 'user'))
+            ? roleFromToken.toLowerCase()
+            : storedRole.value;
+
+        await _prefs.setString('auth_token', token);
+        await _prefs.setString('user_role', normalizedRole);
+        await _prefs.setBool('is_logged_in', true);
+
+        storedRole.value = normalizedRole;
+
+        // Refresh BottomNav role
+        final bottomNavController = Get.find<BottomNavController>();
+        await bottomNavController.refreshRole();
+
+        EasyLoading.showSuccess("Login Successful");
+        Get.offAll(() => BottomNavScreen());
       } else {
-        final data = jsonDecode(response.body);
-        EasyLoading.showError(
-          data['message'] ?? "Login failed",
-          duration: const Duration(seconds: 3),
-        );
+        EasyLoading.showError(data['message'] ?? "Login failed");
       }
     } catch (e) {
       log("Login error: $e");
-      EasyLoading.showError("An error occurred: $e");
+      EasyLoading.showError("An error occurred: ${e.toString()}");
     } finally {
       isLoginLoading.value = false;
       EasyLoading.dismiss();

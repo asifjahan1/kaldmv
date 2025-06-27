@@ -240,6 +240,7 @@ import 'package:kaldmv/User/Views/features/Bottom_Nav_Bar/controller/bottom_nav_
 class BottomNavScreen extends StatelessWidget {
   BottomNavScreen({super.key});
   final BottomNavController controller = Get.find<BottomNavController>();
+  // final BottomNavController controller = Get.put(BottomNavController());
 
   final List<IconData> icons = [
     Icons.home_outlined,
@@ -254,9 +255,8 @@ class BottomNavScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Main content
           Obx(() => controller.currentScreen),
-          // Debug banner to show role
+          /*
           Obx(
             () => Positioned(
               top: 10.h,
@@ -274,6 +274,7 @@ class BottomNavScreen extends StatelessWidget {
               ),
             ),
           ),
+          */
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -345,11 +346,15 @@ class BottomNavScreen extends StatelessWidget {
                   child: FloatingActionButton(
                     backgroundColor: const Color(0xFFF97C68),
                     onPressed: () {
-                      log('FAB tapped, navigating to AddNewPlaceScreen');
-                      controller.changeIndex(
-                        BottomNavController.addItemScreenIndex,
-                      );
+                      if (controller.selectedIndex.value !=
+                          BottomNavController.addItemScreenIndex) {
+                        controller.changeIndex(
+                          BottomNavController.addItemScreenIndex,
+                        );
+                        log('FAB tapped: navigating to AddNewPlaceScreen');
+                      }
                     },
+
                     shape: const CircleBorder(),
                     child: Icon(Icons.add, size: 30.sp, color: Colors.white),
                   ),

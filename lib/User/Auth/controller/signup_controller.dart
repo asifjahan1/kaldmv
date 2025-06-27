@@ -248,48 +248,40 @@ import '../../Auth/screens/login_screen.dart';
 class SignupController extends GetxController {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
-  final companyNameController = TextEditingController();
+  final companyNameController = TextEditingController(); // Optional
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
 
-  var selectedRole = 'Guest'.obs; // UI uses 'Guest' or 'Owner'
+  var selectedRole = 'Guest'.obs; // 'Guest' or 'Owner'
   var isPasswordVisible = false.obs;
   var isConfirmPasswordVisible = false.obs;
   var isLoading = false.obs;
   var acceptTerms = false.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    loadSelectedRole();
-  }
-
+  // Save role as lowercase to SharedPreferences (e.g., 'admin' or 'user')
   Future<void> saveSelectedRole(String role) async {
     final prefs = await SharedPreferences.getInstance();
     final normalized = role == 'Owner' ? 'admin' : 'user';
     await prefs.setString('user_role', normalized);
-  }
-
-  Future<void> loadSelectedRole() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedRole = prefs.getString('user_role');
-    if (savedRole != null) {
-      selectedRole.value = savedRole == 'admin' ? 'Owner' : 'Guest';
-    }
+    log('Saved user_role: $normalized');
   }
 
   void changeRole(String role) => selectedRole.value = role;
-  void togglePasswordVisibility() =>
-      isPasswordVisible.value = !isPasswordVisible.value;
-  void toggleConfirmPasswordVisibility() =>
-      isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
+
+  void togglePasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
+  }
+
+  void toggleConfirmPasswordVisibility() {
+    isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
+  }
 
   Future<void> signup() async {
     if (!acceptTerms.value) {
       Get.snackbar(
         "Terms not accepted",
         "Please accept the terms and conditions.",
+        snackPosition: SnackPosition.BOTTOM,
       );
       return;
     }
@@ -306,10 +298,7 @@ class SignupController extends GetxController {
         "lastName": lastNameController.text.trim(),
         "email": emailController.text.trim(),
         "password": passwordController.text.trim(),
-        // "firstName": "Tanvir",
-        // "lastName": "Hossain",
-        // "email": "tanvi101555@gmail.com",
-        // "password": "123456",
+        // Do not send role to backend — it's handled internally
       };
 
       log("Signup request body: ${jsonEncode(body)}");
@@ -325,16 +314,13 @@ class SignupController extends GetxController {
 
       final resp = jsonDecode(response.body);
 
-      if (response.statusCode == 201) {
-        if (resp["success"] == true) {
-          await saveSelectedRole(selectedRole.value);
-          EasyLoading.showSuccess("Signup successful!");
-          Get.to(() => LoginScreen());
-        } else {
-          EasyLoading.showError(resp["message"] ?? "Signup failed");
-        }
+      if (response.statusCode == 201 && resp["success"] == true) {
+        // Save UI-selected role locally, not from backend
+        await saveSelectedRole(selectedRole.value);
+        EasyLoading.showSuccess("Signup successful!");
+        Get.to(() => LoginScreen());
       } else {
-        EasyLoading.showError(resp["message"] ?? "Something went wrong");
+        EasyLoading.showError(resp["message"] ?? "Signup failed");
       }
     } catch (e) {
       log("Signup error: $e");
@@ -352,7 +338,6 @@ class SignupController extends GetxController {
     companyNameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    confirmPasswordController.dispose();
     super.onClose();
   }
 }
