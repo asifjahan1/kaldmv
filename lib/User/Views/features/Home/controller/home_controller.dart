@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:kaldmv/User/Views/features/Home/model/popular_country_model.dart';
 import 'package:kaldmv/core/const/urls.dart';
 
 class HomeController extends GetxController {
@@ -125,6 +126,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    fetchPopularCountries();
     // Sync TextEditingControllers with Rx variables
     ever(selectedBudget, (_) => budgetController.text = selectedBudget.value);
     ever(
@@ -149,28 +151,30 @@ class HomeController extends GetxController {
   }
 
   // Sample data for popular countries and cities
-  var popularCountries = [
-    PopularPlace(
-      name: 'United Kingdom',
-      placeCount: 6,
-      imageUrl: 'assets/images/uk.png',
-    ),
-    PopularPlace(
-      name: 'Saudi Arabia',
-      placeCount: 4,
-      imageUrl: 'assets/images/ksa.png',
-    ),
-    PopularPlace(
-      name: 'Dubai',
-      placeCount: 8,
-      imageUrl: 'assets/images/ksa1.png',
-    ),
-    PopularPlace(
-      name: 'Turkey',
-      placeCount: 5,
-      imageUrl: 'assets/images/iran.png',
-    ),
-  ].obs;
+  // var popularCountries = [
+  //   PopularPlace(
+  //     name: 'United Kingdom',
+  //     placeCount: 6,
+  //     imageUrl: 'assets/images/uk.png',
+  //   ),
+  //   PopularPlace(
+  //     name: 'Saudi Arabia',
+  //     placeCount: 4,
+  //     imageUrl: 'assets/images/ksa.png',
+  //   ),
+  //   PopularPlace(
+  //     name: 'Dubai',
+  //     placeCount: 8,
+  //     imageUrl: 'assets/images/ksa1.png',
+  //   ),
+  //   PopularPlace(
+  //     name: 'Turkey',
+  //     placeCount: 5,
+  //     imageUrl: 'assets/images/iran.png',
+  //   ),
+  // ].obs;
+
+  RxList<PopularCountryModel> popularCountries = <PopularCountryModel>[].obs;
 
   var popularCities = [
     PopularPlace(
@@ -309,6 +313,36 @@ class HomeController extends GetxController {
       EasyLoading.showError("An error occurred");
     } finally {
       EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> fetchPopularCountries() async {
+    try {
+      EasyLoading.show(status: 'Loading countries...');
+      final response = await http.get(
+        Uri.parse(ApiUrl.getAllCountries),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data['success'] == true && data['data'] is List) {
+          final List<PopularCountryModel> fetchedCountries =
+              (data['data'] as List)
+                  .map((e) => PopularCountryModel.fromJson(e))
+                  .toList();
+
+          popularCountries.value = fetchedCountries;
+          EasyLoading.dismiss();
+        } else {
+          EasyLoading.showError("Unexpected data format");
+        }
+      } else {
+        EasyLoading.showError("Failed to load countries");
+      }
+    } catch (e) {
+      EasyLoading.showError("Error fetching countries: $e");
     }
   }
 }

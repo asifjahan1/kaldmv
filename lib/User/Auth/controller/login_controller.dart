@@ -225,20 +225,69 @@ class LoginController extends GetxController {
     }
   }
 
+  //ei logic thik ache
+  // Future<bool> logout() async {
+  //   EasyLoading.show(status: "Logging out...");
+
+  //   try {
+  //     final token = _prefs.getString('auth_token');
+  //     final email = _prefs.getString('email');
+  //     final password = _prefs.getString('password');
+
+  //     log("Logout token: $token");
+  //     log("Logout email: $email");
+  //     log("Logout password: $password");
+
+  //     if (token == null || email == null || password == null) {
+  //       throw Exception("Missing token or credentials");
+  //     }
+
+  //     final response = await http.post(
+  //       Uri.parse(ApiUrl.logout),
+  //       headers: {
+  //         "Authorization": "Bearer $token",
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: jsonEncode({"email": email, "password": password}),
+  //     );
+
+  //     log("Logout response code: ${response.statusCode}");
+  //     log("Logout response body: ${response.body}");
+
+  //     final data = jsonDecode(response.body);
+
+  //     if (response.statusCode == 200 && data['success'] == true) {
+  //       await _prefs.clear();
+  //       EasyLoading.showSuccess("Logout successful");
+  //       return true;
+  //     } else {
+  //       EasyLoading.showError(data['message'] ?? "Logout failed");
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     log("Logout error: $e");
+  //     EasyLoading.showError("Logout error: ${e.toString()}");
+  //     return false;
+  //   } finally {
+  //     EasyLoading.dismiss();
+  //   }
+  // }
+
+  // new (optional for safe exit when backend logout logic fails)
   Future<bool> logout() async {
     EasyLoading.show(status: "Logging out...");
 
     try {
-      final token = _prefs.getString('auth_token');
-      final email = _prefs.getString('email');
-      final password = _prefs.getString('password');
+      final prefs = await SharedPreferences.getInstance();
+
+      final token = prefs.getString('auth_token');
+      final email = prefs.getString('email') ?? '';
+      final password = prefs.getString('password') ?? '';
 
       log("Logout token: $token");
-      log("Logout email: $email");
-      log("Logout password: $password");
 
-      if (token == null || email == null || password == null) {
-        throw Exception("Missing token or credentials");
+      if (token == null) {
+        throw Exception("Missing token");
       }
 
       final response = await http.post(
@@ -253,20 +302,14 @@ class LoginController extends GetxController {
       log("Logout response code: ${response.statusCode}");
       log("Logout response body: ${response.body}");
 
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200 && data['success'] == true) {
-        await _prefs.clear();
-        EasyLoading.showSuccess("Logout successful");
-        return true;
-      } else {
-        EasyLoading.showError(data['message'] ?? "Logout failed");
-        return false;
-      }
+      // Clear anyway even if logout API fails (bad backend logic)
+      await prefs.clear();
+      EasyLoading.showSuccess("Logged out");
+      return true;
     } catch (e) {
       log("Logout error: $e");
-      EasyLoading.showError("Logout error: ${e.toString()}");
-      return false;
+      EasyLoading.showError("Logged out locally");
+      return true;
     } finally {
       EasyLoading.dismiss();
     }

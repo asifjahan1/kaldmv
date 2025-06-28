@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:kaldmv/User/Auth/screens/login_screen.dart';
+
 import '../../../core/global_widegts/custom_button.dart';
 import '../../../core/global_widegts/custom_text_field.dart';
-import '../controller/login_controller.dart';
-import 'forget_pass_otp_verification.dart';
+import '../controller/forget_pasword_controller.dart';
+import 'login_screen.dart';
 
 class FindAccountScreen extends StatelessWidget {
   final String email;
-  final LoginController controller = Get.put(LoginController());
+  final TextEditingController emailController = TextEditingController();
+  final ForgetPasswordController forgetController = Get.put(
+    ForgetPasswordController(),
+  );
 
   FindAccountScreen({this.email = '', super.key});
-
-  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +54,8 @@ class FindAccountScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 50.h),
+
+                  // Email Field
                   CustomTextField(
                     textEditingController: emailController,
                     fillColor: Color(0xFFFFFFFF),
@@ -63,22 +66,31 @@ class FindAccountScreen extends StatelessWidget {
                     ),
                     textColor: Colors.black,
                   ),
+
                   SizedBox(height: 10.h),
-                  CustomButton(
-                    onPressed: () async {
-                      Get.to(
-                        () => ForgetPassOtpVerification(),
-                        arguments: emailController.text.trim(),
-                      );
-                    },
-                    text: 'Send Reset Link',
-                    textColor: Colors.white,
-                    backgroundColor: const Color(0xFFF97C68),
-                    width: screenWidth * 0.9,
-                    height: 40.h,
-                    borderRadius: 10.r,
-                  ),
+
+                  // Send Reset Link Button
+                  Obx(() {
+                    return forgetController.isLoading.value
+                        ? const CircularProgressIndicator()
+                        : CustomButton(
+                            onPressed: () {
+                              forgetController.emailController.text =
+                                  emailController.text.trim();
+                              forgetController.sendResetLink();
+                            },
+                            text: 'Send Reset Link',
+                            textColor: Colors.white,
+                            backgroundColor: const Color(0xFFF97C68),
+                            width: screenWidth * 0.9,
+                            height: 40.h,
+                            borderRadius: 10.r,
+                          );
+                  }),
+
                   SizedBox(height: 15.h),
+
+                  // Back to Login Button
                   CustomButton(
                     text: 'Back to Login',
                     fontSize: 16.sp,

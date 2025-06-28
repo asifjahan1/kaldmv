@@ -1,15 +1,12 @@
-// ignore_for_file: unused_element
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:kaldmv/User/Auth/controller/forget_pasword_controller.dart';
+import 'package:kaldmv/User/Auth/screens/login_screen.dart';
 import 'package:kaldmv/User/Auth/screens/utils/show_success_dialog.dart';
-
 import '../../../core/const/app_loader.dart';
 import '../../../core/global_widegts/custom_button.dart';
 import '../../../core/global_widegts/custom_text_field.dart';
-import '../controller/forget_pasword_controller.dart';
-import 'login_screen.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
   ForgetPasswordScreen({super.key});
@@ -19,38 +16,53 @@ class ForgetPasswordScreen extends StatelessWidget {
   );
 
   void _submit(BuildContext context) {
-    // Optional validation (if needed)
-    // final newPassword = controller.passwordController.text.trim();
-    // final confirmPassword = confirmPasswordController.text.trim();
+    final newPassword = controller.passwordController.text.trim();
+    final confirmPassword = controller.confirmPasswordController.text.trim();
 
-    // if (newPassword.isEmpty || confirmPassword.isEmpty) {
-    //   Get.snackbar('Input Required', 'Please fill out all fields!',
-    //     backgroundColor: Colors.red, colorText: Colors.white);
-    //   return;
-    // }
+    if (newPassword.isEmpty || confirmPassword.isEmpty) {
+      Get.snackbar(
+        'Required',
+        'Please fill out all fields!',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
 
-    // if (newPassword != confirmPassword) {
-    //   Get.snackbar('Mismatch', 'Passwords do not match!',
-    //     backgroundColor: Colors.red, colorText: Colors.white);
-    //   return;
-    // }
+    if (newPassword != confirmPassword) {
+      Get.snackbar(
+        'Mismatch',
+        'Passwords do not match!',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
 
-    showSuccessDialog(
-      buttonText: 'Continue',
-      context: context,
-      title: 'Success',
-      message: 'Your Validation was successful!',
-      image: Image.asset('assets/images/tick.png', height: 70.h, width: 70.w),
-      onDonePressed: () {
-        Get.off(() => LoginScreen());
-        Get.snackbar(
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          'Successful!',
-          'New Password Setup Successfully! Please Log In',
+    controller.updatePassword(newPassword).then((success) {
+      if (success) {
+        showSuccessDialog(
+          context: context,
+          title: 'Success',
+          message: 'Your password has been updated!',
+          buttonText: 'Continue',
+          image: Image.asset(
+            'assets/images/tick.png',
+            height: 70.h,
+            width: 70.w,
+          ),
+          onDonePressed: () {
+            Get.off(() => LoginScreen());
+            Get.snackbar(
+              'Successful!',
+              'Please log in with your new password.',
+              backgroundColor: Colors.green,
+              colorText: Colors.white,
+            );
+          },
         );
-      },
-    );
+      }
+    });
   }
 
   @override
@@ -73,12 +85,12 @@ class ForgetPasswordScreen extends StatelessWidget {
             SizedBox(height: 60.h),
 
             // New Password
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 16.w),
+            Padding(
+              padding: EdgeInsets.only(left: 16.w),
+              child: Align(
+                alignment: Alignment.centerLeft,
                 child: Text(
-                  '  New Password',
+                  'New Password',
                   style: TextStyle(
                     color: const Color(0xFF4C4C4C),
                     fontWeight: FontWeight.w600,
@@ -92,30 +104,32 @@ class ForgetPasswordScreen extends StatelessWidget {
               return CustomTextField(
                 textEditingController: controller.passwordController,
                 hintText: '*********',
-                hintTextColor: Color(0xFF4C4C4C),
+                hintTextColor: const Color(0xFF4C4C4C),
                 obscureText: !controller.isPasswordVisible.value,
                 fillColor: Colors.white,
-                borderSide: BorderSide(color: Color(0xFF4C4C4C).withAlpha(30)),
-                // suffixIcon: IconButton(
-                //   icon: Icon(
-                //     controller.isPasswordVisible.value
-                //         ? Icons.visibility_off
-                //         : Icons.visibility,
-                //     color: const Color(0xFF4A4F5E),
-                //   ),
-                //   onPressed: controller.togglePasswordVisibility,
-                // ),
+                borderSide: BorderSide(
+                  color: const Color(0xFF4C4C4C).withAlpha(30),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    controller.isPasswordVisible.value
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    color: const Color(0xFF4A4F5E),
+                  ),
+                  onPressed: controller.togglePasswordVisibility,
+                ),
               );
             }),
             SizedBox(height: 20.h),
 
             // Confirm Password
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 16.w),
+            Padding(
+              padding: EdgeInsets.only(left: 16.w),
+              child: Align(
+                alignment: Alignment.centerLeft,
                 child: Text(
-                  '  Confirm Password',
+                  'Confirm Password',
                   style: TextStyle(
                     color: const Color(0xFF4C4C4C),
                     fontWeight: FontWeight.w600,
@@ -129,20 +143,22 @@ class ForgetPasswordScreen extends StatelessWidget {
               return CustomTextField(
                 textEditingController: controller.confirmPasswordController,
                 hintText: '*********',
-                hintTextColor: Color(0xFF4C4C4C),
+                hintTextColor: const Color(0xFF4C4C4C),
                 obscureText: !controller.isConfirmPasswordVisible.value,
                 fillColor: Colors.white,
                 textColor: Colors.black,
-                borderSide: BorderSide(color: Color(0xFF4C4C4C).withAlpha(30)),
-                // suffixIcon: IconButton(
-                //   icon: Icon(
-                //     controller.isConfirmPasswordVisible.value
-                //         ? Icons.visibility_off
-                //         : Icons.visibility,
-                //     color: const Color(0xFF4A4F5E),
-                //   ),
-                //   onPressed: controller.toggleConfirmPasswordVisibility,
-                // ),
+                borderSide: BorderSide(
+                  color: const Color(0xFF4C4C4C).withAlpha(30),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    controller.isConfirmPasswordVisible.value
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    color: const Color(0xFF4A4F5E),
+                  ),
+                  onPressed: controller.toggleConfirmPasswordVisibility,
+                ),
               );
             }),
             SizedBox(height: 40.h),
@@ -152,10 +168,7 @@ class ForgetPasswordScreen extends StatelessWidget {
               return controller.isLoginLoading.value
                   ? loader()
                   : CustomButton(
-                      onPressed: () {
-                        Get.off(() => LoginScreen());
-                      },
-                      // onPressed: () => _submit(context),
+                      onPressed: () => _submit(context),
                       text: 'Update',
                       textColor: Colors.white,
                       backgroundColor: const Color(0xFFF97C68),

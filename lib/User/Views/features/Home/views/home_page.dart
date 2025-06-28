@@ -10,6 +10,7 @@ import 'package:kaldmv/core/global_widegts/custom_button.dart';
 import 'package:kaldmv/core/global_widegts/custom_header.dart';
 import 'package:kaldmv/core/global_widegts/custom_text_field.dart';
 import 'package:kaldmv/User/Views/features/Home/controller/home_controller.dart';
+import 'package:shimmer/shimmer.dart';
 import 'custom_drawer.dart';
 
 class HomePage extends StatelessWidget {
@@ -666,95 +667,141 @@ class HomePage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 5.h),
+
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: SizedBox(
                 height: 150.h,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.only(left: 10.w),
-                  itemCount: controller.popularCountries.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        final BottomNavController nav =
-                            Get.find<BottomNavController>();
-                        final country = controller.popularCountries[index];
-                        nav.openSearchScreen('country', index, country.name);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(right: 10.w),
-                        width: 150.w,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10.r),
-                              child: Stack(
-                                children: [
-                                  Image.asset(
-                                    controller.popularCountries[index].imageUrl,
-                                    height: 140.h,
-                                    width: 180.w,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    bottom: 5.h,
-                                    left: 8.w,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          controller
-                                              .popularCountries[index]
-                                              .name,
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            shadows: [
-                                              Shadow(
-                                                blurRadius: 2,
-                                                color: Colors.black.withAlpha(
-                                                  70,
+                child: Obx(
+                  () => ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.only(left: 10.w),
+                    itemCount: controller.popularCountries.length,
+                    itemBuilder: (context, index) {
+                      final country = controller.popularCountries[index];
+                      return GestureDetector(
+                        onTap: () {
+                          final BottomNavController nav =
+                              Get.find<BottomNavController>();
+                          nav.openSearchScreen('country', index, country.city);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(right: 10.w),
+                          width: 150.w,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10.r),
+                                child: Stack(
+                                  children: [
+                                    Image.network(
+                                      country.countryThumbnail.isNotEmpty
+                                          ? country.countryThumbnail
+                                          : 'https://invalid.url',
+                                      height: 140.h,
+                                      width: 180.w,
+                                      fit: BoxFit.cover,
+                                      // Shimmer shown when image fails to load
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Shimmer.fromColors(
+                                                baseColor: Colors.grey.shade300,
+                                                highlightColor:
+                                                    Colors.grey.shade100,
+                                                child: Container(
+                                                  height: 140.h,
+                                                  width: 180.w,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey[300],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
+                                                  ),
                                                 ),
-                                                offset: Offset(1, 1),
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        Text(
-                                          '${controller.popularCountries[index].placeCount} Places',
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            color: Colors.white,
-                                            shadows: [
-                                              Shadow(
-                                                blurRadius: 2,
-                                                color: Colors.black.withAlpha(
-                                                  70,
+                                      // Shimmer shown while loading image
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return Shimmer.fromColors(
+                                              baseColor: Colors.grey.shade300,
+                                              highlightColor:
+                                                  Colors.grey.shade100,
+                                              child: Container(
+                                                height: 140.h,
+                                                width: 180.w,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey[300],
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        10.r,
+                                                      ),
                                                 ),
-                                                offset: Offset(1, 1),
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+                                            );
+                                          },
                                     ),
-                                  ),
-                                ],
+                                    Positioned(
+                                      bottom: 5.h,
+                                      left: 8.w,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            country.city.capitalizeFirst ?? '',
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                              shadows: [
+                                                Shadow(
+                                                  blurRadius: 2,
+                                                  color: Colors.black.withAlpha(
+                                                    70,
+                                                  ),
+                                                  offset: Offset(1, 1),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Text(
+                                            '${country.count} Places',
+                                            style: TextStyle(
+                                              fontSize: 12.sp,
+                                              color: Colors.white,
+                                              shadows: [
+                                                Shadow(
+                                                  blurRadius: 2,
+                                                  color: Colors.black.withAlpha(
+                                                    70,
+                                                  ),
+                                                  offset: Offset(1, 1),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 5.h),
-                          ],
+
+                              SizedBox(height: 5.h),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
+
             SizedBox(height: 10.h),
             // Popular Cities
             Padding(
